@@ -1,0 +1,2143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASS Company Stock Management</title>
+    <style>
+        /* CSS Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h1, h2, h3, h4, h5 {
+            color: #0056b3;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        header {
+            width: 100%;
+            background-color: #; /* This was empty in original, keeping it */
+            color: #fff;
+            padding: 0;
+            text-align: center;
+        }
+
+        nav {
+            width: 99%;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            display: flex;
+        }
+
+        nav button {
+            background-color: #5cb85c;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            margin: 5px;
+            border-radius: 4px;
+            font-size: 8px;
+            white-space: nowrap;
+        }
+
+        nav button:hover {
+            background-color: #4cae4c;
+        }
+
+        main {
+            position: relative;
+            width: 100%;
+            height: auto;
+            border-radius: 20px;
+            padding: 1px;
+            margin-top: 40px;
+            box-sizing: border-box;
+            background: #ecf0f3;
+            box-shadow: 14px 14px 20px #cbced1, -14px -14px 20px white;
+        }
+        #currentStockTable{
+            position: relative;
+            width: 100%;
+            height: auto;
+            border-radius: 20px;
+            padding: 1px;
+            margin-top: 30px;
+            box-sizing: border-box;
+            background: #fff;
+            box-shadow: 14px 14px 20px #cbced1, -14px -14px 20px white;
+        }
+
+        section {
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: seagreen;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 5px;
+            background-color: #fff;
+        }
+
+        table th, table td {
+            width: auto;
+            border: 1px solid #ddd;
+            padding: 5px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        table th {
+            background-color: #e9e9e9;
+        }
+
+        #currentStockTable tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        form {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+        form label {
+            display: inline-block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            width: 120px;
+        }
+
+        form input[type="text"],
+        form input[type="number"] {
+            width: calc(100% - 130px);
+            padding: 8px;
+            margin-bottom: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        form button[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 8px;
+            margin-top: 10px;
+        }
+
+        form button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #totalQuantityDisplay {
+            font-size: 12px;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .item-name-link, .customer-name-link {
+            color: #007bff;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .item-name-link:hover, .customer-name-link:hover {
+            color: #0056b3;
+        }
+
+        #backToAllData, #backToCustomersList {
+            background-color: #6c757d;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        #backToAllData:hover, #backToCustomersList:hover {
+            background-color: #5a6268;
+        }
+
+        #jsonEditorSection textarea {
+            width: 100%;
+            height: 250px;
+            font-family: monospace;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        #jsonEditorSection button {
+            background-color: #ffc107;
+            color: #333;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        #jsonEditorSection button.save {
+            background-color: #28a745;
+            color: white;
+        }
+
+        #jsonEditorSection button.cancel {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        #jsonEditorSection button:hover {
+            opacity: 0.9;
+        }
+
+        /* Invoice specific styles */
+        #invoiceContainer {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-top: 20px;
+            background-color: #fefefe;
+            border-radius: 8px;
+        }
+
+        #invoiceContainer h3 {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        #invoiceTable {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        #invoiceTable th, #invoiceTable td {
+            border: 1px solid #eee;
+            padding: 15px;
+            text-align: left;
+        }
+
+        #invoiceTable tfoot td {
+            font-weight: bold;
+            font-size: 13px;
+            background-color: #f2f2f2;
+        }
+
+        #invoiceActions {
+            text-align: right;
+            margin-top: 15px;
+        }
+
+        #invoiceActions button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 8px;
+            margin-left: 10px;
+        }
+
+        #finalizeSaleBtn {
+            background-color: #007bff;
+            color: white;
+        }
+
+        #finalizeSaleBtn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Removed #downloadInvoiceBtn styles as the button is moved */
+
+        #clearInvoiceBtn {
+            background-color: #dc3545;
+            color: white;
+        }
+        #clearInvoiceBtn:hover {
+            background-color: #c82333;
+        }
+
+        /* Styles for the downloadable invoice (will be hidden normally) */
+        #downloadableInvoice {
+            padding: 20px;
+            background-color: white;
+            color: black;
+            border: 1px solid #000;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            font-family: Arial, sans-serif;
+            font-size: 15px;
+            line-height: 1.5;
+            width: 600px;
+            margin: 0 auto;
+        }
+        #downloadableInvoice h1 {
+            text-align: center;
+            font-size: 30px;
+            margin-bottom: 20px;
+        }
+        #downloadableInvoice .invoice-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        #downloadableInvoice .invoice-details div {
+            flex: 1;
+        }
+        #downloadableInvoice table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        #downloadableInvoice th, #downloadableInvoice td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            font-size: 15px;
+        }
+        #downloadableInvoice th {
+            background-color: #f2f2f2;
+        }
+        #downloadableInvoice .invoice-total-summary { /* New class for the total, paid, due section */
+            text-align: right;
+            font-weight: bold;
+            font-size: 18px;
+            margin-top: 10px;
+        }
+        #downloadableInvoice .invoice-total-summary div {
+            margin-bottom: 5px; /* Spacing between total, paid, due */
+        }
+        #downloadableInvoice .invoice-footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 12px;
+            color: #555;
+        }
+
+        /* Cart View Specific Styles */
+        #cartViewSection {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #cartTable {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        #cartTable th, #cartTable td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        #cartTable th {
+            background-color: #f2f2f2;
+        }
+
+        .cart-quantity-input {
+            width: 60px;
+            padding: 4px;
+            text-align: center;
+        }
+
+        .cart-action-buttons button {
+            padding: 5px 10px;
+            margin-right: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 8px;
+        }
+        .cart-action-buttons .remove-from-cart {
+            background-color: #dc3545;
+            color: white;
+        }
+        .cart-action-buttons .remove-from-cart:hover {
+            background-color: #c82333;
+        }
+        .cart-action-buttons .update-cart {
+            background-color: #007bff;
+            color: white;
+        }
+        .cart-action-buttons .update-cart:hover {
+            background-color: #0056b3;
+        }
+        .cart-checkout-buttons {
+            text-align: right;
+            margin-top: 20px;
+        }
+        .cart-checkout-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 8px;
+            margin-left: 10px;
+        }
+        #goToInvoiceBtn {
+            background-color: #28a745;
+            color: white;
+        }
+        #goToInvoiceBtn:hover {
+            background-color: #218838;
+        }
+        #clearCartBtn {
+            background-color: #6c757d;
+            color: white;
+        }
+        #clearCartBtn:hover {
+            background-color: #5a6268;
+        }
+
+        /* Add to cart section within stock view */
+        .add-to-cart-form {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 1px;
+        }
+        .add-to-cart-form input[type="number"] {
+            width: 30px;
+            height: 10px;
+            margin-bottom: 0;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+        .add-to-cart-form button {
+            background-color: #17a2b8;
+            color: white;
+            padding: 3px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 10px;
+            margin-top: 0;
+        }
+        .add-to-cart-form button:hover {
+            background-color: #138496;
+        }
+#hint{
+    font-size: 10px;
+    color: seagreen;
+}
+#tsv{
+    color: forestgreen;
+
+}
+        /* Customer specific styles */
+        #customerDetailsForm {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f0f8ff;
+        }
+        #customerDetailsForm input[type="text"] {
+            width: calc(100% - 130px);
+            padding: 8px;
+            margin-bottom: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        #customerDetailsForm label {
+            width: 120px;
+            font-weight: bold;
+        }
+
+        #customerPurchaseHistory table {
+            margin-top: 10px;
+            width: 100%;
+        }
+        #customerPurchaseHistory table th, #customerPurchaseHistory table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        #customerPurchaseHistory .purchase-summary {
+            font-weight: bold;
+            margin-top: 10px;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+        .pay-due-btn, .download-customer-invoice-btn { /* Added new button class */
+            background-color: #28a745;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 10px;
+            margin-top: 5px; /* Added margin for spacing */
+            margin-right: 5px; /* Added margin for spacing */
+        }
+        .download-customer-invoice-btn { /* Specific style for download button */
+            background-color: #ffc107;
+            color: #333;
+        }
+        .pay-due-btn:hover {
+            background-color: #218838;
+        }
+        .download-customer-invoice-btn:hover { /* Hover for new download button */
+            background-color: #e0a800;
+        }
+        .due-payment-input {
+            width: 80px;
+            padding: 3px;
+            margin-right: 5px;
+        }
+        .due-amount-highlight {
+            color: red;
+            font-weight: bold;
+        }
+
+        /* New section for Total Stock, Value, and Due Report */
+        #overallReportSection {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #overallReportSection p {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        #overallReportSection p strong {
+            color: #0056b3;
+        }
+        #h2{
+            color: seagreen;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h3>Modern Apparel Style Solution (MASS) Stock Management System</h3>
+        <nav>
+            <button id="btnStockView">Current Stock</button>
+            <button id="btnStockEntry">Stock Entry</button>
+            <button id="btnStockOut">Stock Out (Direct)</button>
+            <button id="btnOverallReport">Overall Report</button>
+            <button id="btnShowAllData">Show All Data</button>
+            <button id="btnSellInvoice" style="background-color: #20c997;">Generate Invoice</button>
+            <button id="btnCustomers" style="background-color: #6f42c1; color: white;">Customers</button>
+            <button id="btnJsonEdit" style="background-color: #17a2b8;">JSON Edit</button>
+        </nav>
+    </header>
+
+    <main id="content">
+        <section id="stockViewSection">
+            <h2 id="h2">Current Stock Data</h2>
+            <p id="hint">Select items below and add them to your cart before generating an invoice.</p>
+            <table id="currentStockTable">
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Size</th>
+                        <th>Available Quantity</th>
+                        <th>Price (per unit) (TK)</th>
+                        <th>Add to Cart</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="stockEntrySection" class="hidden">
+            <h2>Stock Entry</h2>
+            <form id="stockEntryForm">
+                <label for="entryItemName">Item Name:</label>
+                <input type="text" id="entryItemName" required><br><br>
+
+                <label for="entryItemSize">Size:</label>
+                <input type="text" id="entryItemSize" required><br><br>
+
+                <label for="entryQuantity">Quantity:</label>
+                <input type="number" id="entryQuantity" min="1" required><br><br>
+
+                <label for="entryPrice">Price (per unit) (TK):</label>
+                <input type="number" id="entryPrice" min="0" step="0.01" required><br><br>
+
+                <button type="submit">Add Stock</button>
+            </form>
+        </section>
+
+        <section id="stockOutSection" class="hidden">
+            <h2>Stock Out (Direct Removal)</h2>
+            <p>Use this for direct removal of stock not related to an invoice/sale.</p>
+            <form id="stockOutForm">
+                <label for="outItemName">Item Name:</label>
+                <input type="text" id="outItemName" required><br><br>
+
+                <label for="outItemSize">Size:</label>
+                <input type="text" id="outItemSize" required><br><br>
+
+                <label for="outQuantity">Quantity to Remove:</label>
+                <input type="number" id="outQuantity" min="1" required><br><br>
+
+                <button type="submit">Remove Stock Directly</button>
+            </form>
+        </section>
+
+        <section id="overallReportSection" class="hidden">
+            <h2>Overall Stock & Due Report</h2>
+            <p><strong>Total Stock Quantity:</strong> <span id="totalStockQuantityReport">0</span></p>
+            <p id="tsv"><strong>Total Stock Value:</strong> <span id="totalStockValueReport">0.00 TK</span></p>
+            <p><strong>Total Customer Due:</strong> <span id="totalCustomerDueReport" class="due-amount-highlight">0.00 TK</span></p>
+        </section>
+
+        <section id="showAllDataSection" class="hidden">
+            <h2>All Stock Data</h2>
+            <h3>Current Aggregated Stock:</h3>
+            <table id="allCurrentStockTable">
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Size</th>
+                        <th>Quantity</th>
+                        <th>Price (per unit) (TK)</th>
+                        <th>Total Value (TK)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+
+            <h3>Stock In Log:</h3>
+            <table id="allStockInLogTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Item Name</th>
+                        <th>Size</th>
+                        <th>Quantity</th>
+                        <th>Price (per unit) (TK)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+
+            <h3>Stock Out Log:</h3>
+            <table id="allStockOutLogTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Item Name</th>
+                        <th>Size</th>
+                        <th>Quantity</th>
+                        <th>Invoice No</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="itemReportSection" class="hidden">
+            <h2>Item Specific Report: <span id="itemReportName"></span></h2>
+            <button id="backToAllData">Back to All Data</button>
+            <h3>Stock In for <span id="itemReportInName"></span>:</h3>
+            <table id="itemInReportTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Size</th>
+                        <th>Quantity</th>
+                        <th>Price (per unit) (TK)</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <h3>Stock Out for <span id="itemReportOutName"></span>:</h3>
+            <table id="itemOutReportTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Size</th>
+                        <th>Quantity</th>
+                        <th>Invoice No</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <h3>Current Stock for <span id="itemReportCurrentName"></span>:</h3>
+            <table id="itemCurrentReportTable">
+                <thead>
+                    <tr>
+                        <th>Size</th>
+                        <th>Quantity</th>
+                        <th>Price (per unit) (TK)</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
+
+        <section id="jsonEditorSection" class="hidden">
+            <h2>Edit Raw Data (JSON)</h2>
+            <p><strong>Warning:</strong> Editing this data directly can cause issues if the JSON is malformed. Use with caution.</p>
+
+            <h3>Current Stock Data (`massStockData`)</h3>
+            <textarea id="jsonStockData" rows="10"></textarea>
+
+            <h3>Stock In Log (`massStockInLog`)</h3>
+            <textarea id="jsonStockInLog" rows="10"></textarea>
+
+            <h3>Stock Out Log (`massStockOutLog`)</h3>
+            <textarea id="jsonStockOutLog" rows="10"></textarea>
+
+            <h3>Cart Data (`massCartItems`)</h3>
+            <textarea id="jsonCartData" rows="5"></textarea>
+
+            <h3>Customer Data (`massCustomers`)</h3>
+            <textarea id="jsonCustomerData" rows="10"></textarea>
+            <button id="saveJson" class="save">Save JSON</button>
+            <button id="cancelJson" class="cancel">Cancel</button>
+        </section>
+
+        <section id="sellInvoiceSection" class="hidden">
+            <h2>Generate Invoice from Cart</h2>
+            <p>Items in this invoice are pulled directly from your cart.</p>
+
+            <div id="invoiceContainer">
+                <h3>Invoice</h3>
+                <div id="customerDetailsForm">
+                    <p>Enter Customer Details (Optional for direct sale):</p>
+                    <label for="customerPhone">Phone Number:</label>
+                    <input type="text" id="customerPhone" placeholder="e.g., 01XXXXXXXXX"><br>
+                    <label for="customerName">Customer Name:</label>
+                    <input type="text" id="customerName" placeholder="e.g., John Doe"><br>
+                    <label for="customerAddress">Address:</label><br>
+                    <input type="text" id="customerAddress" placeholder="e.g., 123 Main St"><br>
+                </div>
+                <div class="invoice-details">
+                    <div>
+                        <strong>Invoice Date:</strong> <span id="invoiceDateDisplay"></span><br>
+                        <strong>Invoice No:</strong> <span id="invoiceNoDisplay"></span><br>
+                        <strong>Customer:</strong> <span id="invoiceCustomerName">N/A</span> (<span id="invoiceCustomerPhone">N/A</span>)
+                    </div>
+                    <div style="text-align: right;">
+                      
+                        <strong>Customer Outstanding Due:</strong> <span id="customerOutstandingDueOnInvoice" class="due-amount-highlight">0.00 TK</span>
+                    </div>
+                </div>
+                <table id="invoiceTable">
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Size</th>
+                            <th>Quantity</th>
+                            <th>Unit Price (TK)</th>
+                            <th>Subtotal (TK)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="invoiceTableBody">
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="4" style="text-align: right;"><strong>Total:</strong></td>
+                            <td id="invoiceTotal">0.00 </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="text-align: right;"><strong>Paid Amount (TK):</strong></td>
+                            <td colspan="2">
+                                <input type="number" id="paidAmount" min="0" step="0.01" value="0" style="width: 100%; padding: 5px; box-sizing: border-box;">
+                            </td>
+                        </tr>
+                        <tr id="dueAmountRow">
+                            <td colspan="4" style="text-align: right;"><strong>Due Amount (TK):</strong></td>
+                            <td id="dueAmountDisplay">0.00 TK</td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <div id="invoiceActions">
+                    <button id="finalizeSaleBtn">Finalize Sale & Record Stock Out</button>
+                    <button id="backToCartBtn">Back to Cart</button>
+                </div>
+            </div>
+        </section>
+
+        <div id="downloadableInvoice" class="hidden">
+            <h1>Modern Apparel Style Solution (MASS) <br>Invoice</h1>
+            <div class="invoice-details">
+                <div>
+                    <strong>Invoice Date:</strong> <span id="downloadInvoiceDate"></span><br>
+                    <strong>Invoice No:</strong> <span id="downloadInvoiceNo"></span>
+                </div>
+                <div>
+                    <strong>Customer Name:</strong> <span id="downloadCustomerName">N/A</span><br>
+                    <strong>Contact:</strong> <span id="downloadCustomerContact">N/A</span>
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Size</th>
+                        <th>Quantity</th>
+                        <th>Unit Price (TK)</th>
+                        <th>Subtotal (TK)</th>
+                    </tr>
+                </thead>
+                <tbody id="downloadInvoiceTableBody">
+                </tbody>
+            </table>
+            <div class="invoice-total-summary"> <div>Total: <span id="downloadInvoiceTotal"></span></div>
+                <div>Paid: <span id="downloadInvoicePaid">0.00 TK</span></div>
+                <div>Due: <span id="downloadInvoiceDue">0.00 TK</span></div>
+            </div>
+            <div class="invoice-footer">
+                Thank you for your business!<br>
+                Modern Apparel Style Solution (MASS), Tongi, Dhaka Division, Bangladesh<br>
+                Date Generated: <span id="generatedDateTime"></span>
+            </div>
+        </div>
+
+        <section id="customersSection" class="hidden">
+            <h2>Customer List</h2>
+            <table id="customerListTable">
+                <thead>
+                    <tr>
+                        <th>Phone Number</th>
+                        <th>Customer Name</th>
+                        <th>Total Purchases (TK)</th>
+                        <th>Outstanding Due (TK)</th>
+                        <th>Number of Orders</th>
+                    </tr>
+                </thead>
+                <tbody id="customerListTableBody">
+                </tbody>
+            </table>
+        </section>
+
+        <section id="customerReportSection" class="hidden">
+            <h2>Customer Purchase History: <span id="customerReportName"></span> (<span id="customerReportPhone"></span>)</h2>
+            <button id="backToCustomersList">Back to Customer List</button>
+            <h3>All Purchases</h3>
+            <div id="customerPurchaseHistory">
+            </div>
+            <div class="purchase-summary">
+                <strong>Sum Total of All Purchases:</strong> <span id="customerTotalSpent">0.00 TK</span><br>
+                <strong>Total Outstanding Due:</strong> <span id="customerTotalDue" class="due-amount-highlight">0.00 TK</span>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script type="module">
+        // Import Firebase functions
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
+        import { getDatabase, ref, set, onValue, push, update, remove } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCA-7y10NVwFG5hCNaafSw6_w1D0IsXo7s",
+            authDomain: "mass-244c7.firebaseapp.com",
+            databaseURL: "https://mass-244c7-default-rtdb.firebaseio.com",
+            projectId: "mass-244c7",
+            storageBucket: "mass-244c7.firebasestorage.app",
+            messagingSenderId: "73049426644",
+            appId: "1:73049426644:web:db8b7c598f6192f4700941",
+            measurementId: "G-0DR3XNB5VQ"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const database = getDatabase(app); // Firebase Realtime Database instance
+
+        // Global variables to track online/offline status and data loaded status
+        let isOnline = navigator.onLine;
+        let firebaseDataLoaded = false;
+        let localDataInitialized = false; // To prevent multiple initial loads from local storage
+
+        // References to Firebase paths
+        const stockDataRef = ref(database, 'stockData');
+        const stockInLogRef = ref(database, 'stockInLog');
+        const stockOutLogRef = ref(database, 'stockOutLog');
+        const customersRef = ref(database, 'customers');
+
+        // --- Data Storage (updated to prioritize Firebase) ---
+        let stockData = [];
+        let stockInLog = [];
+        let stockOutLog = [];
+        let cartItems = JSON.parse(localStorage.getItem('massCartItems')) || [];
+        let customers = []; // Will be loaded from Firebase/LocalStorage
+
+        // --- Utility Functions for Data Handling ---
+
+        // Function to save data to LocalStorage
+        function saveToLocalStorage() {
+            localStorage.setItem('massStockData', JSON.stringify(stockData));
+            localStorage.setItem('massStockInLog', JSON.stringify(stockInLog));
+            localStorage.setItem('massStockOutLog', JSON.stringify(stockOutLog));
+            localStorage.setItem('massCartItems', JSON.stringify(cartItems)); // Cart remains local for temporary use
+            localStorage.setItem('massCustomers', JSON.stringify(customers));
+            console.log('Data saved to LocalStorage.');
+        }
+
+        // Function to load data from LocalStorage
+        function loadFromLocalStorage() {
+            stockData = JSON.parse(localStorage.getItem('massStockData')) || [];
+            stockInLog = JSON.parse(localStorage.getItem('massStockInLog')) || [];
+            stockOutLog = JSON.parse(localStorage.getItem('massStockOutLog')) || [];
+            cartItems = JSON.parse(localStorage.getItem('massCartItems')) || [];
+            customers = JSON.parse(localStorage.getItem('massCustomers')) || [];
+            localDataInitialized = true;
+            console.log('Data loaded from LocalStorage.');
+        }
+
+        // Function to save data to Firebase
+        async function saveToFirebase(dataRef, data) {
+            if (isOnline) {
+                try {
+                    await set(dataRef, data);
+                    console.log(`Data saved to Firebase: ${dataRef.key}`);
+                } catch (error) {
+                    console.error(`Error saving data to Firebase ${dataRef.key}:`, error);
+                    alert('Error saving data to cloud. Working offline.');
+                }
+            } else {
+                console.log(`Currently offline. Changes for ${dataRef.key} will be saved locally.`);
+            }
+            saveToLocalStorage(); // Always save to LocalStorage regardless of online status
+        }
+
+        // Function to sync LocalStorage data to Firebase
+        async function syncLocalToFirebase() {
+            if (!isOnline) return; // Only sync if online
+
+            console.log('Attempting to sync local data to Firebase...');
+
+            const localStockData = JSON.parse(localStorage.getItem('massStockData')) || [];
+            const localStockInLog = JSON.parse(localStorage.getItem('massStockInLog')) || [];
+            const localStockOutLog = JSON.parse(localStorage.getItem('massStockOutLog')) || [];
+            const localCustomers = JSON.parse(localStorage.getItem('massCustomers')) || [];
+
+            let syncNeeded = false;
+            // Compare stringified versions for simplicity. For large datasets, a more efficient diffing might be needed.
+            if (JSON.stringify(localStockData) !== JSON.stringify(stockData)) {
+                await saveToFirebase(stockDataRef, localStockData);
+                stockData = localStockData; // Update global state from local after successful Firebase save
+                syncNeeded = true;
+            }
+            if (JSON.stringify(localStockInLog) !== JSON.stringify(stockInLog)) {
+                await saveToFirebase(stockInLogRef, localStockInLog);
+                stockInLog = localStockInLog;
+                syncNeeded = true;
+            }
+            if (JSON.stringify(localStockOutLog) !== JSON.stringify(stockOutLog)) {
+                await saveToFirebase(stockOutLogRef, localStockOutLog);
+                stockOutLog = localStockOutLog;
+                syncNeeded = true;
+            }
+            if (JSON.stringify(localCustomers) !== JSON.stringify(customers)) {
+                await saveToFirebase(customersRef, localCustomers);
+                customers = localCustomers;
+                syncNeeded = true;
+            }
+
+            if (syncNeeded) {
+                alert('Local data successfully synchronized with Firebase!');
+                renderStockView(); // Re-render to show updated data
+            } else {
+                console.log('No significant local data changes to sync to Firebase.');
+            }
+        }
+
+
+        // --- Firebase Data Listener (Primary Data Source) ---
+        // These `onValue` listeners will keep your `stockData`, `stockInLog`, `stockOutLog`,
+        // and `customers` arrays updated from Firebase in real-time.
+        // They also ensure LocalStorage is kept in sync with the Firebase version.
+        onValue(stockDataRef, (snapshot) => {
+            if (snapshot.exists()) {
+                const firebaseData = snapshot.val();
+                if (JSON.stringify(stockData) !== JSON.stringify(firebaseData)) { // Only update if data is truly different
+                    stockData = firebaseData;
+                    console.log("StockData from Firebase:", stockData);
+                    saveToLocalStorage(); // Keep LocalStorage updated with Firebase data
+                    renderStockView(); // Re-render UI after data update
+                }
+            } else {
+                stockData = []; // If data doesn't exist in Firebase, initialize as empty
+                saveToLocalStorage();
+                console.log("No stockData in Firebase.");
+            }
+            firebaseDataLoaded = true; // Mark Firebase data as loaded for future sync decisions
+        }, {
+            onlyOnce: false // Listen for real-time updates
+        });
+
+        onValue(stockInLogRef, (snapshot) => {
+            if (snapshot.exists()) {
+                const firebaseData = snapshot.val();
+                if (JSON.stringify(stockInLog) !== JSON.stringify(firebaseData)) {
+                    stockInLog = firebaseData;
+                    console.log("StockInLog from Firebase:", stockInLog);
+                    saveToLocalStorage();
+                }
+            } else {
+                stockInLog = [];
+                saveToLocalStorage();
+                console.log("No stockInLog in Firebase.");
+            }
+        });
+
+        onValue(stockOutLogRef, (snapshot) => {
+            if (snapshot.exists()) {
+                const firebaseData = snapshot.val();
+                if (JSON.stringify(stockOutLog) !== JSON.stringify(firebaseData)) {
+                    stockOutLog = firebaseData;
+                    console.log("StockOutLog from Firebase:", stockOutLog);
+                    saveToLocalStorage();
+                }
+            } else {
+                stockOutLog = [];
+                saveToLocalStorage();
+                console.log("No stockOutLog in Firebase.");
+            }
+        });
+
+        onValue(customersRef, (snapshot) => {
+            if (snapshot.exists()) {
+                const firebaseData = snapshot.val();
+                if (JSON.stringify(customers) !== JSON.stringify(firebaseData)) {
+                    customers = firebaseData;
+                    console.log("Customers from Firebase:", customers);
+                    saveToLocalStorage();
+                }
+            } else {
+                customers = [];
+                saveToLocalStorage();
+                console.log("No customers in Firebase.");
+            }
+        });
+
+        // --- Network Status Handling ---
+        window.addEventListener('online', () => {
+            isOnline = true;
+            console.log('You are online!');
+            alert('You are now online. Attempting to synchronize data with Firebase...');
+            syncLocalToFirebase(); // Sync local changes to Firebase when online
+        });
+
+        window.addEventListener('offline', () => {
+            isOnline = false;
+            console.log('You are offline!');
+            alert('You are now offline. Changes will be saved locally.');
+        });
+
+        // JavaScript Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check initial online status
+            isOnline = navigator.onLine;
+
+            if (!isOnline && !localDataInitialized) {
+                console.log('Starting offline. Loading data from LocalStorage.');
+                loadFromLocalStorage();
+                renderStockView(); // Render immediately with local data
+            }
+            // If online, onValue listeners will handle loading data from Firebase and then render.
+            // No explicit 'loadFromFirebase' needed here, as `onValue` handles initial data fetch.
+
+            // DOM Elements
+            const contentDiv = document.getElementById('content');
+            const stockViewSection = document.getElementById('stockViewSection');
+            const stockEntrySection = document.getElementById('stockEntrySection');
+            const stockOutSection = document.getElementById('stockOutSection');
+            const showAllDataSection = document.getElementById('showAllDataSection');
+            const itemReportSection = document.getElementById('itemReportSection');
+            const jsonEditorSection = document.getElementById('jsonEditorSection');
+            const sellInvoiceSection = document.getElementById('sellInvoiceSection');
+            const customersSection = document.getElementById('customersSection');
+            const customerReportSection = document.getElementById('customerReportSection');
+            const overallReportSection = document.getElementById('overallReportSection'); // New
+
+            // Buttons
+            const btnStockView = document.getElementById('btnStockView');
+            const btnStockEntry = document.getElementById('btnStockEntry');
+            const btnStockOut = document.getElementById('btnStockOut');
+            const btnShowAllData = document.getElementById('btnShowAllData');
+            const btnJsonEdit = document.getElementById('btnJsonEdit');
+            const btnSellInvoice = document.getElementById('btnSellInvoice');
+            const btnCustomers = document.getElementById('btnCustomers');
+            const btnOverallReport = document.getElementById('btnOverallReport'); // New
+            const backToAllDataBtn = document.getElementById('backToAllData');
+            const saveJsonBtn = document.getElementById('saveJson');
+            const cancelJsonBtn = document.getElementById('cancelJson');
+            const backToCustomersListBtn = document.getElementById('backToCustomersList');
+
+            // Forms
+            const stockEntryForm = document.getElementById('stockEntryForm');
+            const stockOutForm = document.getElementById('stockOutForm');
+
+            // Tables
+            const currentStockTableBody = document.querySelector('#currentStockTable tbody');
+            const allCurrentStockTableBody = document.querySelector('#allCurrentStockTable tbody');
+            const allStockInLogTableBody = document.querySelector('#allStockInLogTable tbody');
+            const allStockOutLogTableBody = document.querySelector('#allStockOutLogTable tbody');
+            const itemInReportTableBody = document.querySelector('#itemInReportTable tbody');
+            const itemOutReportTableBody = document.querySelector('#itemOutReportTable tbody');
+            const itemCurrentReportTableBody = document.querySelector('#itemCurrentReportTable tbody');
+            const customerListTableBody = document.getElementById('customerListTableBody');
+
+            // Textareas for JSON editing
+            const jsonStockDataTextarea = document.getElementById('jsonStockData');
+            const jsonStockInLogTextarea = document.getElementById('jsonStockInLog');
+            const jsonStockOutLogTextarea = document.getElementById('jsonStockOutLog');
+            const jsonCartDataTextarea = document.getElementById('jsonCartData');
+            const jsonCustomerDataTextarea = document.getElementById('jsonStockData'); // Corrected from jsonStockData
+
+            // Cart Specific Elements (still needed for internal logic)
+            // cartItems is already declared globally and managed by Firebase/LocalStorage sync
+
+            // Sell & Invoice Specific Elements
+            const invoiceTableBody = document.getElementById('invoiceTableBody');
+            const invoiceTotalDisplay = document.getElementById('invoiceTotal');
+            const paidAmountInput = document.getElementById('paidAmount');
+            const dueAmountDisplay = document.getElementById('dueAmountDisplay');
+            const dueAmountRow = document.getElementById('dueAmountRow'); // Get the row for due amount
+            const finalizeSaleBtn = document.getElementById('finalizeSaleBtn');
+            const backToCartBtn = document.getElementById('backToCartBtn'); // Kept, but re-directs to stock view
+            const invoiceDateDisplay = document.getElementById('invoiceDateDisplay');
+            const invoiceNoDisplay = document.getElementById('invoiceNoDisplay');
+            const customerPhoneInput = document.getElementById('customerPhone');
+            const customerNameInput = document.getElementById('customerName');
+            const customerAddressInput = document.getElementById('customerAddress');
+            const invoiceCustomerNameDisplay = document.getElementById('invoiceCustomerName');
+            const invoiceCustomerPhoneDisplay = document.getElementById('invoiceCustomerPhone');
+            const customerOutstandingDueOnInvoice = document.getElementById('customerOutstandingDueOnInvoice');
+
+            // Elements for hidden downloadable invoice
+            const downloadableInvoiceDiv = document.getElementById('downloadableInvoice');
+            const downloadInvoiceDate = document.getElementById('downloadInvoiceDate');
+            const downloadInvoiceNo = document.getElementById('downloadInvoiceNo');
+            const downloadCustomerName = document.getElementById('downloadCustomerName');
+            const downloadCustomerContact = document.getElementById('downloadCustomerContact');
+            const downloadInvoiceTableBody = document.getElementById('downloadInvoiceTableBody');
+            const downloadInvoiceTotal = document.getElementById('downloadInvoiceTotal');
+            const downloadInvoicePaid = document.getElementById('downloadInvoicePaid');
+            const downloadInvoiceDue = document.getElementById('downloadInvoiceDue');
+            const generatedDateTime = document.getElementById('generatedDateTime');
+
+            // Customer Report Elements
+            const customerReportNameSpan = document.getElementById('customerReportName');
+            const customerReportPhoneSpan = document.getElementById('customerReportPhone');
+            const customerPurchaseHistoryDiv = document.getElementById('customerPurchaseHistory');
+            const customerTotalSpentSpan = document.getElementById('customerTotalSpent');
+            const customerTotalDueSpan = document.getElementById('customerTotalDue');
+
+            // Overall Report Elements (New)
+            const totalStockQuantityReport = document.getElementById('totalStockQuantityReport');
+            const totalStockValueReport = document.getElementById('totalStockValueReport');
+            const totalCustomerDueReport = document.getElementById('totalCustomerDueReport');
+
+            // Helper function to hide all sections
+            function hideAllSections() {
+                document.querySelectorAll('section').forEach(section => {
+                    section.classList.add('hidden');
+                });
+            }
+
+            // Function to generate a simple invoice number
+            function generateInvoiceNumber() {
+                const now = new Date();
+                const year = now.getFullYear().toString().slice(-2);
+                const month = (now.getMonth() + 1).toString().padStart(2, '0');
+                const day = now.getDate().toString().padStart(2, '0');
+                const hour = now.getHours().toString().padStart(2, '0');
+                const minute = now.getMinutes().toString().padStart(2, '0');
+                const second = now.getSeconds().toString().padStart(2, '0');
+                return `INV-${year}${month}${day}-${hour}${minute}${second}`;
+            }
+
+            // Helper function to format currency
+            function formatCurrency(amount) {
+                return `${parseFloat(amount).toFixed(2)} TK`;
+            }
+
+            // Function to render current stock view
+            function renderStockView() {
+                hideAllSections();
+                stockViewSection.classList.remove('hidden');
+                currentStockTableBody.innerHTML = '';
+
+                // Aggregate stock data to display correctly (if there are multiple entries for same item+size)
+                const aggregatedStock = {};
+                stockData.forEach(item => {
+                    const key = `${item.itemName}_${item.itemSize}`;
+                    if (aggregatedStock[key]) {
+                        aggregatedStock[key].quantity += item.quantity;
+                    } else {
+                        aggregatedStock[key] = { ...item, price: parseFloat(item.price) || 0 };
+                    }
+                });
+
+                for (const key in aggregatedStock) {
+                    const item = aggregatedStock[key];
+                    const row = currentStockTableBody.insertRow();
+                    row.insertCell(0).textContent = item.itemName;
+                    row.insertCell(1).textContent = item.itemSize;
+                    row.insertCell(2).textContent = item.quantity;
+                    row.insertCell(3).textContent = formatCurrency(item.price);
+
+                    const addCell = row.insertCell(4);
+                    const addForm = document.createElement('div');
+                    addForm.classList.add('add-to-cart-form');
+                    addForm.innerHTML = `
+                        <input type="number" min="1" value="1" class="quantity-to-add-to-cart" data-item-name="${item.itemName}" data-item-size="${item.itemSize}">
+                        <button class="add-to-cart-btn" data-item-name="${item.itemName}" data-item-size="${item.itemSize}">Add</button>
+                    `;
+                    addCell.appendChild(addForm);
+                }
+            }
+
+            // --- Add to Cart Logic (from Stock View) ---
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('add-to-cart-btn')) {
+                    const btn = e.target;
+                    const itemName = btn.dataset.itemName;
+                    const itemSize = btn.dataset.itemSize;
+                    const quantityInput = btn.previousElementSibling;
+                    const quantityToAdd = parseInt(quantityInput.value);
+
+                    if (isNaN(quantityToAdd) || quantityToAdd <= 0) {
+                        alert('Please enter a valid quantity to add to cart.');
+                        return;
+                    }
+
+                    const availableItem = stockData.find(item =>
+                        item.itemName.toLowerCase() === itemName.toLowerCase() &&
+                        item.itemSize.toLowerCase() === itemSize.toLowerCase()
+                    );
+
+                    if (!availableItem) {
+                        alert(`Item "${itemName}" with size "${itemSize}" not found in stock.`);
+                        return;
+                    }
+
+                    // Check total available quantity in stock (aggregated)
+                    let totalAvailableQuantity = 0;
+                    stockData.filter(i =>
+                        i.itemName.toLowerCase() === itemName.toLowerCase() &&
+                        i.itemSize.toLowerCase() === itemSize.toLowerCase()
+                    ).forEach(i => totalAvailableQuantity += i.quantity);
+
+
+                    // Check quantity already in cart for this item
+                    const currentCartQuantity = cartItems.find(item =>
+                        item.itemName.toLowerCase() === itemName.toLowerCase() &&
+                        item.itemSize.toLowerCase() === itemSize.toLowerCase()
+                    )?.quantity || 0;
+
+                    if ((currentCartQuantity + quantityToAdd) > totalAvailableQuantity) {
+                         alert(`Not enough stock of "${itemName}" (${itemSize}). Available in stock: ${totalAvailableQuantity}. You already have ${currentCartQuantity} in cart.`);
+                         return;
+                    }
+
+                    let itemInCart = cartItems.find(item =>
+                        item.itemName.toLowerCase() === itemName.toLowerCase() &&
+                        item.itemSize.toLowerCase() === itemSize.toLowerCase()
+                    );
+
+                    if (itemInCart) {
+                        itemInCart.quantity += quantityToAdd;
+                    } else {
+                        cartItems.push({
+                            itemName: availableItem.itemName,
+                            itemSize: availableItem.itemSize,
+                            quantity: quantityToAdd,
+                            price: parseFloat(availableItem.price)
+                        });
+                    }
+
+                    saveToLocalStorage(); // Only save cart to LocalStorage
+                    alert(`${quantityToAdd} x "${itemName}" (${itemSize}) added to cart!`);
+                }
+            });
+
+
+            function updateCartItemQuantity(index, newQuantity) {
+                if (isNaN(newQuantity) || newQuantity <= 0) {
+                    alert('Quantity must be a positive number.');
+                    return;
+                }
+
+                const itemToUpdate = cartItems[index];
+                let totalAvailableQuantity = 0;
+                stockData.filter(i =>
+                    i.itemName.toLowerCase() === itemToUpdate.itemName.toLowerCase() &&
+                    i.itemSize.toLowerCase() === itemToUpdate.itemSize.toLowerCase()
+                ).forEach(i => totalAvailableQuantity += i.quantity);
+
+                if (newQuantity > totalAvailableQuantity) {
+                    alert(`Cannot update. Only ${totalAvailableQuantity} available for "${itemToUpdate.itemName}" (${itemToUpdate.itemSize}).`);
+                    return;
+                }
+
+                itemToUpdate.quantity = newQuantity;
+                saveToLocalStorage(); // Update cart in LocalStorage
+            }
+
+            function removeFromCart(index) {
+                cartItems.splice(index, 1);
+                saveToLocalStorage(); // Update cart in LocalStorage
+            }
+
+
+            // Function to handle stock entry
+            stockEntryForm.addEventListener('submit', async (e) => { // Made async
+                e.preventDefault();
+                const itemName = document.getElementById('entryItemName').value.trim();
+                const itemSize = document.getElementById('entryItemSize').value.trim();
+                const quantity = parseInt(document.getElementById('entryQuantity').value);
+                const price = parseFloat(document.getElementById('entryPrice').value);
+                const date = new Date().toLocaleString();
+
+                if (itemName && itemSize && quantity > 0 && price >= 0) {
+                    let itemFound = false;
+                    for (let i = 0; i < stockData.length; i++) {
+                        if (stockData[i].itemName.toLowerCase() === itemName.toLowerCase() &&
+                            stockData[i].itemSize.toLowerCase() === itemSize.toLowerCase()) {
+                            stockData[i].quantity += quantity;
+                            stockData[i].price = price; // Update price to the latest entry price
+                            itemFound = true;
+                            break;
+                        }
+                    }
+
+                    if (!itemFound) {
+                        stockData.push({ itemName, itemSize, quantity, price });
+                    }
+
+                    stockInLog.push({ date, itemName, itemSize, quantity, price });
+
+                    await saveToFirebase(stockDataRef, stockData); // Save stockData to Firebase
+                    await saveToFirebase(stockInLogRef, stockInLog); // Save stockInLog to Firebase
+
+                    alert('Stock added successfully!');
+                    stockEntryForm.reset();
+                    renderStockView(); // Refresh current stock display
+                } else {
+                    alert('Please fill in all fields correctly.');
+                }
+            });
+
+            // Function to handle stock out (direct removal - separate from invoice)
+            stockOutForm.addEventListener('submit', async (e) => { // Made async
+                e.preventDefault();
+                const itemName = document.getElementById('outItemName').value.trim();
+                const itemSize = document.getElementById('outItemSize').value.trim();
+                const quantityToRemove = parseInt(document.getElementById('outQuantity').value);
+                const date = new Date().toLocaleString();
+
+                if (itemName && itemSize && quantityToRemove > 0) {
+                    let itemFoundAndRemoved = false;
+                    // Find and remove stock from the current stock (aggregated)
+                    const aggregatedItemIndex = stockData.findIndex(item =>
+                        item.itemName.toLowerCase() === itemName.toLowerCase() &&
+                        item.itemSize.toLowerCase() === itemSize.toLowerCase()
+                    );
+
+                    if (aggregatedItemIndex !== -1) {
+                        if (stockData[aggregatedItemIndex].quantity >= quantityToRemove) {
+                            stockData[aggregatedItemIndex].quantity -= quantityToRemove;
+                            stockOutLog.push({ date, itemName, itemSize, quantity: quantityToRemove, invoiceNo: 'DIRECT_OUT' });
+                            itemFoundAndRemoved = true;
+                            if (stockData[aggregatedItemIndex].quantity === 0) {
+                                stockData.splice(aggregatedItemIndex, 1);
+                            }
+                        } else {
+                            alert(`Not enough stock. Available: ${stockData[aggregatedItemIndex].quantity}`);
+                            return;
+                        }
+                    }
+
+                    if (itemFoundAndRemoved) {
+                        await saveToFirebase(stockDataRef, stockData); // Save stockData to Firebase
+                        await saveToFirebase(stockOutLogRef, stockOutLog); // Save stockOutLog to Firebase
+
+                        alert('Stock removed successfully!');
+                        stockOutForm.reset();
+                        renderStockView(); // Refresh current stock display
+                    } else {
+                        alert('Item not found or incorrect details.');
+                    }
+                } else {
+                    alert('Please fill in all fields correctly.');
+                }
+            });
+
+
+            // New: Render Overall Report
+            function renderOverallReport() {
+                hideAllSections();
+                overallReportSection.classList.remove('hidden');
+
+                let totalQuantity = 0;
+                let totalStockValue = 0;
+                stockData.forEach(item => {
+                    totalQuantity += item.quantity;
+                    totalStockValue += item.quantity * (parseFloat(item.price) || 0);
+                });
+
+                let totalCustomerDue = 0;
+                customers.forEach(customer => {
+                    customer.purchases.forEach(purchase => {
+                        totalCustomerDue += purchase.dueAmount || 0;
+                    });
+                });
+
+                totalStockQuantityReport.textContent = totalQuantity;
+                totalStockValueReport.textContent = formatCurrency(totalStockValue);
+                totalCustomerDueReport.textContent = formatCurrency(totalCustomerDue);
+            }
+
+            // Render All Data
+            function renderAllData() {
+                hideAllSections();
+                showAllDataSection.classList.remove('hidden');
+
+                // Render Current Aggregated Stock
+                allCurrentStockTableBody.innerHTML = '';
+                const aggregatedStock = {};
+                stockData.forEach(item => {
+                    const key = `${item.itemName}_${item.itemSize}`;
+                    if (aggregatedStock[key]) {
+                        aggregatedStock[key].quantity += item.quantity;
+                    } else {
+                        aggregatedStock[key] = { ...item };
+                    }
+                });
+
+                for (const key in aggregatedStock) {
+                    const item = aggregatedStock[key];
+                    const row = allCurrentStockTableBody.insertRow();
+                    const itemNameCell = row.insertCell(0);
+                    itemNameCell.textContent = item.itemName;
+                    itemNameCell.classList.add('item-name-link');
+                    itemNameCell.dataset.itemName = item.itemName;
+                    row.insertCell(1).textContent = item.itemSize;
+                    row.insertCell(2).textContent = item.quantity;
+                    row.insertCell(3).textContent = formatCurrency(item.price);
+                    row.insertCell(4).textContent = formatCurrency(item.quantity * item.price);
+                }
+
+                // Render Stock In Log
+                allStockInLogTableBody.innerHTML = '';
+                stockInLog.forEach(item => {
+                    const row = allStockInLogTableBody.insertRow();
+                    const itemNameCell = row.insertCell(1);
+                    row.insertCell(0).textContent = item.date;
+                    itemNameCell.textContent = item.itemName;
+                    itemNameCell.classList.add('item-name-link');
+                    itemNameCell.dataset.itemName = item.itemName;
+                    row.insertCell(2).textContent = item.itemSize;
+                    row.insertCell(3).textContent = item.quantity;
+                    row.insertCell(4).textContent = formatCurrency(item.price);
+                });
+
+                // Render Stock Out Log
+                allStockOutLogTableBody.innerHTML = '';
+                stockOutLog.forEach(item => {
+                    const row = allStockOutLogTableBody.insertRow();
+                    const itemNameCell = row.insertCell(1);
+                    row.insertCell(0).textContent = item.date;
+                    itemNameCell.textContent = item.itemName;
+                    itemNameCell.classList.add('item-name-link');
+                    itemNameCell.dataset.itemName = item.itemName;
+                    row.insertCell(2).textContent = item.itemSize;
+                    row.insertCell(3).textContent = item.quantity;
+                    row.insertCell(4).textContent = item.invoiceNo || 'N/A';
+                });
+            }
+
+            // Function to render individual item report
+            function renderItemReport(itemName) {
+                hideAllSections();
+                itemReportSection.classList.remove('hidden');
+
+                document.getElementById('itemReportName').textContent = itemName;
+                document.getElementById('itemReportInName').textContent = itemName;
+                document.getElementById('itemReportOutName').textContent = itemName;
+                document.getElementById('itemReportCurrentName').textContent = itemName;
+
+                // Populate Stock In for this item
+                itemInReportTableBody.innerHTML = '';
+                stockInLog.filter(item => item.itemName.toLowerCase() === itemName.toLowerCase())
+                        .forEach(item => {
+                            const row = itemInReportTableBody.insertRow();
+                            row.insertCell(0).textContent = item.date;
+                            row.insertCell(1).textContent = item.itemSize;
+                            row.insertCell(2).textContent = item.quantity;
+                            row.insertCell(3).textContent = formatCurrency(item.price);
+                        });
+
+                // Populate Stock Out for this item
+                itemOutReportTableBody.innerHTML = '';
+                stockOutLog.filter(item => item.itemName.toLowerCase() === itemName.toLowerCase())
+                        .forEach(item => {
+                            const row = itemOutReportTableBody.insertRow();
+                            row.insertCell(0).textContent = item.date;
+                            row.insertCell(1).textContent = item.itemSize;
+                            row.insertCell(2).textContent = item.quantity;
+                            row.insertCell(3).textContent = item.invoiceNo || 'N/A';
+                        });
+
+                // Populate Current Stock for this item (aggregated by size)
+                itemCurrentReportTableBody.innerHTML = '';
+                const itemAggregatedStock = {};
+                stockData.filter(item => item.itemName.toLowerCase() === itemName.toLowerCase())
+                        .forEach(item => {
+                            const key = item.itemSize;
+                            if (itemAggregatedStock[key]) {
+                                itemAggregatedStock[key].quantity += item.quantity;
+                            } else {
+                                itemAggregatedStock[key] = { ...item };
+                            }
+                        });
+                for (const key in itemAggregatedStock) {
+                    const item = itemAggregatedStock[key];
+                    const row = itemCurrentReportTableBody.insertRow();
+                    row.insertCell(0).textContent = item.itemSize;
+                    row.insertCell(1).textContent = item.quantity;
+                    row.insertCell(2).textContent = formatCurrency(item.price);
+                }
+            }
+
+            // Function to display JSON editor
+            function renderJsonEditor() {
+                hideAllSections();
+                jsonEditorSection.classList.remove('hidden');
+
+                jsonStockDataTextarea.value = JSON.stringify(stockData, null, 2);
+                jsonStockInLogTextarea.value = JSON.stringify(stockInLog, null, 2);
+                jsonStockOutLogTextarea.value = JSON.stringify(stockOutLog, null, 2);
+                jsonCartDataTextarea.value = JSON.stringify(cartItems, null, 2);
+                jsonCustomerDataTextarea.value = JSON.stringify(customers, null, 2);
+            }
+
+            // Function to save JSON data
+            saveJsonBtn.addEventListener('click', async () => { // Made async
+                try {
+                    const newStockData = JSON.parse(jsonStockDataTextarea.value);
+                    const newStockInLog = JSON.parse(jsonStockInLogTextarea.value);
+                    const newStockOutLog = JSON.parse(jsonStockOutLogTextarea.value);
+                    const newCartData = JSON.parse(jsonCartDataTextarea.value);
+                    const newCustomerData = JSON.parse(jsonCustomerDataTextarea.value);
+
+                    if (!Array.isArray(newStockData) || !Array.isArray(newStockInLog) || !Array.isArray(newStockOutLog) || !Array.isArray(newCartData) || !Array.isArray(newCustomerData)) {
+                        throw new Error("Parsed data must be arrays.");
+                    }
+
+                    stockData = newStockData;
+                    stockInLog = newStockInLog;
+                    stockOutLog = newStockOutLog;
+                    cartItems = newCartData;
+                    customers = newCustomerData;
+
+                    // Save all updated data to Firebase (and LocalStorage via saveToFirebase)
+                    await saveToFirebase(stockDataRef, stockData);
+                    await saveToFirebase(stockInLogRef, stockInLog);
+                    await saveToFirebase(stockOutLogRef, stockOutLog);
+                    await saveToFirebase(customersRef, customers); // Customers data also saved to Firebase
+                    saveToLocalStorage(); // Ensure cartItems is also saved locally
+
+                    alert('JSON data saved successfully! Please refresh the page or navigate to a view to see changes.');
+                    renderStockView(); // Go back to main stock view after saving
+                } catch (e) {
+                    alert('Error saving JSON data: ' + e.message + '\nPlease check your JSON format.');
+                }
+            });
+
+            // Function to cancel JSON editing
+            cancelJsonBtn.addEventListener('click', () => {
+                const confirmCancel = confirm("Are you sure you want to cancel? Any unsaved changes will be lost.");
+                if (confirmCancel) {
+                    renderStockView(); // Go back to main stock view
+                }
+            });
+
+            // --- Generate Invoice from Cart Functions ---
+
+            function renderInvoiceFromCart() {
+                hideAllSections();
+                sellInvoiceSection.classList.remove('hidden');
+
+                if (cartItems.length === 0) {
+                    alert('Your cart is empty. Please add items to the cart before generating an invoice.');
+                    renderStockView(); // Redirect to stock view if cart is empty
+                    return;
+                }
+
+                invoiceTableBody.innerHTML = '';
+                let total = 0;
+
+                cartItems.forEach((item) => {
+                    const row = invoiceTableBody.insertRow();
+                    const subtotal = item.quantity * item.price;
+                    total += subtotal;
+
+                    row.insertCell(0).textContent = item.itemName;
+                    row.insertCell(1).textContent = item.itemSize;
+                    row.insertCell(2).textContent = item.quantity;
+                    row.insertCell(3).textContent = formatCurrency(item.price);
+                    row.insertCell(4).textContent = formatCurrency(subtotal);
+                });
+                invoiceTotalDisplay.textContent = formatCurrency(total);
+
+                // Initialize paid and due amounts
+                paidAmountInput.value = total.toFixed(2);
+                
+                // Update paid and due display when paidAmountInput changes
+                paidAmountInput.oninput = calculateDueAmount;
+
+                // Set invoice date and generate number
+                invoiceDateDisplay.textContent = new Date().toLocaleDateString();
+                if (!invoiceNoDisplay.textContent || invoiceNoDisplay.textContent.startsWith('INV-')) {
+                    invoiceNoDisplay.textContent = generateInvoiceNumber();
+                }
+
+                // Pre-fill customer details if a phone number was previously entered
+                // And calculate total purchases and outstanding due for existing customer
+                const phone = customerPhoneInput.value.trim();
+                const existingCustomer = customers.find(c => c.phone === phone);
+                let currentCustomerOutstandingDue = 0;
+
+                if (existingCustomer) {
+                    customerNameInput.value = existingCustomer.name || '';
+                    customerAddressInput.value = existingCustomer.address || '';
+                    invoiceCustomerNameDisplay.textContent = existingCustomer.name || 'N/A';
+                    invoiceCustomerPhoneDisplay.textContent = existingCustomer.phone || 'N/A';
+
+                    existingCustomer.purchases.forEach(purchase => {
+                        currentCustomerOutstandingDue += purchase.dueAmount || 0;
+                    });
+
+                } else {
+                    invoiceCustomerNameDisplay.textContent = 'N/A';
+                    invoiceCustomerPhoneDisplay.textContent = 'N/A';
+                }
+
+                customerOutstandingDueOnInvoice.textContent = formatCurrency(currentCustomerOutstandingDue);
+                
+                // Call calculateDueAmount initially to set the correct display state
+                calculateDueAmount();
+            }
+
+            // NEW FUNCTION: Calculate Due Amount
+            function calculateDueAmount() {
+                const totalAmount = parseFloat(invoiceTotalDisplay.textContent.replace(' TK', '')) || 0;
+                const paidAmount = parseFloat(paidAmountInput.value) || 0;
+                let dueAmount = totalAmount - paidAmount;
+
+                // Ensure dueAmount is not negative
+                if (dueAmount < 0) {
+                    dueAmount = 0;
+                }
+
+                dueAmountDisplay.textContent = formatCurrency(dueAmount);
+
+                // Conditional hiding/showing of the due amount row
+                if (dueAmount <= 0) {
+                    dueAmountRow.classList.add('hidden');
+                } else {
+                    dueAmountRow.classList.remove('hidden');
+                }
+            }
+
+
+            finalizeSaleBtn.addEventListener('click', async () => { // Made async
+                if (cartItems.length === 0) {
+                    alert('No items in the invoice to finalize. Add items to cart first.');
+                    return;
+                }
+
+                const confirmSale = confirm('Are you sure you want to finalize this sale and record stock out? This action cannot be undone.');
+                if (!confirmSale) {
+                    return;
+                }
+
+                const date = new Date().toLocaleString();
+                const currentInvoiceNo = invoiceNoDisplay.textContent;
+                const customerPhone = customerPhoneInput.value.trim();
+                const customerName = customerNameInput.value.trim() || 'Guest';
+                const customerAddress = customerAddressInput.value.trim() || 'N/A';
+                const totalInvoiceAmount = parseFloat(invoiceTotalDisplay.textContent.replace(' TK', ''));
+                const paidAmount = parseFloat(paidAmountInput.value);
+                let dueAmount = totalInvoiceAmount - paidAmount;
+
+                // Ensure dueAmount for saving is not negative
+                if (dueAmount < 0) {
+                    dueAmount = 0;
+                }
+
+                // Validate paid amount
+                if (isNaN(paidAmount) || paidAmount < 0) {
+                    alert('Please enter a valid paid amount (non-negative number).');
+                    return;
+                }
+                if (paidAmount > totalInvoiceAmount) {
+                    alert('Paid amount cannot be greater than the total invoice amount.');
+                    return;
+                }
+
+
+                // Validate stock availability one last time before finalizing
+                for (const soldItem of cartItems) {
+                    let totalAvailableQuantity = 0;
+                    stockData.filter(i =>
+                        i.itemName.toLowerCase() === soldItem.itemName.toLowerCase() &&
+                        i.itemSize.toLowerCase() === soldItem.itemSize.toLowerCase()
+                    ).forEach(i => totalAvailableQuantity += i.quantity);
+
+                    if (totalAvailableQuantity < soldItem.quantity) {
+                        alert(`Cannot finalize sale: Not enough stock of "${soldItem.itemName}" (${soldItem.itemSize}). Available: ${totalAvailableQuantity}, Requested: ${soldItem.quantity}. Please adjust cart.`);
+                        return;
+                    }
+                }
+
+                // Proceed with stock reduction and logging
+                cartItems.forEach(soldItem => {
+                    // Find the exact item in stockData and deduct the quantity
+                    const stockItemIndex = stockData.findIndex(s =>
+                        s.itemName.toLowerCase() === soldItem.itemName.toLowerCase() &&
+                        s.itemSize.toLowerCase() === soldItem.itemSize.toLowerCase()
+                    );
+
+                    if (stockItemIndex !== -1) {
+                        stockData[stockItemIndex].quantity -= soldItem.quantity;
+                        if (stockData[stockItemIndex].quantity <= 0) {
+                            stockData.splice(stockItemIndex, 1); // Remove item if quantity becomes zero or less
+                        }
+                    }
+
+                    stockOutLog.push({
+                        date: date,
+                        itemName: soldItem.itemName,
+                        itemSize: soldItem.itemSize,
+                        quantity: soldItem.quantity,
+                        invoiceNo: currentInvoiceNo
+                    });
+                });
+
+                // Update customer purchase history
+                if (customerPhone) {
+                    let existingCustomer = customers.find(c => c.phone === customerPhone);
+                    const purchaseDetails = {
+                        invoiceNo: currentInvoiceNo,
+                        date: date,
+                        items: cartItems.map(item => ({
+                            itemName: item.itemName,
+                            itemSize: item.itemSize,
+                            quantity: item.quantity,
+                            unitPrice: item.price,
+                            subtotal: item.quantity * item.price
+                        })),
+                        totalAmount: totalInvoiceAmount,
+                        paidAmount: paidAmount,
+                        dueAmount: dueAmount // Store the calculated due amount
+                    };
+
+                    if (existingCustomer) {
+                        existingCustomer.name = customerName;
+                        existingCustomer.address = customerAddress;
+                        existingCustomer.purchases.push(purchaseDetails);
+                    } else {
+                        customers.push({
+                            phone: customerPhone,
+                            name: customerName,
+                            address: customerAddress,
+                            purchases: [purchaseDetails]
+                        });
+                    }
+                    await saveToFirebase(customersRef, customers); // Save customers data to Firebase
+                }
+
+                await saveToFirebase(stockDataRef, stockData); // Save stockData to Firebase
+                await saveToFirebase(stockOutLogRef, stockOutLog); // Save stockOutLog to Firebase
+
+                alert('Sale finalized and stock updated!');
+                cartItems = []; // Clear the cart after sale
+                saveToLocalStorage(); // Clear cart in LocalStorage too
+                invoiceNoDisplay.textContent = '';
+                customerPhoneInput.value = '';
+                customerNameInput.value = '';
+                customerAddressInput.value = '';
+                paidAmountInput.value = '0';
+                dueAmountDisplay.textContent = formatCurrency(0);
+                
+                // Hide the due amount row after finalization (as it's now 0 or hidden)
+                dueAmountRow.classList.add('hidden');
+
+                renderStockView(); // Redirect back to current stock view
+            });
+
+
+            // --- Customer Section Logic ---
+            function renderCustomersList() {
+                hideAllSections();
+                customersSection.classList.remove('hidden');
+                customerListTableBody.innerHTML = '';
+
+                if (customers.length === 0) {
+                    const row = customerListTableBody.insertRow();
+                    row.insertCell(0).colSpan = 5;
+                    row.cells[0].textContent = 'No customers found.';
+                    row.cells[0].style.textAlign = 'center';
+                    return;
+                }
+
+                customers.forEach(customer => {
+                    const row = customerListTableBody.insertRow();
+                    const phoneCell = row.insertCell(0);
+                    phoneCell.textContent = customer.phone;
+                    phoneCell.classList.add('customer-name-link');
+                    phoneCell.dataset.customerPhone = customer.phone;
+
+                    row.insertCell(1).textContent = customer.name || 'N/A';
+
+                    let totalPurchasesAmount = 0;
+                    let totalOutstandingDue = 0;
+                    customer.purchases.forEach(purchase => {
+                        totalPurchasesAmount += purchase.totalAmount || 0;
+                        totalOutstandingDue += purchase.dueAmount || 0;
+                    });
+                    row.insertCell(2).textContent = formatCurrency(totalPurchasesAmount);
+
+                    const outstandingDueCell = row.insertCell(3);
+                    outstandingDueCell.textContent = formatCurrency(totalOutstandingDue);
+                    if (totalOutstandingDue > 0) {
+                        outstandingDueCell.classList.add('due-amount-highlight');
+                    }
+
+                    row.insertCell(4).textContent = customer.purchases.length;
+                });
+            }
+
+            function renderCustomerReport(customerPhone) {
+                hideAllSections();
+                customerReportSection.classList.remove('hidden');
+
+                const customer = customers.find(c => c.phone === customerPhone);
+                if (!customer) {
+                    alert('Customer not found!');
+                    renderCustomersList();
+                    return;
+                }
+
+                customerReportNameSpan.textContent = customer.name || 'N/A';
+                customerReportPhoneSpan.textContent = customer.phone;
+                customerPurchaseHistoryDiv.innerHTML = '';
+
+                let grandTotalSpent = 0;
+                let grandTotalDue = 0;
+
+                if (customer.purchases.length === 0) {
+                    customerPurchaseHistoryDiv.innerHTML = '<p>No purchase history for this customer.</p>';
+                } else {
+                    customer.purchases.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach((purchase, purchaseIndex) => {
+                        const purchaseDiv = document.createElement('div');
+                        purchaseDiv.style.border = '1px solid #ccc';
+                        purchaseDiv.style.padding = '10px';
+                        purchaseDiv.style.marginBottom = '15px';
+                        purchaseDiv.style.borderRadius = '5px';
+                        purchaseDiv.style.backgroundColor = '#fefefe';
+
+                        grandTotalSpent += purchase.totalAmount;
+                        grandTotalDue += purchase.dueAmount || 0;
+
+                        let dueActionHtml = '';
+                        if (purchase.dueAmount > 0) {
+                            dueActionHtml = `
+                                <br>
+                                <strong>Pay Due:</strong>
+                                <input type="number" min="0" step="0.01" value="${purchase.dueAmount.toFixed(2)}" class="due-payment-input" id="dueInput_${customerPhone}_${purchaseIndex}">
+                                <button class="pay-due-btn" data-customer-phone="${customerPhone}" data-purchase-index="${purchaseIndex}">Record Payment</button>
+                            `;
+                        }
+
+                        purchaseDiv.innerHTML = `
+                            <h4>Invoice No: ${purchase.invoiceNo} (Date: ${purchase.date})</h4>
+                            <p>
+                                <strong>Total Amount:</strong> ${formatCurrency(purchase.totalAmount)}<br>
+                                <strong>Paid Amount:</strong> ${formatCurrency(purchase.paidAmount || 0)}<br>
+                                <strong>Due Amount:</strong> <span class="${purchase.dueAmount > 0 ? 'due-amount-highlight' : ''}">${formatCurrency(purchase.dueAmount || 0)}</span>
+                                ${dueActionHtml}
+                            </p>
+                            <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                                <thead>
+                                    <tr>
+                                        <th>Item Name</th>
+                                        <th>Size</th>
+                                        <th>Quantity</th>
+                                        <th>Unit Price (TK)</th>
+                                        <th>Subtotal (TK)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${purchase.items.map(item => `
+                                        <tr>
+                                            <td>${item.itemName}</td>
+                                            <td>${item.itemSize}</td>
+                                            <td>${item.quantity}</td>
+                                            <td>${formatCurrency(item.unitPrice)}</td>
+                                            <td>${formatCurrency(item.subtotal)}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                            <button class="download-customer-invoice-btn" data-invoice-no="${purchase.invoiceNo}" data-customer-phone="${customerPhone}">Download Invoice (JPEG)</button>
+                        `;
+                        customerPurchaseHistoryDiv.appendChild(purchaseDiv);
+                    });
+                }
+                customerTotalSpentSpan.textContent = formatCurrency(grandTotalSpent);
+                customerTotalDueSpan.textContent = formatCurrency(grandTotalDue);
+            }
+
+            // --- Record Due Payment Logic ---
+            document.addEventListener('click', async (e) => { // Made async
+                if (e.target.classList.contains('pay-due-btn')) {
+                    const btn = e.target;
+                    const customerPhone = btn.dataset.customerPhone;
+                    const purchaseIndex = parseInt(btn.dataset.purchaseIndex);
+                    const dueInput = document.getElementById(`dueInput_${customerPhone}_${purchaseIndex}`);
+                    const paymentAmount = parseFloat(dueInput.value);
+
+                    if (isNaN(paymentAmount) || paymentAmount <= 0) {
+                        alert('Please enter a valid positive amount to pay.');
+                        return;
+                    }
+
+                    const customer = customers.find(c => c.phone === customerPhone);
+                    if (!customer || !customer.purchases[purchaseIndex]) {
+                        alert('Error: Customer or purchase not found.');
+                        return;
+                    }
+
+                    const purchase = customer.purchases[purchaseIndex];
+                    if (paymentAmount > purchase.dueAmount) {
+                        alert(`Payment amount (${formatCurrency(paymentAmount)}) cannot exceed the outstanding due amount (${formatCurrency(purchase.dueAmount)}).`);
+                        return;
+                    }
+
+                    purchase.paidAmount = (purchase.paidAmount || 0) + paymentAmount;
+                    purchase.dueAmount = purchase.dueAmount - paymentAmount;
+
+                    await saveToFirebase(customersRef, customers); // Save updated customers data to Firebase
+                    alert(`Payment of ${formatCurrency(paymentAmount)} recorded for Invoice ${purchase.invoiceNo}. Remaining Due: ${formatCurrency(purchase.dueAmount)}`);
+                    renderCustomerReport(customerPhone); // Re-render the customer report to show updated balances
+                }
+            });
+
+            // NEW LOGIC: Download Invoice from Customer Report Section
+            document.addEventListener('click', async (e) => {
+                if (e.target.classList.contains('download-customer-invoice-btn')) {
+                    const btn = e.target;
+                    const invoiceNo = btn.dataset.invoiceNo;
+                    const customerPhone = btn.dataset.customerPhone;
+
+                    const customer = customers.find(c => c.phone === customerPhone);
+                    if (!customer) {
+                        alert('Customer not found for this invoice.');
+                        return;
+                    }
+
+                    const purchase = customer.purchases.find(p => p.invoiceNo === invoiceNo);
+                    if (!purchase) {
+                        alert('Invoice not found for this customer.');
+                        return;
+                    }
+
+                    // Populate the hidden downloadable invoice div with data from the specific purchase
+                    downloadInvoiceDate.textContent = purchase.date;
+                    downloadInvoiceNo.textContent = purchase.invoiceNo;
+                    downloadCustomerName.textContent = customer.name || 'N/A';
+                    downloadCustomerContact.textContent = customer.phone || 'N/A';
+                    generatedDateTime.textContent = new Date().toLocaleString();
+                    downloadInvoiceTableBody.innerHTML = '';
+
+                    purchase.items.forEach(item => {
+                        const row = downloadInvoiceTableBody.insertRow();
+                        row.insertCell(0).textContent = item.itemName;
+                        row.insertCell(1).textContent = item.itemSize;
+                        row.insertCell(2).textContent = item.quantity;
+                        row.insertCell(3).textContent = formatCurrency(item.unitPrice);
+                        row.insertCell(4).textContent = formatCurrency(item.subtotal);
+                    });
+                    
+                    downloadInvoiceTotal.textContent = formatCurrency(purchase.totalAmount);
+                    downloadInvoicePaid.textContent = formatCurrency(purchase.paidAmount);
+                    downloadInvoiceDue.textContent = formatCurrency(purchase.dueAmount);
+
+                    // Conditionally hide 'Due' if 0
+                    const downloadDueDiv = downloadableInvoiceDiv.querySelector('#downloadInvoiceDue').closest('div');
+                    if (purchase.dueAmount <= 0) {
+                        downloadDueDiv.classList.add('hidden');
+                    } else {
+                        downloadDueDiv.classList.remove('hidden');
+                    }
+                    // Ensure paid is always visible
+                    downloadableInvoiceDiv.querySelector('#downloadInvoicePaid').closest('div').classList.remove('hidden');
+
+
+                    downloadableInvoiceDiv.style.position = 'absolute';
+                    downloadableInvoiceDiv.style.left = '-9999px';
+                    downloadableInvoiceDiv.style.top = '-9999px';
+                    downloadableInvoiceDiv.classList.remove('hidden');
+
+                    try {
+                        if (typeof html2canvas === 'undefined') {
+                            console.error("html2canvas library not loaded. Please check the CDN link.");
+                            alert("Error: Image generation library not loaded. Cannot download invoice.");
+                            return;
+                        }
+
+                        const canvas = await html2canvas(downloadableInvoiceDiv, {
+                            scale: 2,
+                            useCORS: true,
+                            logging: true,
+                            onclone: (document) => {
+                                // Ensure the paid section is visible in the cloned document for rendering
+                                document.querySelector('#downloadableInvoice #downloadInvoicePaid').closest('div').classList.remove('hidden');
+                                // Conditionally hide due in the cloned document as well
+                                const clonedDueAmount = parseFloat(document.getElementById('downloadInvoiceDue').textContent.replace(' TK', '')) || 0;
+                                if (clonedDueAmount <= 0) {
+                                    document.querySelector('#downloadableInvoice #downloadInvoiceDue').closest('div').classList.add('hidden');
+                                } else {
+                                    document.querySelector('#downloadableInvoice #downloadInvoiceDue').closest('div').classList.remove('hidden');
+                                }
+                            }
+                        });
+
+                        const imageDataURL = canvas.toDataURL('image/jpeg', 0.9);
+
+                        const link = document.createElement('a');
+                        link.href = imageDataURL;
+                        link.download = `Invoice_${purchase.invoiceNo}_${customer.name || 'Customer'}.jpeg`;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+
+                        alert('Invoice downloaded successfully!');
+
+                    } catch (error) {
+                        console.error('Error generating invoice image:', error);
+                        alert('Failed to generate invoice image. Please check the console for details and ensure all content is properly rendered. This could be due to a "tainted canvas" issue if external content (like images from another domain) is present.');
+                    } finally {
+                        downloadableInvoiceDiv.classList.add('hidden');
+                        downloadableInvoiceDiv.style.position = '';
+                        downloadableInvoiceDiv.style.left = '';
+                        downloadableInvoiceDiv.style.top = '';
+                    }
+                }
+            });
+
+
+            // --- Event Listeners for Navigation Buttons ---
+            btnStockView.addEventListener('click', renderStockView);
+            btnStockEntry.addEventListener('click', () => { hideAllSections(); stockEntrySection.classList.remove('hidden'); });
+            btnStockOut.addEventListener('click', () => { hideAllSections(); stockOutSection.classList.remove('hidden'); });
+            btnShowAllData.addEventListener('click', renderAllData);
+            btnJsonEdit.addEventListener('click', renderJsonEditor);
+            btnSellInvoice.addEventListener('click', renderInvoiceFromCart);
+            btnCustomers.addEventListener('click', renderCustomersList);
+            btnOverallReport.addEventListener('click', renderOverallReport); // New button event listener
+            backToAllDataBtn.addEventListener('click', renderAllData);
+            backToCartBtn.addEventListener('click', renderStockView); // Redirect "Back to Cart" to Stock View
+            backToCustomersListBtn.addEventListener('click', renderCustomersList);
+
+            // Event listener for clicking on item names in "Show All Data"
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('item-name-link')) {
+                    const itemName = e.target.dataset.itemName;
+                    if (itemName) {
+                        renderItemReport(itemName);
+                    }
+                } else if (e.target.classList.contains('customer-name-link')) {
+                    const customerPhone = e.target.dataset.customerPhone;
+                    if (customerPhone) {
+                        renderCustomerReport(customerPhone);
+                    }
+                }
+            });
+
+            // Auto-fill customer details from phone number input and update customer summary on invoice
+            customerPhoneInput.addEventListener('input', () => {
+                const phone = customerPhoneInput.value.trim();
+                const existingCustomer = customers.find(c => c.phone === phone);
+                let totalDue = 0;
+
+                if (existingCustomer) {
+                    customerNameInput.value = existingCustomer.name || '';
+                    customerAddressInput.value = existingCustomer.address || '';
+                    invoiceCustomerNameDisplay.textContent = existingCustomer.name || 'N/A';
+                    invoiceCustomerPhoneDisplay.textContent = existingCustomer.phone || 'N/A';
+
+                    existingCustomer.purchases.forEach(purchase => {
+                        totalDue += purchase.dueAmount || 0;
+                    });
+                } else {
+                    // Only clear if the user hasn't explicitly typed something after the phone number changed
+                    // This prevents clearing user-entered data if they type name/address before phone
+                    if (!customerNameInput.dataset.userEdited) {
+                        customerNameInput.value = '';
+                    }
+                    if (!customerAddressInput.dataset.userEdited) {
+                        customerAddressInput.value = '';
+                    }
+                    invoiceCustomerNameDisplay.textContent = phone ? phone : 'N/A'; // Show phone even if new customer
+                    invoiceCustomerPhoneDisplay.textContent = phone ? phone : 'N/A';
+                }
+                customerOutstandingDueOnInvoice.textContent = formatCurrency(totalDue);
+            });
+
+            customerNameInput.addEventListener('input', () => {
+                customerNameInput.dataset.userEdited = 'true';
+                invoiceCustomerNameDisplay.textContent = customerNameInput.value.trim() || 'N/A';
+            });
+            customerAddressInput.addEventListener('input', () => {
+                customerAddressInput.dataset.userEdited = 'true';
+            });
+
+
+            // Initial render on page load is handled by the DOMContentLoaded event listener which
+            // conditionally loads from LocalStorage if offline, or waits for Firebase if online.
+            // renderStockView() is called after data is available.
+        });
+    </script>
+</body>
+</html>
