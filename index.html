@@ -224,6 +224,12 @@
             background-color: #fefefe;
             border-radius: 8px;
         }
+        .invoice-logo {
+            display: block;
+            margin: 0 auto 20px;
+            max-width: 150px;
+            height: auto;
+        }
 
         #invoiceContainer h3 {
             text-align: center;
@@ -707,20 +713,47 @@
 
             <h3>Current Stock Data (`massStockData`)</h3>
             <textarea id="jsonStockData" rows="10"></textarea>
+            <button id="saveStockDataJson" class="save">Save Stock Data</button>
 
             <h3>Stock In Log (`massStockInLog`)</h3>
             <textarea id="jsonStockInLog" rows="10"></textarea>
+            <button id="saveStockInLogJson" class="save">Save Stock In Log</button>
 
             <h3>Stock Out Log (`massStockOutLog`)</h3>
             <textarea id="jsonStockOutLog" rows="10"></textarea>
+            <button id="saveStockOutLogJson" class="save">Save Stock Out Log</button>
 
             <h3>Cart Data (`massCartItems`)</h3>
             <textarea id="jsonCartData" rows="5"></textarea>
+            <button id="saveCartDataJson" class="save">Save Cart Data</button>
 
             <h3>Customer Data (`massCustomers`)</h3>
             <textarea id="jsonCustomerData" rows="10"></textarea>
-            <button id="saveJson" class="save">Save JSON</button>
+            <button id="saveCustomerDataJson" class="save">Save Customer Data</button>
+
             <button id="cancelJson" class="cancel">Cancel</button>
+        </section>
+        
+        <section id="cartViewSection" class="hidden">
+            <h2>Your Cart</h2>
+            <table id="cartTable">
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Size</th>
+                        <th>Quantity</th>
+                        <th>Unit Price (TK)</th>
+                        <th>Subtotal (TK)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="cartTableBody">
+                </tbody>
+            </table>
+            <div class="cart-checkout-buttons">
+                <button id="goToInvoiceBtn">Go to Invoice</button>
+                <button id="clearCartBtn">Clear Cart</button>
+            </div>
         </section>
 
         <section id="sellInvoiceSection" class="hidden">
@@ -728,6 +761,7 @@
             <p>Items in this invoice are pulled directly from your cart.</p>
 
             <div id="invoiceContainer">
+                <img src="mass-logo.png" alt="MASS Company Logo" class="invoice-logo">
                 <h3>Invoice</h3>
                 <div id="customerDetailsForm">
                     <p>Enter Customer Details (Optional for direct sale):</p>
@@ -786,6 +820,7 @@
         </section>
 
         <div id="downloadableInvoice" class="hidden">
+            <img src="mass-logo.png" alt="MASS Company Logo" class="invoice-logo">
             <h1>Modern Apparel Style Solution (MASS) <br>Invoice</h1>
             <div class="invoice-details">
                 <div>
@@ -875,12 +910,7 @@
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
-        const database = getDatabase(app); // Firebase Realtime Database instance
-
-        // Global variables to track online/offline status and data loaded status
-        let isOnline = navigator.onLine;
-        let firebaseDataLoaded = false;
-        let localDataInitialized = false; // To prevent multiple initial loads from local storage
+        const database = getDatabase(app);
 
         // References to Firebase paths
         const stockDataRef = ref(database, 'stockData');
@@ -892,186 +922,66 @@
         let stockData = [];
         let stockInLog = [];
         let stockOutLog = [];
-        let cartItems = JSON.parse(localStorage.getItem('massCartItems')) || [];
-        let customers = []; // Will be loaded from Firebase/LocalStorage
+        let cartItems = []; // Cart is now just a temporary in-memory variable
+        let customers = [];
 
         // --- Utility Functions for Data Handling ---
 
-        // Function to save data to LocalStorage
-        function saveToLocalStorage() {
-            localStorage.setItem('massStockData', JSON.stringify(stockData));
-            localStorage.setItem('massStockInLog', JSON.stringify(stockInLog));
-            localStorage.setItem('massStockOutLog', JSON.stringify(stockOutLog));
-            localStorage.setItem('massCartItems', JSON.stringify(cartItems)); // Cart remains local for temporary use
-            localStorage.setItem('massCustomers', JSON.stringify(customers));
-            console.log('Data saved to LocalStorage.');
-        }
-
-        // Function to load data from LocalStorage
-        function loadFromLocalStorage() {
-            stockData = JSON.parse(localStorage.getItem('massStockData')) || [];
-            stockInLog = JSON.parse(localStorage.getItem('massStockInLog')) || [];
-            stockOutLog = JSON.parse(localStorage.getItem('massStockOutLog')) || [];
-            cartItems = JSON.parse(localStorage.getItem('massCartItems')) || [];
-            customers = JSON.parse(localStorage.getItem('massCustomers')) || [];
-            localDataInitialized = true;
-            console.log('Data loaded from LocalStorage.');
-        }
-
         // Function to save data to Firebase
         async function saveToFirebase(dataRef, data) {
-            if (isOnline) {
-                try {
-                    await set(dataRef, data);
-                    console.log(`Data saved to Firebase: ${dataRef.key}`);
-                } catch (error) {
-                    console.error(`Error saving data to Firebase ${dataRef.key}:`, error);
-                    alert('Error saving data to cloud. Working offline.');
-                }
-            } else {
-                console.log(`Currently offline. Changes for ${dataRef.key} will be saved locally.`);
-            }
-            saveToLocalStorage(); // Always save to LocalStorage regardless of online status
-        }
-
-        // Function to sync LocalStorage data to Firebase
-        async function syncLocalToFirebase() {
-            if (!isOnline) return; // Only sync if online
-
-            console.log('Attempting to sync local data to Firebase...');
-
-            const localStockData = JSON.parse(localStorage.getItem('massStockData')) || [];
-            const localStockInLog = JSON.parse(localStorage.getItem('massStockInLog')) || [];
-            const localStockOutLog = JSON.parse(localStorage.getItem('massStockOutLog')) || [];
-            const localCustomers = JSON.parse(localStorage.getItem('massCustomers')) || [];
-
-            let syncNeeded = false;
-            // Compare stringified versions for simplicity. For large datasets, a more efficient diffing might be needed.
-            if (JSON.stringify(localStockData) !== JSON.stringify(stockData)) {
-                await saveToFirebase(stockDataRef, localStockData);
-                stockData = localStockData; // Update global state from local after successful Firebase save
-                syncNeeded = true;
-            }
-            if (JSON.stringify(localStockInLog) !== JSON.stringify(stockInLog)) {
-                await saveToFirebase(stockInLogRef, localStockInLog);
-                stockInLog = localStockInLog;
-                syncNeeded = true;
-            }
-            if (JSON.stringify(localStockOutLog) !== JSON.stringify(stockOutLog)) {
-                await saveToFirebase(stockOutLogRef, localStockOutLog);
-                stockOutLog = localStockOutLog;
-                syncNeeded = true;
-            }
-            if (JSON.stringify(localCustomers) !== JSON.stringify(customers)) {
-                await saveToFirebase(customersRef, localCustomers);
-                customers = localCustomers;
-                syncNeeded = true;
-            }
-
-            if (syncNeeded) {
-                alert('Local data successfully synchronized with Firebase!');
-                renderStockView(); // Re-render to show updated data
-            } else {
-                console.log('No significant local data changes to sync to Firebase.');
+            try {
+                await set(dataRef, data);
+                console.log(`Data saved to Firebase: ${dataRef.key}`);
+            } catch (error) {
+                console.error(`Error saving data to Firebase ${dataRef.key}:`, error);
+                alert('Error saving data to cloud. Check your internet connection.');
             }
         }
-
 
         // --- Firebase Data Listener (Primary Data Source) ---
-        // These `onValue` listeners will keep your `stockData`, `stockInLog`, `stockOutLog`,
-        // and `customers` arrays updated from Firebase in real-time.
-        // They also ensure LocalStorage is kept in sync with the Firebase version.
         onValue(stockDataRef, (snapshot) => {
             if (snapshot.exists()) {
-                const firebaseData = snapshot.val();
-                if (JSON.stringify(stockData) !== JSON.stringify(firebaseData)) { // Only update if data is truly different
-                    stockData = firebaseData;
-                    console.log("StockData from Firebase:", stockData);
-                    saveToLocalStorage(); // Keep LocalStorage updated with Firebase data
-                    renderStockView(); // Re-render UI after data update
-                }
+                stockData = snapshot.val();
+                console.log("StockData from Firebase:", stockData);
+                renderStockView(); // Re-render UI after data update
             } else {
                 stockData = []; // If data doesn't exist in Firebase, initialize as empty
-                saveToLocalStorage();
                 console.log("No stockData in Firebase.");
             }
-            firebaseDataLoaded = true; // Mark Firebase data as loaded for future sync decisions
-        }, {
-            onlyOnce: false // Listen for real-time updates
         });
 
         onValue(stockInLogRef, (snapshot) => {
             if (snapshot.exists()) {
-                const firebaseData = snapshot.val();
-                if (JSON.stringify(stockInLog) !== JSON.stringify(firebaseData)) {
-                    stockInLog = firebaseData;
-                    console.log("StockInLog from Firebase:", stockInLog);
-                    saveToLocalStorage();
-                }
+                stockInLog = snapshot.val();
+                console.log("StockInLog from Firebase:", stockInLog);
             } else {
                 stockInLog = [];
-                saveToLocalStorage();
                 console.log("No stockInLog in Firebase.");
             }
         });
 
         onValue(stockOutLogRef, (snapshot) => {
             if (snapshot.exists()) {
-                const firebaseData = snapshot.val();
-                if (JSON.stringify(stockOutLog) !== JSON.stringify(firebaseData)) {
-                    stockOutLog = firebaseData;
-                    console.log("StockOutLog from Firebase:", stockOutLog);
-                    saveToLocalStorage();
-                }
+                stockOutLog = snapshot.val();
+                console.log("StockOutLog from Firebase:", stockOutLog);
             } else {
                 stockOutLog = [];
-                saveToLocalStorage();
                 console.log("No stockOutLog in Firebase.");
             }
         });
 
         onValue(customersRef, (snapshot) => {
             if (snapshot.exists()) {
-                const firebaseData = snapshot.val();
-                if (JSON.stringify(customers) !== JSON.stringify(firebaseData)) {
-                    customers = firebaseData;
-                    console.log("Customers from Firebase:", customers);
-                    saveToLocalStorage();
-                }
+                customers = snapshot.val();
+                console.log("Customers from Firebase:", customers);
             } else {
                 customers = [];
-                saveToLocalStorage();
                 console.log("No customers in Firebase.");
             }
         });
 
-        // --- Network Status Handling ---
-        window.addEventListener('online', () => {
-            isOnline = true;
-            console.log('You are online!');
-            alert('You are now online. Attempting to synchronize data with Firebase...');
-            syncLocalToFirebase(); // Sync local changes to Firebase when online
-        });
-
-        window.addEventListener('offline', () => {
-            isOnline = false;
-            console.log('You are offline!');
-            alert('You are now offline. Changes will be saved locally.');
-        });
-
         // JavaScript Logic
         document.addEventListener('DOMContentLoaded', () => {
-            // Check initial online status
-            isOnline = navigator.onLine;
-
-            if (!isOnline && !localDataInitialized) {
-                console.log('Starting offline. Loading data from LocalStorage.');
-                loadFromLocalStorage();
-                renderStockView(); // Render immediately with local data
-            }
-            // If online, onValue listeners will handle loading data from Firebase and then render.
-            // No explicit 'loadFromFirebase' needed here, as `onValue` handles initial data fetch.
-
             // DOM Elements
             const contentDiv = document.getElementById('content');
             const stockViewSection = document.getElementById('stockViewSection');
@@ -1080,10 +990,11 @@
             const showAllDataSection = document.getElementById('showAllDataSection');
             const itemReportSection = document.getElementById('itemReportSection');
             const jsonEditorSection = document.getElementById('jsonEditorSection');
+            const cartViewSection = document.getElementById('cartViewSection');
             const sellInvoiceSection = document.getElementById('sellInvoiceSection');
             const customersSection = document.getElementById('customersSection');
             const customerReportSection = document.getElementById('customerReportSection');
-            const overallReportSection = document.getElementById('overallReportSection'); // New
+            const overallReportSection = document.getElementById('overallReportSection');
 
             // Buttons
             const btnStockView = document.getElementById('btnStockView');
@@ -1093,9 +1004,8 @@
             const btnJsonEdit = document.getElementById('btnJsonEdit');
             const btnSellInvoice = document.getElementById('btnSellInvoice');
             const btnCustomers = document.getElementById('btnCustomers');
-            const btnOverallReport = document.getElementById('btnOverallReport'); // New
+            const btnOverallReport = document.getElementById('btnOverallReport');
             const backToAllDataBtn = document.getElementById('backToAllData');
-            const saveJsonBtn = document.getElementById('saveJson');
             const cancelJsonBtn = document.getElementById('cancelJson');
             const backToCustomersListBtn = document.getElementById('backToCustomersList');
 
@@ -1112,25 +1022,30 @@
             const itemOutReportTableBody = document.querySelector('#itemOutReportTable tbody');
             const itemCurrentReportTableBody = document.querySelector('#itemCurrentReportTable tbody');
             const customerListTableBody = document.getElementById('customerListTableBody');
+            const cartTableBody = document.getElementById('cartTableBody');
+
 
             // Textareas for JSON editing
             const jsonStockDataTextarea = document.getElementById('jsonStockData');
             const jsonStockInLogTextarea = document.getElementById('jsonStockInLog');
             const jsonStockOutLogTextarea = document.getElementById('jsonStockOutLog');
             const jsonCartDataTextarea = document.getElementById('jsonCartData');
-            const jsonCustomerDataTextarea = document.getElementById('jsonStockData'); // Corrected from jsonStockData
+            const jsonCustomerDataTextarea = document.getElementById('jsonCustomerData');
+            const saveStockDataJsonBtn = document.getElementById('saveStockDataJson');
+            const saveStockInLogJsonBtn = document.getElementById('saveStockInLogJson');
+            const saveStockOutLogJsonBtn = document.getElementById('saveStockOutLogJson');
+            const saveCartDataJsonBtn = document.getElementById('saveCartDataJson');
+            const saveCustomerDataJsonBtn = document.getElementById('saveCustomerDataJson');
 
-            // Cart Specific Elements (still needed for internal logic)
-            // cartItems is already declared globally and managed by Firebase/LocalStorage sync
 
             // Sell & Invoice Specific Elements
             const invoiceTableBody = document.getElementById('invoiceTableBody');
             const invoiceTotalDisplay = document.getElementById('invoiceTotal');
             const paidAmountInput = document.getElementById('paidAmount');
             const dueAmountDisplay = document.getElementById('dueAmountDisplay');
-            const dueAmountRow = document.getElementById('dueAmountRow'); // Get the row for due amount
+            const dueAmountRow = document.getElementById('dueAmountRow');
             const finalizeSaleBtn = document.getElementById('finalizeSaleBtn');
-            const backToCartBtn = document.getElementById('backToCartBtn'); // Kept, but re-directs to stock view
+            const backToCartBtn = document.getElementById('backToCartBtn');
             const invoiceDateDisplay = document.getElementById('invoiceDateDisplay');
             const invoiceNoDisplay = document.getElementById('invoiceNoDisplay');
             const customerPhoneInput = document.getElementById('customerPhone');
@@ -1139,6 +1054,9 @@
             const invoiceCustomerNameDisplay = document.getElementById('invoiceCustomerName');
             const invoiceCustomerPhoneDisplay = document.getElementById('invoiceCustomerPhone');
             const customerOutstandingDueOnInvoice = document.getElementById('customerOutstandingDueOnInvoice');
+            const goToInvoiceBtn = document.getElementById('goToInvoiceBtn');
+            const clearCartBtn = document.getElementById('clearCartBtn');
+
 
             // Elements for hidden downloadable invoice
             const downloadableInvoiceDiv = document.getElementById('downloadableInvoice');
@@ -1283,48 +1201,23 @@
                         });
                     }
 
-                    saveToLocalStorage(); // Only save cart to LocalStorage
                     alert(`${quantityToAdd} x "${itemName}" (${itemSize}) added to cart!`);
                 }
             });
 
-
-            function updateCartItemQuantity(index, newQuantity) {
-                if (isNaN(newQuantity) || newQuantity <= 0) {
-                    alert('Quantity must be a positive number.');
-                    return;
-                }
-
-                const itemToUpdate = cartItems[index];
-                let totalAvailableQuantity = 0;
-                stockData.filter(i =>
-                    i.itemName.toLowerCase() === itemToUpdate.itemName.toLowerCase() &&
-                    i.itemSize.toLowerCase() === itemToUpdate.itemSize.toLowerCase()
-                ).forEach(i => totalAvailableQuantity += i.quantity);
-
-                if (newQuantity > totalAvailableQuantity) {
-                    alert(`Cannot update. Only ${totalAvailableQuantity} available for "${itemToUpdate.itemName}" (${itemToUpdate.itemSize}).`);
-                    return;
-                }
-
-                itemToUpdate.quantity = newQuantity;
-                saveToLocalStorage(); // Update cart in LocalStorage
-            }
-
-            function removeFromCart(index) {
-                cartItems.splice(index, 1);
-                saveToLocalStorage(); // Update cart in LocalStorage
-            }
-
-
             // Function to handle stock entry
-            stockEntryForm.addEventListener('submit', async (e) => { // Made async
+            stockEntryForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const itemName = document.getElementById('entryItemName').value.trim();
                 const itemSize = document.getElementById('entryItemSize').value.trim();
                 const quantity = parseInt(document.getElementById('entryQuantity').value);
                 const price = parseFloat(document.getElementById('entryPrice').value);
-                const date = new Date().toLocaleString();
+                
+                const now = new Date();
+                const day = String(now.getDate()).padStart(2, '0');
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const year = now.getFullYear();
+                const date = `${day}/${month}/${year}`;
 
                 if (itemName && itemSize && quantity > 0 && price >= 0) {
                     let itemFound = false;
@@ -1332,7 +1225,7 @@
                         if (stockData[i].itemName.toLowerCase() === itemName.toLowerCase() &&
                             stockData[i].itemSize.toLowerCase() === itemSize.toLowerCase()) {
                             stockData[i].quantity += quantity;
-                            stockData[i].price = price; // Update price to the latest entry price
+                            stockData[i].price = price;
                             itemFound = true;
                             break;
                         }
@@ -1344,24 +1237,28 @@
 
                     stockInLog.push({ date, itemName, itemSize, quantity, price });
 
-                    await saveToFirebase(stockDataRef, stockData); // Save stockData to Firebase
-                    await saveToFirebase(stockInLogRef, stockInLog); // Save stockInLog to Firebase
+                    await saveToFirebase(stockDataRef, stockData);
+                    await saveToFirebase(stockInLogRef, stockInLog);
 
                     alert('Stock added successfully!');
                     stockEntryForm.reset();
-                    renderStockView(); // Refresh current stock display
                 } else {
                     alert('Please fill in all fields correctly.');
                 }
             });
 
             // Function to handle stock out (direct removal - separate from invoice)
-            stockOutForm.addEventListener('submit', async (e) => { // Made async
+            stockOutForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const itemName = document.getElementById('outItemName').value.trim();
                 const itemSize = document.getElementById('outItemSize').value.trim();
                 const quantityToRemove = parseInt(document.getElementById('outQuantity').value);
-                const date = new Date().toLocaleString();
+                
+                const now = new Date();
+                const day = String(now.getDate()).padStart(2, '0');
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const year = now.getFullYear();
+                const date = `${day}/${month}/${year}`;
 
                 if (itemName && itemSize && quantityToRemove > 0) {
                     let itemFoundAndRemoved = false;
@@ -1386,12 +1283,11 @@
                     }
 
                     if (itemFoundAndRemoved) {
-                        await saveToFirebase(stockDataRef, stockData); // Save stockData to Firebase
-                        await saveToFirebase(stockOutLogRef, stockOutLog); // Save stockOutLog to Firebase
+                        await saveToFirebase(stockDataRef, stockData);
+                        await saveToFirebase(stockOutLogRef, stockOutLog);
 
                         alert('Stock removed successfully!');
                         stockOutForm.reset();
-                        renderStockView(); // Refresh current stock display
                     } else {
                         alert('Item not found or incorrect details.');
                     }
@@ -1550,35 +1446,68 @@
             }
 
             // Function to save JSON data
-            saveJsonBtn.addEventListener('click', async () => { // Made async
+            saveStockDataJsonBtn.addEventListener('click', async () => {
                 try {
                     const newStockData = JSON.parse(jsonStockDataTextarea.value);
-                    const newStockInLog = JSON.parse(jsonStockInLogTextarea.value);
-                    const newStockOutLog = JSON.parse(jsonStockOutLogTextarea.value);
-                    const newCartData = JSON.parse(jsonCartDataTextarea.value);
-                    const newCustomerData = JSON.parse(jsonCustomerDataTextarea.value);
-
-                    if (!Array.isArray(newStockData) || !Array.isArray(newStockInLog) || !Array.isArray(newStockOutLog) || !Array.isArray(newCartData) || !Array.isArray(newCustomerData)) {
-                        throw new Error("Parsed data must be arrays.");
+                    if (!Array.isArray(newStockData)) {
+                        throw new Error("Parsed data must be an array.");
                     }
-
-                    stockData = newStockData;
-                    stockInLog = newStockInLog;
-                    stockOutLog = newStockOutLog;
-                    cartItems = newCartData;
-                    customers = newCustomerData;
-
-                    // Save all updated data to Firebase (and LocalStorage via saveToFirebase)
-                    await saveToFirebase(stockDataRef, stockData);
-                    await saveToFirebase(stockInLogRef, stockInLog);
-                    await saveToFirebase(stockOutLogRef, stockOutLog);
-                    await saveToFirebase(customersRef, customers); // Customers data also saved to Firebase
-                    saveToLocalStorage(); // Ensure cartItems is also saved locally
-
-                    alert('JSON data saved successfully! Please refresh the page or navigate to a view to see changes.');
-                    renderStockView(); // Go back to main stock view after saving
+                    await saveToFirebase(stockDataRef, newStockData);
+                    alert('Stock Data JSON saved successfully!');
                 } catch (e) {
-                    alert('Error saving JSON data: ' + e.message + '\nPlease check your JSON format.');
+                    alert('Error saving Stock Data: ' + e.message + '\nPlease check your JSON format.');
+                }
+            });
+
+            saveStockInLogJsonBtn.addEventListener('click', async () => {
+                try {
+                    const newStockInLog = JSON.parse(jsonStockInLogTextarea.value);
+                    if (!Array.isArray(newStockInLog)) {
+                        throw new Error("Parsed data must be an array.");
+                    }
+                    await saveToFirebase(stockInLogRef, newStockInLog);
+                    alert('Stock In Log JSON saved successfully!');
+                } catch (e) {
+                    alert('Error saving Stock In Log: ' + e.message + '\nPlease check your JSON format.');
+                }
+            });
+
+            saveStockOutLogJsonBtn.addEventListener('click', async () => {
+                try {
+                    const newStockOutLog = JSON.parse(jsonStockOutLogTextarea.value);
+                    if (!Array.isArray(newStockOutLog)) {
+                        throw new Error("Parsed data must be an array.");
+                    }
+                    await saveToFirebase(stockOutLogRef, newStockOutLog);
+                    alert('Stock Out Log JSON saved successfully!');
+                } catch (e) {
+                    alert('Error saving Stock Out Log: ' + e.message + '\nPlease check your JSON format.');
+                }
+            });
+
+            saveCustomerDataJsonBtn.addEventListener('click', async () => {
+                try {
+                    const newCustomerData = JSON.parse(jsonCustomerDataTextarea.value);
+                    if (!Array.isArray(newCustomerData)) {
+                        throw new Error("Parsed data must be an array.");
+                    }
+                    await saveToFirebase(customersRef, newCustomerData);
+                    alert('Customer Data JSON saved successfully!');
+                } catch (e) {
+                    alert('Error saving Customer Data: ' + e.message + '\nPlease check your JSON format.');
+                }
+            });
+
+            saveCartDataJsonBtn.addEventListener('click', () => {
+                try {
+                    const newCartData = JSON.parse(jsonCartDataTextarea.value);
+                    if (!Array.isArray(newCartData)) {
+                        throw new Error("Parsed data must be an array.");
+                    }
+                    cartItems = newCartData;
+                    alert('Cart Data JSON loaded successfully! This data is not saved to the cloud.');
+                } catch (e) {
+                    alert('Error loading Cart Data: ' + e.message + '\nPlease check your JSON format.');
                 }
             });
 
@@ -1586,11 +1515,41 @@
             cancelJsonBtn.addEventListener('click', () => {
                 const confirmCancel = confirm("Are you sure you want to cancel? Any unsaved changes will be lost.");
                 if (confirmCancel) {
-                    renderStockView(); // Go back to main stock view
+                    renderStockView();
                 }
             });
 
-            // --- Generate Invoice from Cart Functions ---
+            // --- Cart and Invoice Logic ---
+            function renderCartView() {
+                hideAllSections();
+                cartViewSection.classList.remove('hidden');
+                cartTableBody.innerHTML = '';
+            
+                if (cartItems.length === 0) {
+                    cartTableBody.innerHTML = `<tr><td colspan="6" style="text-align: center;">Your cart is empty.</td></tr>`;
+                    return;
+                }
+            
+                cartItems.forEach((item, index) => {
+                    const row = cartTableBody.insertRow();
+                    const subtotal = item.quantity * item.price;
+                    row.insertCell(0).textContent = item.itemName;
+                    row.insertCell(1).textContent = item.itemSize;
+            
+                    const quantityCell = row.insertCell(2);
+                    quantityCell.innerHTML = `<input type="number" value="${item.quantity}" min="1" class="cart-quantity-input" data-index="${index}">`;
+            
+                    row.insertCell(3).textContent = formatCurrency(item.price);
+                    row.insertCell(4).textContent = formatCurrency(subtotal);
+                    const actionCell = row.insertCell(5);
+                    actionCell.innerHTML = `
+                        <div class="cart-action-buttons">
+                            <button class="update-cart" data-index="${index}">Update</button>
+                            <button class="remove-from-cart" data-index="${index}">Remove</button>
+                        </div>
+                    `;
+                });
+            }
 
             function renderInvoiceFromCart() {
                 hideAllSections();
@@ -1598,7 +1557,7 @@
 
                 if (cartItems.length === 0) {
                     alert('Your cart is empty. Please add items to the cart before generating an invoice.');
-                    renderStockView(); // Redirect to stock view if cart is empty
+                    renderCartView();
                     return;
                 }
 
@@ -1620,18 +1579,20 @@
 
                 // Initialize paid and due amounts
                 paidAmountInput.value = total.toFixed(2);
-                
+
                 // Update paid and due display when paidAmountInput changes
                 paidAmountInput.oninput = calculateDueAmount;
 
                 // Set invoice date and generate number
-                invoiceDateDisplay.textContent = new Date().toLocaleDateString();
+                const now = new Date();
+                const day = String(now.getDate()).padStart(2, '0');
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const year = now.getFullYear();
+                invoiceDateDisplay.textContent = `${day}/${month}/${year}`;
                 if (!invoiceNoDisplay.textContent || invoiceNoDisplay.textContent.startsWith('INV-')) {
                     invoiceNoDisplay.textContent = generateInvoiceNumber();
                 }
 
-                // Pre-fill customer details if a phone number was previously entered
-                // And calculate total purchases and outstanding due for existing customer
                 const phone = customerPhoneInput.value.trim();
                 const existingCustomer = customers.find(c => c.phone === phone);
                 let currentCustomerOutstandingDue = 0;
@@ -1652,25 +1613,21 @@
                 }
 
                 customerOutstandingDueOnInvoice.textContent = formatCurrency(currentCustomerOutstandingDue);
-                
-                // Call calculateDueAmount initially to set the correct display state
+
                 calculateDueAmount();
             }
 
-            // NEW FUNCTION: Calculate Due Amount
             function calculateDueAmount() {
                 const totalAmount = parseFloat(invoiceTotalDisplay.textContent.replace(' TK', '')) || 0;
                 const paidAmount = parseFloat(paidAmountInput.value) || 0;
                 let dueAmount = totalAmount - paidAmount;
 
-                // Ensure dueAmount is not negative
                 if (dueAmount < 0) {
                     dueAmount = 0;
                 }
 
                 dueAmountDisplay.textContent = formatCurrency(dueAmount);
 
-                // Conditional hiding/showing of the due amount row
                 if (dueAmount <= 0) {
                     dueAmountRow.classList.add('hidden');
                 } else {
@@ -1679,7 +1636,7 @@
             }
 
 
-            finalizeSaleBtn.addEventListener('click', async () => { // Made async
+            finalizeSaleBtn.addEventListener('click', async () => {
                 if (cartItems.length === 0) {
                     alert('No items in the invoice to finalize. Add items to cart first.');
                     return;
@@ -1690,7 +1647,12 @@
                     return;
                 }
 
-                const date = new Date().toLocaleString();
+                const now = new Date();
+                const day = String(now.getDate()).padStart(2, '0');
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const year = now.getFullYear();
+                const date = `${day}/${month}/${year}`;
+                
                 const currentInvoiceNo = invoiceNoDisplay.textContent;
                 const customerPhone = customerPhoneInput.value.trim();
                 const customerName = customerNameInput.value.trim() || 'Guest';
@@ -1699,12 +1661,10 @@
                 const paidAmount = parseFloat(paidAmountInput.value);
                 let dueAmount = totalInvoiceAmount - paidAmount;
 
-                // Ensure dueAmount for saving is not negative
                 if (dueAmount < 0) {
                     dueAmount = 0;
                 }
 
-                // Validate paid amount
                 if (isNaN(paidAmount) || paidAmount < 0) {
                     alert('Please enter a valid paid amount (non-negative number).');
                     return;
@@ -1715,7 +1675,6 @@
                 }
 
 
-                // Validate stock availability one last time before finalizing
                 for (const soldItem of cartItems) {
                     let totalAvailableQuantity = 0;
                     stockData.filter(i =>
@@ -1729,9 +1688,7 @@
                     }
                 }
 
-                // Proceed with stock reduction and logging
                 cartItems.forEach(soldItem => {
-                    // Find the exact item in stockData and deduct the quantity
                     const stockItemIndex = stockData.findIndex(s =>
                         s.itemName.toLowerCase() === soldItem.itemName.toLowerCase() &&
                         s.itemSize.toLowerCase() === soldItem.itemSize.toLowerCase()
@@ -1740,7 +1697,7 @@
                     if (stockItemIndex !== -1) {
                         stockData[stockItemIndex].quantity -= soldItem.quantity;
                         if (stockData[stockItemIndex].quantity <= 0) {
-                            stockData.splice(stockItemIndex, 1); // Remove item if quantity becomes zero or less
+                            stockData.splice(stockItemIndex, 1);
                         }
                     }
 
@@ -1753,7 +1710,6 @@
                     });
                 });
 
-                // Update customer purchase history
                 if (customerPhone) {
                     let existingCustomer = customers.find(c => c.phone === customerPhone);
                     const purchaseDetails = {
@@ -1768,7 +1724,7 @@
                         })),
                         totalAmount: totalInvoiceAmount,
                         paidAmount: paidAmount,
-                        dueAmount: dueAmount // Store the calculated due amount
+                        dueAmount: dueAmount
                     };
 
                     if (existingCustomer) {
@@ -1783,26 +1739,24 @@
                             purchases: [purchaseDetails]
                         });
                     }
-                    await saveToFirebase(customersRef, customers); // Save customers data to Firebase
+                    await saveToFirebase(customersRef, customers);
                 }
 
-                await saveToFirebase(stockDataRef, stockData); // Save stockData to Firebase
-                await saveToFirebase(stockOutLogRef, stockOutLog); // Save stockOutLog to Firebase
+                await saveToFirebase(stockDataRef, stockData);
+                await saveToFirebase(stockOutLogRef, stockOutLog);
 
                 alert('Sale finalized and stock updated!');
-                cartItems = []; // Clear the cart after sale
-                saveToLocalStorage(); // Clear cart in LocalStorage too
+                cartItems = [];
                 invoiceNoDisplay.textContent = '';
                 customerPhoneInput.value = '';
                 customerNameInput.value = '';
                 customerAddressInput.value = '';
                 paidAmountInput.value = '0';
                 dueAmountDisplay.textContent = formatCurrency(0);
-                
-                // Hide the due amount row after finalization (as it's now 0 or hidden)
+
                 dueAmountRow.classList.add('hidden');
 
-                renderStockView(); // Redirect back to current stock view
+                renderStockView();
             });
 
 
@@ -1929,7 +1883,7 @@
             }
 
             // --- Record Due Payment Logic ---
-            document.addEventListener('click', async (e) => { // Made async
+            document.addEventListener('click', async (e) => {
                 if (e.target.classList.contains('pay-due-btn')) {
                     const btn = e.target;
                     const customerPhone = btn.dataset.customerPhone;
@@ -1957,9 +1911,9 @@
                     purchase.paidAmount = (purchase.paidAmount || 0) + paymentAmount;
                     purchase.dueAmount = purchase.dueAmount - paymentAmount;
 
-                    await saveToFirebase(customersRef, customers); // Save updated customers data to Firebase
+                    await saveToFirebase(customersRef, customers);
                     alert(`Payment of ${formatCurrency(paymentAmount)} recorded for Invoice ${purchase.invoiceNo}. Remaining Due: ${formatCurrency(purchase.dueAmount)}`);
-                    renderCustomerReport(customerPhone); // Re-render the customer report to show updated balances
+                    renderCustomerReport(customerPhone);
                 }
             });
 
@@ -1982,12 +1936,19 @@
                         return;
                     }
 
-                    // Populate the hidden downloadable invoice div with data from the specific purchase
                     downloadInvoiceDate.textContent = purchase.date;
                     downloadInvoiceNo.textContent = purchase.invoiceNo;
                     downloadCustomerName.textContent = customer.name || 'N/A';
                     downloadCustomerContact.textContent = customer.phone || 'N/A';
-                    generatedDateTime.textContent = new Date().toLocaleString();
+                    
+                    const now = new Date();
+                    const day = String(now.getDate()).padStart(2, '0');
+                    const month = String(now.getMonth() + 1).padStart(2, '0');
+                    const year = now.getFullYear();
+                    const hours = String(now.getHours()).padStart(2, '0');
+                    const minutes = String(now.getMinutes()).padStart(2, '0');
+                    generatedDateTime.textContent = `${day}/${month}/${year} ${hours}:${minutes}`;
+
                     downloadInvoiceTableBody.innerHTML = '';
 
                     purchase.items.forEach(item => {
@@ -1998,19 +1959,17 @@
                         row.insertCell(3).textContent = formatCurrency(item.unitPrice);
                         row.insertCell(4).textContent = formatCurrency(item.subtotal);
                     });
-                    
+
                     downloadInvoiceTotal.textContent = formatCurrency(purchase.totalAmount);
                     downloadInvoicePaid.textContent = formatCurrency(purchase.paidAmount);
                     downloadInvoiceDue.textContent = formatCurrency(purchase.dueAmount);
 
-                    // Conditionally hide 'Due' if 0
                     const downloadDueDiv = downloadableInvoiceDiv.querySelector('#downloadInvoiceDue').closest('div');
                     if (purchase.dueAmount <= 0) {
                         downloadDueDiv.classList.add('hidden');
                     } else {
                         downloadDueDiv.classList.remove('hidden');
                     }
-                    // Ensure paid is always visible
                     downloadableInvoiceDiv.querySelector('#downloadInvoicePaid').closest('div').classList.remove('hidden');
 
 
@@ -2031,9 +1990,8 @@
                             useCORS: true,
                             logging: true,
                             onclone: (document) => {
-                                // Ensure the paid section is visible in the cloned document for rendering
+                                document.querySelector('#downloadableInvoice .invoice-logo').style.display = 'block';
                                 document.querySelector('#downloadableInvoice #downloadInvoicePaid').closest('div').classList.remove('hidden');
-                                // Conditionally hide due in the cloned document as well
                                 const clonedDueAmount = parseFloat(document.getElementById('downloadInvoiceDue').textContent.replace(' TK', '')) || 0;
                                 if (clonedDueAmount <= 0) {
                                     document.querySelector('#downloadableInvoice #downloadInvoiceDue').closest('div').classList.add('hidden');
@@ -2066,6 +2024,49 @@
                 }
             });
 
+            // --- Event Listeners for Cart Actions ---
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('update-cart')) {
+                    const index = e.target.dataset.index;
+                    const newQuantity = parseInt(document.querySelector(`.cart-quantity-input[data-index="${index}"]`).value);
+            
+                    if (isNaN(newQuantity) || newQuantity <= 0) {
+                        alert('Please enter a valid quantity.');
+                        renderCartView(); // Re-render to show original value
+                        return;
+                    }
+            
+                    const item = cartItems[index];
+                    const availableInStock = stockData.find(s => 
+                        s.itemName.toLowerCase() === item.itemName.toLowerCase() && 
+                        s.itemSize.toLowerCase() === item.itemSize.toLowerCase()
+                    )?.quantity || 0;
+            
+                    if (newQuantity > availableInStock) {
+                        alert(`Not enough stock of "${item.itemName}" (${item.itemSize}). Available: ${availableInStock}.`);
+                        renderCartView(); // Re-render to show original value
+                        return;
+                    }
+            
+                    item.quantity = newQuantity;
+                    renderCartView();
+                }
+            
+                if (e.target.classList.contains('remove-from-cart')) {
+                    const index = e.target.dataset.index;
+                    cartItems.splice(index, 1);
+                    renderCartView();
+                }
+            });
+
+            clearCartBtn.addEventListener('click', () => {
+                const confirmClear = confirm('Are you sure you want to clear your cart?');
+                if (confirmClear) {
+                    cartItems = [];
+                    renderCartView();
+                }
+            });
+
 
             // --- Event Listeners for Navigation Buttons ---
             btnStockView.addEventListener('click', renderStockView);
@@ -2073,11 +2074,12 @@
             btnStockOut.addEventListener('click', () => { hideAllSections(); stockOutSection.classList.remove('hidden'); });
             btnShowAllData.addEventListener('click', renderAllData);
             btnJsonEdit.addEventListener('click', renderJsonEditor);
-            btnSellInvoice.addEventListener('click', renderInvoiceFromCart);
+            btnSellInvoice.addEventListener('click', renderCartView); // Go to cart view first
+            goToInvoiceBtn.addEventListener('click', renderInvoiceFromCart); // New button for going from cart to invoice
+            backToCartBtn.addEventListener('click', renderCartView);
             btnCustomers.addEventListener('click', renderCustomersList);
-            btnOverallReport.addEventListener('click', renderOverallReport); // New button event listener
+            btnOverallReport.addEventListener('click', renderOverallReport);
             backToAllDataBtn.addEventListener('click', renderAllData);
-            backToCartBtn.addEventListener('click', renderStockView); // Redirect "Back to Cart" to Stock View
             backToCustomersListBtn.addEventListener('click', renderCustomersList);
 
             // Event listener for clicking on item names in "Show All Data"
@@ -2095,7 +2097,6 @@
                 }
             });
 
-            // Auto-fill customer details from phone number input and update customer summary on invoice
             customerPhoneInput.addEventListener('input', () => {
                 const phone = customerPhoneInput.value.trim();
                 const existingCustomer = customers.find(c => c.phone === phone);
@@ -2111,15 +2112,13 @@
                         totalDue += purchase.dueAmount || 0;
                     });
                 } else {
-                    // Only clear if the user hasn't explicitly typed something after the phone number changed
-                    // This prevents clearing user-entered data if they type name/address before phone
                     if (!customerNameInput.dataset.userEdited) {
                         customerNameInput.value = '';
                     }
                     if (!customerAddressInput.dataset.userEdited) {
                         customerAddressInput.value = '';
                     }
-                    invoiceCustomerNameDisplay.textContent = phone ? phone : 'N/A'; // Show phone even if new customer
+                    invoiceCustomerNameDisplay.textContent = phone ? phone : 'N/A';
                     invoiceCustomerPhoneDisplay.textContent = phone ? phone : 'N/A';
                 }
                 customerOutstandingDueOnInvoice.textContent = formatCurrency(totalDue);
@@ -2132,11 +2131,6 @@
             customerAddressInput.addEventListener('input', () => {
                 customerAddressInput.dataset.userEdited = 'true';
             });
-
-
-            // Initial render on page load is handled by the DOMContentLoaded event listener which
-            // conditionally loads from LocalStorage if offline, or waits for Firebase if online.
-            // renderStockView() is called after data is available.
         });
     </script>
 </body>
