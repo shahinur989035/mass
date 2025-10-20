@@ -15,7 +15,7 @@
             color: #333;
         }
         
-        /* Header Logo Styling (from original request) */
+        /* Header Logo Styling (This is for the main application header, already okay) */
         .main-header {
             display: flex;
             align-items: center;
@@ -37,7 +37,7 @@
 
         .header-text h3 {
             margin: 0;
-            color: #0056b3;
+            color: ##004d40;
             font-size: 20px;
         }
 
@@ -86,7 +86,7 @@
         
         /* Section Header */
         h2 {
-            color: seagreen;
+            color: #004d40;
             border-bottom: 2px solid #eee;
             padding-bottom: 10px;
             margin-bottom: 20px;
@@ -156,24 +156,44 @@
             pointer-events: none;
         }
 
-        /* Invoice Top Logo */
+        /* 👇 পরিবর্তনের ১ নং স্থান: ইনভয়েসের টপ লোগো স্টাইল */
+        /* এই লোগোটি এখন download-invoice-header এর মধ্যে আছে */
         #downloadableInvoice .invoice-logo {
-            max-width: 120px;
-            margin: 0 auto 10px auto;
-            display: block;
-            opacity: 1; 
-            z-index: 1; 
-            position: relative; 
+            /* স্টাইলটি নতুন ক্লাসে স্থানান্তরিত হয়েছে */
+            display: none; /* যাতে দুটি লোগো না দেখায় */
         }
 
-        #downloadableInvoice h1 {
-            text-align: center;
-            color: #0056b3;
-            margin-top: 0;
-            position: relative;
+        /* 👇 পরিবর্তনের ২ নং স্থান: নতুন Flex Header স্টাইল (পাশাপাশি রাখার জন্য) */
+        .download-invoice-header {
+            display: flex;
+            align-items: center; /* লোগো এবং হেডিং-এর টেক্সট মাঝখানে রাখবে */
+            justify-content: center; /* পুরো হেডারটিকে মাঝখানে রাখবে */
+            margin-bottom: 20px;
+            position: relative; 
             z-index: 1;
+        }
+
+        .download-invoice-header .invoice-logo {
+            max-width: 80px; /* লোগোর আকার সেট করা হলো */
+            height: auto;
+            margin: 0 15px 0 0; /* হেডিং থেকে দূরত্ব */
+            display: block !important; /* নিশ্চিত করা হলো যে লোগোটি দেখা যাচ্ছে */
+        }
+
+        .download-invoice-header h1 {
+            text-align: center; /* বামদিকে লেখা শুরু হবে */
+            color: ##004d40;
+            margin: 0; /* অতিরিক্ত মার্জিন সরিয়ে দেওয়া হলো */
+            font-size: 20px; /* ফন্টের আকার ছোট করা হলো */
+            line-height: 1.2;
+        }
+        /* 👆 পরিবর্তনের শেষ */
+        
+        /* পুরাতন ইনভয়েস হেডিং স্টাইল পরিবর্তন করা হয়েছে */
+        #downloadableInvoice h1 {
             font-size: 24px;
         }
+
         .invoice-details {
             display: flex;
             justify-content: space-between;
@@ -230,6 +250,8 @@
         .download-customer-invoice-btn { background-color: #ffc107; color: #333; }
         #monthlyReportControls { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; background-color: #e6f7ff; display: flex; gap: 15px; align-items: center; }
         #monthlyReportControls select, #monthlyReportControls button { padding: 8px 12px; border-radius: 4px; border: 1px solid #ccc; }
+        
+        }
     </style>
 </head>
 <body>
@@ -238,7 +260,7 @@
         <div class="main-header">
             <img src="img.png" alt="Modern Apparel Style Solutian Logo" class="header-logo">
             <div class="header-text">
-                <h3>Modern Apparel Style Solution (MASS)</h3>
+                <h2>Modern Apparel Style Solution (MASS)</h2>
                 <h4>Stock Management System</h4>
             </div>
         </div>
@@ -609,8 +631,11 @@
         <div id="downloadableInvoice" class="hidden">
             <img src="img.png" alt="MASS Company Logo Watermark" class="invoice-watermark">
             
-            <img src="img.png" alt="MASS Company Logo" class="invoice-logo">
-            <h1>Modern Apparel Style Solution (MASS) <br>Invoice</h1>
+            <div class="download-invoice-header"> 
+                <img src="img.png" alt="MASS Company Logo" class="invoice-logo">
+                <h1>Modern Apparel Style Solution (MASS) <br>Invoice</h1>
+            </div>
+            
             <div class="invoice-details">
                 <div>
                     <strong>Invoice Date:</strong> <span id="downloadInvoiceDate"></span><br>
@@ -2187,3 +2212,4 @@
     </script>
 </body>
 </html>
+
