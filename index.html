@@ -155,7 +155,12 @@
             z-index: 0; /* অন্যান্য কন্টেন্টের নিচে */
             pointer-events: none;
         }
-
+          .payable-amount-highlight {
+            color: green;
+            font-weight: bold;
+        
+    
+        }
         /* 👇 পরিবর্তনের ১ নং স্থান: ইনভয়েসের টপ লোগো স্টাইল */
         /* এই লোগোটি এখন download-invoice-header এর মধ্যে আছে */
         #downloadableInvoice .invoice-logo {
@@ -660,13 +665,13 @@
                 </tbody>
             </table>
             <div class="invoice-total-summary"> 
-                <div>Subtotal: <span id="downloadInvoiceSubTotal">0.00 TK</span></div>
-                <div>Discount: <span id="downloadInvoiceDiscount">0.00 TK</span></div>
+                <div>Subtotal: <span id="downloadInvoiceSubTotal">00.00 TK</span></div>
+                <div>Discount: <span id="downloadInvoiceDiscount">00.00 TK</span></div>
                 <div>Total (Net): <span id="downloadInvoiceTotal"></span></div>
-                <div>Previous Due: <span id="downloadInvoicePreviousDue" class="due-amount-highlight">0.00 TK</span></div>
-                <div>**Total Payable:** <span id="downloadInvoiceTotalPayable" class="due-amount-highlight">0.00 TK</span></div>
-                <div>Paid: <span id="downloadInvoicePaid">0.00 TK</span></div>
-                <div>Due: <span id="downloadInvoiceDue" class="due-amount-highlight">0.00 TK</span></div>
+                <div>Previous Due: <span id="downloadInvoicePreviousDue" class="due-amount-highlight">00.00 TK</span></div>
+                <div>**Total Payable:** <span id="downloadInvoiceTotalPayable" class="payable-amount-highlight">00.00 TK</span></div>
+                <div>Paid: <span id="downloadInvoicePaid">00.00 TK</span></div>
+                <div>Due: <span id="downloadInvoiceDue" class="due-amount-highlight">00.00 TK</span></div>
                 </div>
             <div class="invoice-footer">
                 Thank you for your business!<br>
