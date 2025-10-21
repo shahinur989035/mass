@@ -23,12 +23,14 @@
             padding: 10px 0;
             background-color: #fff;
             border-bottom: 2px solid #ddd;
+            border-radius: 20px;
         }
-
+         
         .header-logo {
             max-width: 80px;
             height: auto;
             margin-right: 15px;
+            margin-top: 0px;
         }
 
         .header-text {
@@ -37,16 +39,16 @@
 
         .header-text h3 {
             margin: 0;
-            color: ##244950;
-            font-size: 20px;
+            color: #244850;
+            font-size: 26px;
         }
 
         .header-text h4 {
-            margin: 0;
+            margin: 5px;
             color: #555;
             font-size: 14px;
         }
-        
+
         /* Navigation Styling (from user provided code) */
         nav {
             width: 99%;
@@ -86,7 +88,7 @@
         
         /* Section Header */
         h2 {
-            color: #004d40;
+            color: seagreen;
             border-bottom: 2px solid #eee;
             padding-bottom: 10px;
             margin-bottom: 20px;
@@ -127,10 +129,14 @@
         .due-amount-highlight {
             color: red;
             font-weight: bold;
+            
+        
         }
         .payable-amount-highlight {
             color: green;
             font-weight: bold;
+        
+    
         }
 
         /* INVOICE SPECIFIC STYLES - FROM ORIGINAL REQUEST WITH WATERMARK */
@@ -140,7 +146,7 @@
             overflow: hidden; 
             padding: 30px;
             margin: 20px auto;
-            border: 1px solid #ccc;
+            border: 2px solid #ccc;
             background-color: #fff;
             max-width: 800px; /* Increased size for better PDF rendering */
             box-sizing: border-box;
@@ -149,53 +155,55 @@
 
         /* Watermark Logo Styling */
         .invoice-watermark {
+            
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%); /* মাঝখানে আনার জন্য */
-            width: 80%; /* প্রশস্ততার 80% */
+            width: 70%; /* প্রশস্ততার 80% */
             height: auto;
+            margin-top: 30px;
             opacity: 0.1; /* 10% অপাসিটি */
             z-index: 0; /* অন্যান্য কন্টেন্টের নিচে */
             pointer-events: none;
         }
-          
-        /* 👇 পরিবর্তনের ১ নং স্থান: ইনভয়েসের টপ লোগো স্টাইল */
-        /* এই লোগোটি এখন download-invoice-header এর মধ্যে আছে */
+
+        /* ইনভয়েসের টপ লোগো স্টাইল */
         #downloadableInvoice .invoice-logo {
-            /* স্টাইলটি নতুন ক্লাসে স্থানান্তরিত হয়েছে */
-            display: none; /* যাতে দুটি লোগো না দেখায় */
+            display: none; 
         }
 
-        /* 👇 পরিবর্তনের ২ নং স্থান: নতুন Flex Header স্টাইল (পাশাপাশি রাখার জন্য) */
+        /* নতুন Flex Header স্টাইল (পাশাপাশি রাখার জন্য) */
         .download-invoice-header {
             display: flex;
-            align-items: center; /* লোগো এবং হেডিং-এর টেক্সট মাঝখানে রাখবে */
+            align-items: center; 
             justify-content: center; /* পুরো হেডারটিকে মাঝখানে রাখবে */
-            margin-bottom: 20px;
+            margin-bottom: 30px; /* নিচে দূরত্ব বাড়ানো হলো */
+            margin-top: 15px; /* উপরে কিছুটা দূরত্ব */
             position: relative; 
             z-index: 1;
         }
 
         .download-invoice-header .invoice-logo {
-            max-width: 80px; /* লোগোর আকার সেট করা হলো */
+            max-width: 90px; /* লোগোর আকার কিছুটা বড় করা হলো */
             height: auto;
-            margin: 0 15px 0 0; /* হেডিং থেকে দূরত্ব */
-            display: block !important; /* নিশ্চিত করা হলো যে লোগোটি দেখা যাচ্ছে */
+            margin: 0 25px 0 0; /* হেডিং থেকে দূরত্ব বাড়ানো হলো */
+            display: block !important;
         }
 
         .download-invoice-header h1 {
-            text-align: center; /* বামদিকে লেখা শুরু হবে */
-            color: ##004d40;
-            margin: 0; /* অতিরিক্ত মার্জিন সরিয়ে দেওয়া হলো */
-            font-size: 20px; /* ফন্টের আকার ছোট করা হলো */
+            text-align: left; 
+            color: #244950;
+            margin: 0; 
+            font-size: 20px; /* ফন্টের আকার বড় করা হলো */
             line-height: 1.2;
+            padding-top: 5px; /* লোগোর সাথে লেখাটিকে নিচে নামানো হলো */
         }
-        /* 👆 পরিবর্তনের শেষ */
         
         /* পুরাতন ইনভয়েস হেডিং স্টাইল পরিবর্তন করা হয়েছে */
         #downloadableInvoice h1 {
-            font-size: 24px;
+            font-size: 25px;
+            text-align: center;
         }
 
         .invoice-details {
@@ -214,11 +222,13 @@
             margin-top: 20px;
             position: relative;
             z-index: 1;
-            font-size: 16px;
+            font-size: 17px;
+            
         }
         .invoice-total-summary div {
             padding: 5px 0;
             font-weight: bold;
+            
         }
         .invoice-footer {
             margin-top: 30px;
@@ -232,7 +242,7 @@
         }
         /* End of Invoice Specific Styles */
 
-        /* Existing Styles from user provided code (truncated for brevity but included in the final code block) */
+        /* Existing Styles from user provided code (continued) */
         #currentStockTable tr:nth-child(even) { background-color: #f2f2f2; }
         form label { display: inline-block; margin-bottom: 8px; font-weight: bold; width: 120px; }
         form input[type="text"], form input[type="number"] { width: calc(100% - 130px); padding: 8px; margin-bottom: 5px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
@@ -253,22 +263,24 @@
         .pay-due-btn, .download-customer-invoice-btn { background-color: #28a745; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; font-size: 10px; margin-top: 5px; margin-right: 5px; }
         .download-customer-invoice-btn { background-color: #ffc107; color: #333; }
         #monthlyReportControls { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; background-color: #e6f7ff; display: flex; gap: 15px; align-items: center; }
-        #monthlyReportControls select, #monthlyReportControls button { padding: 8px 12px; border-radius: 4px; border: 1px solid #ccc; }
-        
-        }
+        #monthlyReportControls select, #monthlyReportControls button { padding: 8px 12px; border-radius: 4px; border: 1px solid green; }
     </style>
 </head>
 <body>
     
     <header>
+        
+            
         <div class="main-header">
             <img src="img.png" alt="Modern Apparel Style Solutian Logo" class="header-logo">
             <div class="header-text">
-                <h2>Modern Apparel Style Solution (MASS)</h2>
+                <h3>Modern Apparel Style Solution (MASS)</h3>
                 <h4>Stock Management System</h4>
             </div>
         </div>
+        
         <nav>
+            
             <button id="btnStockView">Current Stock</button>
             <button id="btnStockEntry">Stock Entry</button>
             <button id="btnStockOut">Stock Out (Direct)</button>
@@ -542,7 +554,7 @@
             <p>Items in this invoice are pulled directly from your cart.</p>
 
             <div id="invoiceContainer">
-                <img src="https://drive.google.com/uc?id=1ZQmt3yk0D-0ZCiNbnwIH1uDyWfS69Kvc" alt="MASS Company Logo" class="invoice-logo">
+                <img src="img.png" alt="MASS Company Logo" class="invoice-logo">
                 <h3>Invoice</h3>
                 <div id="customerDetailsForm">
                     <p>Enter Customer Details (Optional for direct sale):</p>
@@ -596,8 +608,8 @@
                             </td>
                         </tr>
                         
-                        <tr>
-                            <td colspan="4" style="text-align: right;"><strong>Grand Total (After Discount):</strong></td>
+                        <tr id="invoiceTotalRow" class="hidden">
+                            <td colspan="4" style="text-align: right;">**Grand Total (Net Amount / প্রদেয় বিল):**</td>
                             <td id="invoiceTotal">0.00 TK</td>
                         </tr>
                         
@@ -607,7 +619,7 @@
                         </tr>
                         
                         <tr>
-                            <td colspan="4" style="text-align: right;"><strong>Total Payable (Current + Previous) (TK):</strong></td>
+                            <td colspan="4" style="text-align: right;">**Total Payable (Net + Previous) (TK):**</td>
                             <td id="totalPayableDisplay" class="due-amount-highlight">0.00 TK</td>
                         </tr>
                         
@@ -619,7 +631,7 @@
                         </tr>
                         
                         <tr id="dueAmountRow">
-                            <td colspan="4" style="text-align: right;"><strong>Total Outstanding Due (TK):</strong></td>
+                            <td colspan="4" style="text-align: right;">**Total Outstanding Due (TK):**</td>
                             <td id="dueAmountDisplay" class="due-amount-highlight">0.00 TK</td>
                         </tr>
                     </tfoot>
@@ -664,17 +676,18 @@
                 </tbody>
             </table>
             <div class="invoice-total-summary"> 
-                <div>Subtotal: <span id="downloadInvoiceSubTotal">00.00 TK</span></div>
-                <div>Discount: <span id="downloadInvoiceDiscount">00.00 TK</span></div>
+                <div>Subtotal: <span id="downloadInvoiceSubTotal">0>0.00 TK</span></div>
+                <div id="downloadDiscountRow">Discount: <span id="downloadInvoiceDiscount">00.00 TK</span></div>  
                 <div>Total (Net): <span id="downloadInvoiceTotal"></span></div>
                 <div>Previous Due: <span id="downloadInvoicePreviousDue" class="due-amount-highlight">00.00 TK</span></div>
-                <div>**Total Payable:** <span id="downloadInvoiceTotalPayable" class="payable-amount-highlight">00.00 TK</span></div>
+                <div>Total Payable:  <span id="downloadInvoiceTotalPayable" class="payable-amount-highlight">00.00 TK</span></div>
                 <div>Paid: <span id="downloadInvoicePaid">00.00 TK</span></div>
                 <div>Due: <span id="downloadInvoiceDue" class="due-amount-highlight">00.00 TK</span></div>
                 </div>
             <div class="invoice-footer">
                 Thank you for your business!<br>
                 Modern Apparel Style Solution (MASS), Tongi, Dhaka Division, Bangladesh<br>
+                Phone number:01710989035<br>
                 Date Generated: <span id="generatedDateTime"></span>
             </div>
         </div>
@@ -747,7 +760,7 @@
         let stockOutLog = [];
         let cartItems = []; // Cart is now just a temporary in-memory variable
         let customers = [];
-        let currentCustomerPreviousDue = 0; // NEW Global for previous due
+        let currentCustomerPreviousDue = 0; // Global for previous due
 
         // --- Utility Functions for Data Handling ---
 
@@ -824,7 +837,7 @@
             const customersSection = document.getElementById('customersSection');
             const customerReportSection = document.getElementById('customerReportSection');
             const overallReportSection = document.getElementById('overallReportSection');
-            const reportByMonthSection = document.getElementById('reportByMonthSection'); // NEW
+            const reportByMonthSection = document.getElementById('reportByMonthSection'); 
 
             // Buttons
             const btnStockView = document.getElementById('btnStockView');
@@ -835,7 +848,7 @@
             const btnSellInvoice = document.getElementById('btnSellInvoice');
             const btnCustomers = document.getElementById('btnCustomers');
             const btnOverallReport = document.getElementById('btnOverallReport');
-            const btnMonthlyReport = document.getElementById('btnMonthlyReport'); // NEW
+            const btnMonthlyReport = document.getElementById('btnMonthlyReport'); 
             const backToAllDataBtn = document.getElementById('backToAllData');
             const cancelJsonBtn = document.getElementById('cancelJson');
             const backToCustomersListBtn = document.getElementById('backToCustomersList');
@@ -887,15 +900,16 @@
             const customerOutstandingDueOnInvoice = document.getElementById('customerOutstandingDueOnInvoice');
             const goToInvoiceBtn = document.getElementById('goToInvoiceBtn');
             const clearCartBtn = document.getElementById('clearCartBtn');
-            const invoiceSubTotalDisplay = document.getElementById('invoiceSubTotal'); // NEW: For subtotal
+            const invoiceSubTotalDisplay = document.getElementById('invoiceSubTotal'); 
             
-            // NEW REFERENCES FOR INVOICE/DISCOUNT/DUE
+            // REFERENCES FOR INVOICE/DISCOUNT/DUE
             const discountAmountInput = document.getElementById('discountAmount');
             const applyDiscountCheckbox = document.getElementById('applyDiscountCheckbox');
             const discountInputRow = document.getElementById('discountInputRow');
-            const previousDueDisplay = document.getElementById('previousDueDisplay'); // NEW
-            const totalPayableDisplay = document.getElementById('totalPayableDisplay'); // NEW
-            const downloadInvoicePdfBtn = document.getElementById('downloadInvoicePdfBtn'); // NEW
+            const invoiceTotalRow = document.getElementById('invoiceTotalRow'); 
+            const previousDueDisplay = document.getElementById('previousDueDisplay'); 
+            const totalPayableDisplay = document.getElementById('totalPayableDisplay'); 
+            const downloadInvoicePdfBtn = document.getElementById('downloadInvoicePdfBtn'); 
 
 
             // Elements for hidden downloadable invoice
@@ -913,6 +927,7 @@
             // NEW ELEMENTS FOR DOWNLOADABLE INVOICE TEMPLATE
             const downloadInvoiceSubTotal = document.getElementById('downloadInvoiceSubTotal');
             const downloadInvoiceDiscount = document.getElementById('downloadInvoiceDiscount');
+            const downloadDiscountRow = document.getElementById('downloadDiscountRow'); 
             const downloadInvoicePreviousDue = document.getElementById('downloadInvoicePreviousDue');
             const downloadInvoiceTotalPayable = document.getElementById('downloadInvoiceTotalPayable');
 
@@ -1245,8 +1260,6 @@
                             totalPaidAmount += paidAmount;
                             
                             // Calculate new due generated in THIS invoice (excluding previous due)
-                            // Due on Current Bill = (Total Amount - (Paid Amount - Previous Due, if Paid > Previous Due))
-                            
                             let dueOnCurrentBill = totalAmount - Math.max(0, paidAmount - (purchase.previousDue || 0));
                             if (dueOnCurrentBill < 0) dueOnCurrentBill = 0;
                             
@@ -1596,13 +1609,12 @@
                 
                 // Reset Discount State
                 applyDiscountCheckbox.checked = false;
-                discountInputRow.classList.add('hidden');
                 discountAmountInput.value = '0';
 
                 // Initialize paid amount (Total Subtotal is default paid)
                 paidAmountInput.value = totalSubtotal.toFixed(2);
                 
-                // Calculate all totals
+                // Calculate all totals (Will also handle hiding/showing)
                 calculateDueAmount(); 
             }
 
@@ -1619,6 +1631,14 @@
                     if (discountAmount < 0) discountAmount = 0;
                     if (discountAmount > subTotalAmount) discountAmount = subTotalAmount; // Max discount is subtotal
                     discountAmountInput.value = discountAmount.toFixed(2);
+                    
+                    // Show discount and grand total rows
+                    discountInputRow.classList.remove('hidden');
+                    invoiceTotalRow.classList.remove('hidden'); // <<-- এই রো-টিকে দৃশ্যমান করা হলো
+                } else {
+                    // Hide discount and grand total rows
+                    discountInputRow.classList.add('hidden');
+                    invoiceTotalRow.classList.add('hidden'); // <<-- এই রো-টিকে লুকানো হলো
                 }
                 
                 // 3. Grand Total (Net total after discount - Current Bill Amount)
@@ -1670,11 +1690,13 @@
                 const customerName = customerNameInput.value.trim() || 'Guest';
                 const customerAddress = customerAddressInput.value.trim() || 'N/A';
                 
-                // Get All Calculated Totals (Use the current displayed values for accuracy)
+                // Get All Calculated Totals (Run calculation one last time for safety)
+                calculateDueAmount();
                 const subTotalAmount = parseFloat(invoiceSubTotalDisplay.textContent.replace(' TK', ''));
+                // Use the calculated total amount after discount, which is always available.
+                const totalInvoiceAmount = parseFloat(invoiceTotalDisplay.textContent.replace(' TK', '')); 
                 const discountAmount = applyDiscountCheckbox.checked ? parseFloat(discountAmountInput.value) || 0 : 0;
-                const totalInvoiceAmount = parseFloat(invoiceTotalDisplay.textContent.replace(' TK', '')); // Grand Total after discount
-                const totalPayable = parseFloat(totalPayableDisplay.textContent.replace(' TK', '')); // Grand Total + Previous Due
+                const totalPayable = parseFloat(totalPayableDisplay.textContent.replace(' TK', '')); 
                 const paidAmount = parseFloat(paidAmountInput.value);
                 let dueAmount = totalPayable - paidAmount;
 
@@ -1786,10 +1808,11 @@
                 customerOutstandingDueOnInvoice.textContent = formatCurrency(0);
                 currentCustomerPreviousDue = 0;
                 applyDiscountCheckbox.checked = false;
-                discountInputRow.classList.add('hidden');
                 discountAmountInput.value = '0';
 
                 dueAmountRow.classList.add('hidden');
+                discountInputRow.classList.add('hidden'); // Hide discount row
+                invoiceTotalRow.classList.add('hidden'); // Hide grand total row
 
                 renderStockView();
             });
@@ -2020,6 +2043,20 @@
                     downloadInvoicePaid.textContent = formatCurrency(purchase.paidAmount);
                     downloadInvoiceDue.textContent = formatCurrency(purchase.dueAmount);
 
+                    // **👇 নতুন ডিসকাউন্ট হাইড লজিক**
+                    const discountAmount = purchase.discount || 0;
+                    const downloadDiscountDiv = downloadableInvoiceDiv.querySelector('#downloadDiscountRow'); 
+                    const downloadTotalDiv = downloadableInvoiceDiv.querySelector('#downloadInvoiceTotal').closest('div'); // Total (Net) Div
+                    
+                    if (discountAmount <= 0) {
+                        downloadDiscountDiv.classList.add('hidden');
+                        downloadTotalDiv.classList.add('hidden'); // Total Net ও হাইড হবে
+                    } else {
+                        downloadDiscountDiv.classList.remove('hidden');
+                        downloadTotalDiv.classList.remove('hidden'); // Total Net visible হবে
+                    }
+                    // **👆 নতুন ডিসকাউন্ট হাইড লজিক**
+
                     const downloadDueDiv = downloadableInvoiceDiv.querySelector('#downloadInvoiceDue').closest('div');
                     if (purchase.dueAmount <= 0) {
                         downloadDueDiv.classList.add('hidden');
@@ -2047,6 +2084,22 @@
                             logging: true,
                             onclone: (document) => {
                                 document.querySelector('#downloadableInvoice .invoice-logo').style.display = 'block';
+                                
+                                // 👇 html2canvas ক্লোনের জন্য ডিসকাউন্ট হাইড লজিক
+                                const clonedDiscountAmount = parseFloat(document.getElementById('downloadInvoiceDiscount').textContent.replace(' TK', '')) || 0;
+                                
+                                const clonedDiscountRow = document.getElementById('downloadDiscountRow');
+                                const clonedTotalNetRow = document.getElementById('downloadInvoiceTotal').closest('div');
+
+                                if (clonedDiscountAmount <= 0) {
+                                    clonedDiscountRow.classList.add('hidden'); 
+                                    clonedTotalNetRow.classList.add('hidden'); // Total Net ও হাইড হবে
+                                } else {
+                                    clonedDiscountRow.classList.remove('hidden');
+                                    clonedTotalNetRow.classList.remove('hidden'); // Total Net visible হবে
+                                }
+                                // 👆 ক্লোন লজিক শেষ
+
                                 document.querySelector('#downloadableInvoice #downloadInvoicePaid').closest('div').classList.remove('hidden');
                                 const clonedDueAmount = parseFloat(document.getElementById('downloadInvoiceDue').textContent.replace(' TK', '')) || 0;
                                 if (clonedDueAmount <= 0) {
@@ -2125,15 +2178,7 @@
             });
 
             // --- NEW: Dynamic Calculation & Conditional Discount Display ---
-            applyDiscountCheckbox.addEventListener('change', () => {
-                if (applyDiscountCheckbox.checked) {
-                    discountInputRow.classList.remove('hidden');
-                } else {
-                    discountInputRow.classList.add('hidden');
-                    discountAmountInput.value = '0'; 
-                }
-                calculateDueAmount(); 
-            });
+            applyDiscountCheckbox.addEventListener('change', calculateDueAmount); 
 
             discountAmountInput.addEventListener('input', calculateDueAmount);
             paidAmountInput.addEventListener('input', calculateDueAmount);
@@ -2148,13 +2193,13 @@
             btnStockOut.addEventListener('click', () => { hideAllSections(); stockOutSection.classList.remove('hidden'); });
             btnShowAllData.addEventListener('click', renderAllData);
             btnJsonEdit.addEventListener('click', renderJsonEditor);
-            btnSellInvoice.addEventListener('click', renderCartView); // Go to cart view first
-            goToInvoiceBtn.addEventListener('click', renderInvoiceFromCart); // New button for going from cart to invoice
+            btnSellInvoice.addEventListener('click', renderCartView); 
+            goToInvoiceBtn.addEventListener('click', renderInvoiceFromCart); 
             backToCartBtn.addEventListener('click', renderCartView);
             btnCustomers.addEventListener('click', renderCustomersList);
             btnOverallReport.addEventListener('click', renderOverallReport);
-            btnMonthlyReport.addEventListener('click', renderMonthlyReportSection); // NEW
-            generateMonthlyReportBtn.addEventListener('click', generateMonthlyReport); // NEW
+            btnMonthlyReport.addEventListener('click', renderMonthlyReportSection); 
+            generateMonthlyReportBtn.addEventListener('click', generateMonthlyReport); 
             backToAllDataBtn.addEventListener('click', renderAllData);
             backToCustomersListBtn.addEventListener('click', renderCustomersList);
 
@@ -2216,4 +2261,3 @@
     </script>
 </body>
 </html>
-
