@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Apparel Style Solution - Stock & Sales Management</title>
+    <title>Modern Apparel Style Solution - Stock & Sales Management (Optimized)</title>
     
     <style>
         /* Base Styles */
@@ -15,7 +15,7 @@
             color: #333;
         }
         
-        /* Header Logo Styling (This is for the main application header, already okay) */
+        /* Header Logo Styling */
         .main-header {
             display: flex;
             align-items: center;
@@ -49,7 +49,7 @@
             font-size: 14px;
         }
 
-        /* Navigation Styling (from user provided code) */
+        /* Navigation Styling */
         nav {
             width: 99%;
             margin-top: 10px;
@@ -73,7 +73,7 @@
             background-color: #4cae4c;
         }
         
-        /* Main Content Styling (from user provided code) */
+        /* Main Content Styling */
         main {
             position: relative;
             width: 100%;
@@ -129,42 +129,36 @@
         .due-amount-highlight {
             color: red;
             font-weight: bold;
-            
-        
         }
         .payable-amount-highlight {
             color: green;
             font-weight: bold;
-        
-    
         }
 
         /* INVOICE SPECIFIC STYLES - FROM ORIGINAL REQUEST WITH WATERMARK */
         #downloadableInvoice {
-            /* **ওয়াটারমার্কের জন্য বিশেষ স্টাইল** */
             position: relative; 
             overflow: hidden; 
             padding: 30px;
             margin: 20px auto;
             border: 2px solid #ccc;
             background-color: #fff;
-            max-width: 800px; /* Increased size for better PDF rendering */
+            max-width: 800px; 
             box-sizing: border-box;
             font-size: 15px;
         }
 
         /* Watermark Logo Styling */
         .invoice-watermark {
-            
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%); /* মাঝখানে আনার জন্য */
-            width: 70%; /* প্রশস্ততার 80% */
+            transform: translate(-50%, -50%); 
+            width: 70%; 
             height: auto;
             margin-top: 30px;
-            opacity: 0.1; /* 10% অপাসিটি */
-            z-index: 0; /* অন্যান্য কন্টেন্টের নিচে */
+            opacity: 0.1; 
+            z-index: 0; 
             pointer-events: none;
         }
 
@@ -177,17 +171,17 @@
         .download-invoice-header {
             display: flex;
             align-items: center; 
-            justify-content: center; /* পুরো হেডারটিকে মাঝখানে রাখবে */
-            margin-bottom: 30px; /* নিচে দূরত্ব বাড়ানো হলো */
-            margin-top: 15px; /* উপরে কিছুটা দূরত্ব */
+            justify-content: center; 
+            margin-bottom: 30px; 
+            margin-top: 15px; 
             position: relative; 
             z-index: 1;
         }
 
         .download-invoice-header .invoice-logo {
-            max-width: 90px; /* লোগোর আকার কিছুটা বড় করা হলো */
+            max-width: 90px; 
             height: auto;
-            margin: 0 25px 0 0; /* হেডিং থেকে দূরত্ব বাড়ানো হলো */
+            margin: 0 25px 0 0; 
             display: block !important;
         }
 
@@ -195,9 +189,9 @@
             text-align: left; 
             color: #244950;
             margin: 0; 
-            font-size: 20px; /* ফন্টের আকার বড় করা হলো */
+            font-size: 20px; 
             line-height: 1.2;
-            padding-top: 5px; /* লোগোর সাথে লেখাটিকে নিচে নামানো হলো */
+            padding-top: 5px; 
         }
         
         /* পুরাতন ইনভয়েস হেডিং স্টাইল পরিবর্তন করা হয়েছে */
@@ -269,8 +263,6 @@
 <body>
     
     <header>
-        
-            
         <div class="main-header">
             <img src="img.png" alt="Modern Apparel Style Solutian Logo" class="header-logo">
             <div class="header-text">
@@ -280,7 +272,6 @@
         </div>
         
         <nav>
-            
             <button id="btnStockView">Current Stock</button>
             <button id="btnStockEntry">Stock Entry</button>
             <button id="btnStockOut">Stock Out (Direct)</button>
@@ -308,6 +299,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <tr><td colspan="5" style="text-align: center;">Loading stock data... Please wait.</td></tr> 
                 </tbody>
             </table>
         </section>
@@ -686,7 +678,7 @@
                 </div>
             <div class="invoice-footer">
                 Thank you for your business!<br>
-                Modern Apparel Style Solution (MASS), <br>Tongi, Dhaka, Bangladesh<br>
+                Modern Apparel Style Solution (MASS), Tongi, Dhaka Division, Bangladesh<br>
                 Phone number:01710989035<br>
                 Date Generated: <span id="generatedDateTime"></span>
             </div>
@@ -715,6 +707,22 @@
             <h3>All Purchases</h3>
             <div id="customerPurchaseHistory">
             </div>
+            
+            <h3>Payment Log (Due Payments Only):</h3>
+            <table id="customerPaymentsLogTable" style="margin-bottom: 20px;">
+                <thead>
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Payment Amount (TK)</th>
+                        <th>Ref. Invoice No</th>
+                        <th>Cleared From Oldest Due</th>
+                    </tr>
+                </thead>
+                <tbody id="customerPaymentsLogBody">
+                    <tr><td colspan="4" style="text-align: center;">No due payments recorded.</td></tr>
+                </tbody>
+            </table>
+            
             <div class="purchase-summary">
                 <strong>Sum Total of All Purchases:</strong> <span id="customerTotalSpent">0.00 TK</span><br>
                 <strong>Total Outstanding Due:</strong> <span id="customerTotalDue" class="due-amount-highlight">0.00 TK</span>
@@ -723,9 +731,10 @@
 
     </main>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script type="module">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+    
+    <script type="module" defer>
         // Import Firebase functions
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
@@ -775,7 +784,22 @@
             }
         }
 
+        // ✅ CRITICAL FIX APPLIED: Function to calculate a single customer's total outstanding due
+        // New Lgical Fix: Sum the dueAmount from ALL purchases that have a due > 0 (FIFO requirement)
+        function getCustomerTotalDue(customer) {
+            let totalDue = 0;
+            if (customer && customer.purchases && customer.purchases.length > 0) {
+                // Sum the dueAmount from ALL purchases that have a due > 0
+                customer.purchases.forEach(purchase => {
+                    totalDue += purchase.dueAmount || 0;
+                });
+            }
+            return parseFloat(totalDue.toFixed(2));
+        }
+
         // --- Firebase Data Listener (Primary Data Source) ---
+        // We move the DOMContentLoaded listener setup *inside* the script tag, but the script itself is *deferred*.
+
         onValue(stockDataRef, (snapshot) => {
             if (snapshot.exists()) {
                 stockData = snapshot.val();
@@ -784,6 +808,10 @@
             } else {
                 stockData = []; // If data doesn't exist in Firebase, initialize as empty
                 console.log("No stockData in Firebase.");
+                // If no data, ensure the table shows 'No data' instead of 'Loading...'
+                if (document.getElementById('currentStockTable')) {
+                    document.querySelector('#currentStockTable tbody').innerHTML = '<tr><td colspan="5" style="text-align: center;">No stock data available.</td></tr>';
+                }
             }
         });
 
@@ -812,7 +840,6 @@
                 customers = snapshot.val();
                 console.log("Customers from Firebase:", customers);
                 // Also update customer-dependent reports if they are currently visible
-                // For safety, only call if necessary or after initial load
                 if (!document.getElementById('customersSection').classList.contains('hidden')) {
                     renderCustomersList();
                 }
@@ -821,8 +848,10 @@
                 console.log("No customers in Firebase.");
             }
         });
-
+        
         // JavaScript Logic
+        // The script is already deferred, so DOMContentLoaded is technically redundant for code execution flow, 
+        // but we wrap the main execution logic inside it for safety and best practice.
         document.addEventListener('DOMContentLoaded', () => {
             // DOM Elements
             const contentDiv = document.getElementById('content');
@@ -867,7 +896,7 @@
             const itemCurrentReportTableBody = document.querySelector('#itemCurrentReportTable tbody');
             const customerListTableBody = document.getElementById('customerListTableBody');
             const cartTableBody = document.getElementById('cartTableBody');
-
+            const customerPaymentsLogBody = document.getElementById('customerPaymentsLogBody'); // NEW
 
             // Textareas for JSON editing
             const jsonStockDataTextarea = document.getElementById('jsonStockData');
@@ -977,7 +1006,7 @@
 
             // Function to render current stock view
             function renderStockView() {
-                hideAllSections();
+                // hideAllSections(); // We don't hide on initial load to keep the loading message visible
                 stockViewSection.classList.remove('hidden');
                 currentStockTableBody.innerHTML = '';
 
@@ -1008,6 +1037,10 @@
                         <button class="add-to-cart-btn" data-item-name="${item.itemName}" data-item-size="${item.itemSize}">Add</button>
                     `;
                     addCell.appendChild(addForm);
+                }
+                
+                if (stockData.length === 0) {
+                     currentStockTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No stock data available.</td></tr>';
                 }
             }
 
@@ -1185,9 +1218,8 @@
 
                 let totalCustomerDue = 0;
                 customers.forEach(customer => {
-                    customer.purchases.forEach(purchase => {
-                        totalCustomerDue += purchase.dueAmount || 0;
-                    });
+                    // Using the fixed function to get the correct due amount (sum of all purchases due)
+                    totalCustomerDue += getCustomerTotalDue(customer);
                 });
 
                 totalStockQuantityReport.textContent = totalQuantity;
@@ -1260,10 +1292,12 @@
                             totalPaidAmount += paidAmount;
                             
                             // Calculate new due generated in THIS invoice (excluding previous due)
-                            let dueOnCurrentBill = totalAmount - Math.max(0, paidAmount - (purchase.previousDue || 0));
-                            if (dueOnCurrentBill < 0) dueOnCurrentBill = 0;
+                            // Note: With the new FIFO logic, this calculation becomes complex because the paid amount is split.
+                            // For simplicity in reporting, we will calculate the DUE of the current invoice itself.
+                            let newDueGenerated = totalAmount - Math.max(0, paidAmount - (purchase.previousDue || 0));
+                            if (newDueGenerated < 0) newDueGenerated = 0; 
                             
-                            totalNewDueGenerated += dueOnCurrentBill;
+                            totalNewDueGenerated += newDueGenerated;
 
                             monthlyInvoices.push({
                                 date: purchase.date,
@@ -1271,7 +1305,8 @@
                                 customerName: customer.name || customer.phone || 'Guest',
                                 netSale: totalAmount,
                                 discount: discount,
-                                due: dueAmount // This is the total outstanding due for that invoice
+                                // Due here should be the NEW due generated by this specific invoice.
+                                due: dueAmount 
                             });
                         }
                     });
@@ -1310,6 +1345,7 @@
                         detailRow.insertCell(4).textContent = formatCurrency(invoice.discount);
                         
                         const dueCell = detailRow.insertCell(5);
+                        // We will display the purchase.dueAmount from the log (which is the due of the current invoice).
                         dueCell.textContent = formatCurrency(invoice.due);
                         if (invoice.due > 0) {
                             dueCell.classList.add('due-amount-highlight');
@@ -1593,10 +1629,9 @@
                     customerAddressInput.value = existingCustomer.address || '';
                     invoiceCustomerNameDisplay.textContent = existingCustomer.name || 'N/A';
                     invoiceCustomerPhoneDisplay.textContent = existingCustomer.phone || 'N/A';
-
-                    existingCustomer.purchases.forEach(purchase => {
-                        totalDueForCustomer += purchase.dueAmount || 0;
-                    });
+                    
+                    // ✅ New Logic: Sum of all outstanding due amounts
+                    totalDueForCustomer = getCustomerTotalDue(existingCustomer); 
                 } else {
                     invoiceCustomerNameDisplay.textContent = 'N/A';
                     invoiceCustomerPhoneDisplay.textContent = 'N/A';
@@ -1634,11 +1669,11 @@
                     
                     // Show discount and grand total rows
                     discountInputRow.classList.remove('hidden');
-                    invoiceTotalRow.classList.remove('hidden'); // <<-- এই রো-টিকে দৃশ্যমান করা হলো
+                    invoiceTotalRow.classList.remove('hidden'); 
                 } else {
                     // Hide discount and grand total rows
                     discountInputRow.classList.add('hidden');
-                    invoiceTotalRow.classList.add('hidden'); // <<-- এই রো-টিকে লুকানো হলো
+                    invoiceTotalRow.classList.add('hidden'); 
                 }
                 
                 // 3. Grand Total (Net total after discount - Current Bill Amount)
@@ -1684,6 +1719,7 @@
                 const month = String(now.getMonth() + 1).padStart(2, '0');
                 const year = now.getFullYear();
                 const date = `${day}/${month}/${year}`;
+                const dateTime = now.toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false });
                 
                 const currentInvoiceNo = invoiceNoDisplay.textContent;
                 const customerPhone = customerPhoneInput.value.trim();
@@ -1693,15 +1729,16 @@
                 // Get All Calculated Totals (Run calculation one last time for safety)
                 calculateDueAmount();
                 const subTotalAmount = parseFloat(invoiceSubTotalDisplay.textContent.replace(' TK', ''));
-                // Use the calculated total amount after discount, which is always available.
-                const totalInvoiceAmount = parseFloat(invoiceTotalDisplay.textContent.replace(' TK', '')); 
+                const totalInvoiceAmount = parseFloat(invoiceTotalDisplay.textContent.replace(' TK', '')); // Net total after discount
                 const discountAmount = applyDiscountCheckbox.checked ? parseFloat(discountAmountInput.value) || 0 : 0;
                 const totalPayable = parseFloat(totalPayableDisplay.textContent.replace(' TK', '')); 
-                const paidAmount = parseFloat(paidAmountInput.value);
-                let dueAmount = totalPayable - paidAmount;
+                let paidAmount = parseFloat(paidAmountInput.value);
+                
+                // Final calculation of the TOTAL OUTSTANDING DUE after this sale
+                let finalOutstandingDue = totalPayable - paidAmount; 
 
-                if (dueAmount < 0) {
-                    dueAmount = 0;
+                if (finalOutstandingDue < 0) {
+                    finalOutstandingDue = 0;
                 }
 
                 if (isNaN(paidAmount) || paidAmount < 0) {
@@ -1716,9 +1753,10 @@
                 // Create copies to avoid race conditions with the onValue listener
                 const newStockData = [...stockData];
                 const newStockOutLog = [...stockOutLog];
-                const newCustomers = [...customers];
+                const newCustomers = JSON.parse(JSON.stringify(customers)); // Deep clone for safe modification
 
 
+                // 1. Stock Check (Already done in renderInvoiceFromCart, but repeated for critical safety)
                 for (const soldItem of cartItems) {
                     let totalAvailableQuantity = 0;
                     stockData.filter(i =>
@@ -1732,6 +1770,7 @@
                     }
                 }
 
+                // 2. Stock Out Logging and Update
                 cartItems.forEach(soldItem => {
                     const stockItemIndex = newStockData.findIndex(s =>
                         s.itemName.toLowerCase() === soldItem.itemName.toLowerCase() &&
@@ -1754,8 +1793,53 @@
                     });
                 });
 
+                // 3. Customer & Due Update (FIFO Lgical Fix)
+                let currentInvoiceDue = totalInvoiceAmount; // Initialize current invoice due with net sale
+                let oldPaidAmount = 0; // The portion of paidAmount used to clear old dues
+
                 if (customerPhone) {
-                    let existingCustomer = newCustomers.find(c => c.phone === customerPhone);
+                    let existingCustomerIndex = newCustomers.findIndex(c => c.phone === customerPhone);
+                    let customer;
+
+                    if (existingCustomerIndex !== -1) {
+                        customer = newCustomers[existingCustomerIndex];
+                        customer.name = customerName;
+                        customer.address = customerAddress;
+                    } else {
+                        customer = {
+                            phone: customerPhone,
+                            name: customerName,
+                            address: customerAddress,
+                            purchases: [],
+                            paymentsLog: [] // Initialize paymentsLog for new customer
+                        };
+                        newCustomers.push(customer);
+                    }
+                    
+                    let remainingPayment = paidAmount; // e.g., 20
+                    let oldDueCleared = 0; // Total amount cleared from previous invoices
+                    let clearedInvoiceNo = '';
+
+                    // 3a. FIFO Distribution: Pay off old dues first (Sort by date ascending is implicit as purchases are logged chronologically)
+                    customer.purchases.forEach(purchase => {
+                        if (remainingPayment > 0 && purchase.dueAmount > 0) {
+                            const amountToClear = Math.min(remainingPayment, purchase.dueAmount);
+                            purchase.dueAmount = parseFloat((purchase.dueAmount - amountToClear).toFixed(2));
+                            remainingPayment = parseFloat((remainingPayment - amountToClear).toFixed(2));
+                            oldDueCleared += amountToClear;
+                            clearedInvoiceNo += (clearedInvoiceNo ? ', ' : '') + purchase.invoiceNo;
+                        }
+                    });
+                    oldPaidAmount = oldDueCleared; // This is the portion of 'paidAmount' that cleared old dues.
+
+                    // 3b. Pay off current invoice
+                    if (remainingPayment > 0) {
+                        const amountToClear = Math.min(remainingPayment, currentInvoiceDue);
+                        currentInvoiceDue = parseFloat((currentInvoiceDue - amountToClear).toFixed(2));
+                        remainingPayment = parseFloat((remainingPayment - amountToClear).toFixed(2));
+                    }
+                    
+                    // 3c. Store the new purchase
                     const purchaseDetails = {
                         invoiceNo: currentInvoiceNo,
                         date: date,
@@ -1764,36 +1848,53 @@
                             itemSize: item.itemSize,
                             quantity: item.quantity,
                             unitPrice: item.price,
-                            subtotal: item.quantity * item.price
+                            subtotal: item.quantity * item.price 
                         })),
-                        totalAmount: totalInvoiceAmount, // Grand Total (Net amount after discount)
-                        subTotal: subTotalAmount, // NEW: Subtotal before discount
-                        discount: discountAmount, // NEW: Discount amount
-                        previousDue: currentCustomerPreviousDue, // NEW: Previous due at the time of invoice
-                        totalPayable: totalPayable, // NEW: Grand Total + Previous Due
-                        paidAmount: paidAmount,
-                        dueAmount: dueAmount // NEW: Final Due
+                        totalAmount: totalInvoiceAmount, // Net Total (Bill for current items)
+                        subTotal: subTotalAmount, // Subtotal before discount
+                        discount: discountAmount, // Discount amount
+                        previousDue: currentCustomerPreviousDue, // Total Due BEFORE this sale
+                        totalPayable: totalPayable, // Net Sale + Previous Due
+                        // This paid amount is the total cash received in this transaction (used for reporting)
+                        paidAmount: paidAmount, 
+                        // This due is ONLY for the current invoice (e.g., 18 in your example)
+                        dueAmount: Math.max(0, currentInvoiceDue) 
                     };
+                    
+                    customer.purchases.push(purchaseDetails);
 
-                    if (existingCustomer) {
-                        existingCustomer.name = customerName;
-                        existingCustomer.address = customerAddress;
-                        existingCustomer.purchases.push(purchaseDetails);
-                    } else {
-                        newCustomers.push({
-                            phone: customerPhone,
-                            name: customerName,
-                            address: customerAddress,
-                            purchases: [purchaseDetails]
+                    // 3d. Log Payment if any amount was paid (cleared old due + paid current invoice)
+                    if (paidAmount > 0) {
+                        if (!customer.paymentsLog) {
+                            customer.paymentsLog = [];
+                        }
+                        
+                        let currentPaidForInvoices = paidAmount - oldDueCleared; // Amount paid specifically for the current invoice
+                        let refInvoices = clearedInvoiceNo;
+                        
+                        // If paid amount for current invoice is positive, log the current invoice number as cleared/partially cleared
+                        if (currentPaidForInvoices > 0) {
+                            refInvoices += (refInvoices ? ', ' : '') + currentInvoiceNo;
+                        }
+
+                        customer.paymentsLog.push({
+                            dateTime: dateTime,
+                            paymentAmount: paidAmount, // Total cash received
+                            clearedAmount: oldDueCleared + currentPaidForInvoices, // Total value settled (old due + part of current bill)
+                            refInvoice: refInvoices.substring(0, 100) // Log the invoices cleared/paid (max 100 chars)
                         });
                     }
+
                     await saveToFirebase(customersRef, newCustomers);
                 }
 
+                // 4. Final Save
                 await saveToFirebase(stockDataRef, newStockData);
                 await saveToFirebase(stockOutLogRef, newStockOutLog);
 
-                alert('Sale finalized and stock updated!');
+                alert('Sale finalized, stock and due amounts updated!');
+                
+                // 5. Cleanup
                 cartItems = [];
                 invoiceNoDisplay.textContent = '';
                 customerPhoneInput.value = '';
@@ -1811,8 +1912,8 @@
                 discountAmountInput.value = '0';
 
                 dueAmountRow.classList.add('hidden');
-                discountInputRow.classList.add('hidden'); // Hide discount row
-                invoiceTotalRow.classList.add('hidden'); // Hide grand total row
+                discountInputRow.classList.add('hidden'); 
+                invoiceTotalRow.classList.add('hidden'); 
 
                 renderStockView();
             });
@@ -1842,11 +1943,14 @@
                     row.insertCell(1).textContent = customer.name || 'N/A';
 
                     let totalPurchasesAmount = 0;
-                    let totalOutstandingDue = 0;
+                    
                     customer.purchases.forEach(purchase => {
                         totalPurchasesAmount += purchase.totalAmount || 0;
-                        totalOutstandingDue += purchase.dueAmount || 0;
                     });
+                    
+                    // ✅ Correct Logic: Sum of all outstanding due amounts
+                    const totalOutstandingDue = getCustomerTotalDue(customer); 
+                    
                     row.insertCell(2).textContent = formatCurrency(totalPurchasesAmount);
 
                     const outstandingDueCell = row.insertCell(3);
@@ -1875,7 +1979,7 @@
                 customerPurchaseHistoryDiv.innerHTML = '';
 
                 let grandTotalSpent = 0;
-                let grandTotalDue = 0;
+                
 
                 if (customer.purchases.length === 0) {
                     customerPurchaseHistoryDiv.innerHTML = '<p>No purchase history for this customer.</p>';
@@ -1896,17 +2000,22 @@
                         purchaseDiv.style.backgroundColor = '#fefefe';
 
                         grandTotalSpent += purchase.totalAmount;
-                        grandTotalDue += purchase.dueAmount || 0;
+                        
+                        // We must fetch the *current* total due for this customer every time.
+                        const currentTotalDue = getCustomerTotalDue(customer);
 
                         let dueActionHtml = '';
-                        if (purchase.dueAmount > 0) {
-                            dueActionHtml = `
+                        // This payment button is now for ALL outstanding due amounts
+                        if (currentTotalDue > 0) {
+                             dueActionHtml = `
                                 <br>
-                                <strong>Pay Due:</strong>
-                                <input type="number" min="0" step="0.01" value="${purchase.dueAmount.toFixed(2)}" class="due-payment-input" id="dueInput_${customerPhone}_${purchaseIndex}">
-                                <button class="pay-due-btn" data-customer-phone="${customerPhone}" data-purchase-index="${purchaseIndex}">Record Payment</button>
+                                <strong>Record Payment Against ALL Dues:</strong>
+                                <input type="number" min="0" step="0.01" value="${currentTotalDue.toFixed(2)}" class="due-payment-input" id="dueInput_${customerPhone}">
+                                <button class="pay-due-btn" data-customer-phone="${customerPhone}">Record Payment</button>
+                                <p style="font-size: 10px; color: #888; margin-top: 5px;">*Recording payment here will clear the oldest outstanding invoices first.</p>
                             `;
                         }
+
 
                         purchaseDiv.innerHTML = `
                             <h4>Invoice No: ${purchase.invoiceNo} (Date: ${purchase.date})</h4>
@@ -1914,11 +2023,10 @@
                                 <strong>Subtotal (Gross):</strong> ${formatCurrency(purchase.subTotal || purchase.totalAmount)}<br>
                                 <strong>Discount:</strong> ${formatCurrency(purchase.discount || 0)}<br>
                                 <strong>Total (Net):</strong> ${formatCurrency(purchase.totalAmount)}<br>
-                                <strong>Previous Due:</strong> ${formatCurrency(purchase.previousDue || 0)}<br>
-                                <strong>Total Payable:</strong> ${formatCurrency(purchase.totalPayable || purchase.totalAmount + (purchase.previousDue || 0))}<br>
-                                <strong>Paid Amount:</strong> ${formatCurrency(purchase.paidAmount || 0)}<br>
-                                <strong>Due Amount:</strong> <span class="${purchase.dueAmount > 0 ? 'due-amount-highlight' : ''}">${formatCurrency(purchase.dueAmount || 0)}</span>
-                                ${dueActionHtml}
+                                <strong>Previous Due (at sale time):</strong> ${formatCurrency(purchase.previousDue || 0)}<br>
+                                <strong>Total Payable (at sale time):</strong> ${formatCurrency(purchase.totalPayable || purchase.totalAmount + (purchase.previousDue || 0))}<br>
+                                <strong>Paid Amount (at sale time):</strong> ${formatCurrency(purchase.paidAmount || 0)}<br>
+                                <strong>Due Amount (from this invoice):</strong> <span class="${purchase.dueAmount > 0 ? 'due-amount-highlight' : ''}">${formatCurrency(purchase.dueAmount || 0)}</span>
                             </p>
                             <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
                                 <thead>
@@ -1944,52 +2052,114 @@
                             </table>
                             <button class="download-customer-invoice-btn" data-invoice-no="${purchase.invoiceNo}" data-customer-phone="${customerPhone}">Download Invoice (JPEG)</button>
                         `;
+                        
+                        // Only add the payment button once on the most recent invoice (first in the list)
+                        if (purchaseIndex === 0 && currentTotalDue > 0) {
+                             purchaseDiv.innerHTML += dueActionHtml;
+                        }
+                        
                         customerPurchaseHistoryDiv.appendChild(purchaseDiv);
                     });
                 }
+                
+                // ✅ Correct Logic: Sum of all outstanding due amounts
+                let grandTotalDue = getCustomerTotalDue(customer); 
+                
                 customerTotalSpentSpan.textContent = formatCurrency(grandTotalSpent);
                 customerTotalDueSpan.textContent = formatCurrency(grandTotalDue);
+
+                // --- Populate Payments Log Table (UPDATED) ---
+                const paymentsLogBody = document.getElementById('customerPaymentsLogBody');
+                paymentsLogBody.innerHTML = '';
+
+                if (customer.paymentsLog && customer.paymentsLog.length > 0) {
+                    // Sort by date/time (newest first)
+                    customer.paymentsLog.sort((a, b) => {
+                        const dateA = new Date(a.dateTime.replace(/(\d{2})\/(\d{2})\/(\d{4}), (\d{2}):(\d{2})/, '$3-$2-$1T$4:$5:00'));
+                        const dateB = new Date(b.dateTime.replace(/(\d{2})\/(\d{2})\/(\d{4}), (\d{2}):(\d{2})/, '$3-$2-$1T$4:$5:00'));
+                        return dateB - dateA;
+                    }).forEach(log => {
+                        const row = paymentsLogBody.insertRow();
+                        row.insertCell(0).textContent = log.dateTime;
+                        row.insertCell(1).textContent = formatCurrency(log.paymentAmount);
+                        row.insertCell(2).textContent = log.refInvoice || 'N/A';
+                        row.insertCell(3).textContent = formatCurrency(log.clearedAmount);
+                    });
+                } else {
+                    paymentsLogBody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No due payments recorded.</td></tr>';
+                }
+                // ------------------------------------------
             }
 
-            // --- Record Due Payment Logic ---
+            // --- Record Due Payment Logic (UPDATED FOR FIFO & LOGGING) ---
             document.addEventListener('click', async (e) => {
                 if (e.target.classList.contains('pay-due-btn')) {
                     const btn = e.target;
                     const customerPhone = btn.dataset.customerPhone;
-                    const purchaseIndex = parseInt(btn.dataset.purchaseIndex);
-                    const dueInput = document.getElementById(`dueInput_${customerPhone}_${purchaseIndex}`);
-                    const paymentAmount = parseFloat(dueInput.value);
+                    const dueInput = document.getElementById(`dueInput_${customerPhone}`);
+                    let paymentAmount = parseFloat(dueInput.value);
 
                     if (isNaN(paymentAmount) || paymentAmount <= 0) {
                         alert('Please enter a valid positive amount to pay.');
                         return;
                     }
 
-                    // Create a copy of customers to avoid race conditions
-                    const newCustomers = [...customers];
+                    const now = new Date();
+                    const dateTime = now.toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false });
+                    
+                    // Deep clone for safe modification
+                    const newCustomers = JSON.parse(JSON.stringify(customers)); 
                     const customer = newCustomers.find(c => c.phone === customerPhone);
-                    if (!customer || !customer.purchases[purchaseIndex]) {
-                        alert('Error: Customer or purchase not found.');
-                        return;
-                    }
-
-                    const purchase = customer.purchases[purchaseIndex];
-                    if (paymentAmount > purchase.dueAmount) {
-                        alert(`Payment amount (${formatCurrency(paymentAmount)}) cannot exceed the outstanding due amount (${formatCurrency(purchase.dueAmount)}).`);
+                    if (!customer) {
+                        alert('Error: Customer not found.');
                         return;
                     }
                     
-                    // Update due/paid logic: preserve previous paid amounts and only update due
-                    purchase.paidAmount = (purchase.paidAmount || 0) + paymentAmount;
-                    purchase.dueAmount = purchase.dueAmount - paymentAmount;
+                    const currentTotalDue = getCustomerTotalDue(customer);
+                    if (paymentAmount > currentTotalDue) {
+                        alert(`Payment amount (${formatCurrency(paymentAmount)}) cannot exceed the outstanding total due (${formatCurrency(currentTotalDue)}).`);
+                        return;
+                    }
+                    
+                    let remainingPayment = paymentAmount;
+                    let oldDueCleared = 0;
+                    let clearedInvoiceNo = '';
+
+                    // Initialize paymentsLog if it doesn't exist
+                    if (!customer.paymentsLog) {
+                        customer.paymentsLog = [];
+                    }
+
+                    // FIFO Logic: Update old invoices first
+                    customer.purchases.forEach(purchase => {
+                        if (remainingPayment > 0 && purchase.dueAmount > 0) {
+                            const amountToClear = Math.min(remainingPayment, purchase.dueAmount);
+                            purchase.dueAmount = parseFloat((purchase.dueAmount - amountToClear).toFixed(2));
+                            remainingPayment = parseFloat((remainingPayment - amountToClear).toFixed(2));
+                            oldDueCleared += amountToClear;
+                            clearedInvoiceNo += (clearedInvoiceNo ? ', ' : '') + purchase.invoiceNo;
+                        }
+                    });
+                    
+                    // Log the payment
+                    customer.paymentsLog.push({
+                        dateTime: dateTime,
+                        paymentAmount: paymentAmount,
+                        clearedAmount: oldDueCleared,
+                        refInvoice: clearedInvoiceNo.substring(0, 100), // Log the invoices cleared (max 100 chars)
+                    });
 
                     await saveToFirebase(customersRef, newCustomers);
-                    alert(`Payment of ${formatCurrency(paymentAmount)} recorded for Invoice ${purchase.invoiceNo}. Remaining Due: ${formatCurrency(purchase.dueAmount)}`);
+                    
+                    const newTotalDue = getCustomerTotalDue(newCustomers.find(c => c.phone === customerPhone));
+
+                    alert(`Payment of ${formatCurrency(paymentAmount)} recorded successfully. New Total Outstanding Due: ${formatCurrency(newTotalDue)}`);
                     renderCustomerReport(customerPhone);
                 }
             });
 
-            // NEW LOGIC: Download Invoice from Customer Report Section
+
+            // ✅ UPDATED LOGIC: Download Invoice from Customer Report Section
             document.addEventListener('click', async (e) => {
                 if (e.target.classList.contains('download-customer-invoice-btn')) {
                     const btn = e.target;
@@ -2007,6 +2177,13 @@
                         alert('Invoice not found for this customer.');
                         return;
                     }
+
+                    // --- নতুন লজিক: গ্রাহকের চূড়ান্ত বকেয়া গণনা করা হচ্ছে ---
+                    // Recalculate Final Outstanding Due: Total Payable - Paid Amount
+                    const purchaseTotalPayable = purchase.totalPayable || (purchase.totalAmount + (purchase.previousDue || 0));
+                    const purchasePaidAmount = purchase.paidAmount || 0;
+                    const finalOutstandingDueAfterTransaction = Math.max(0, purchaseTotalPayable - purchasePaidAmount);
+                    // -------------------------------------------------------------------
 
                     downloadInvoiceDate.textContent = purchase.date;
                     downloadInvoiceNo.textContent = purchase.invoiceNo;
@@ -2032,38 +2209,47 @@
                         row.insertCell(4).textContent = formatCurrency(item.subtotal);
                     });
                     
-                    // NEW FIELDS POPULATION START
+                    // FIELDS POPULATION
                     downloadInvoiceSubTotal.textContent = formatCurrency(purchase.subTotal || purchase.totalAmount || 0);
                     downloadInvoiceDiscount.textContent = formatCurrency(purchase.discount || 0);
                     downloadInvoicePreviousDue.textContent = formatCurrency(purchase.previousDue || 0);
                     downloadInvoiceTotalPayable.textContent = formatCurrency(purchase.totalPayable || purchase.totalAmount + (purchase.previousDue || 0));
-                    // NEW FIELDS POPULATION END
-
+                    
                     downloadInvoiceTotal.textContent = formatCurrency(purchase.totalAmount);
                     downloadInvoicePaid.textContent = formatCurrency(purchase.paidAmount);
-                    downloadInvoiceDue.textContent = formatCurrency(purchase.dueAmount);
+                    
+                    // ✅ CRITICAL FIX: The due amount here is the FINAL outstanding due to the customer (e.g., 565.00 TK)
+                    downloadInvoiceDue.textContent = formatCurrency(finalOutstandingDueAfterTransaction); 
 
                     // **👇 নতুন ডিসকাউন্ট হাইড লজিক**
                     const discountAmount = purchase.discount || 0;
                     const downloadDiscountDiv = downloadableInvoiceDiv.querySelector('#downloadDiscountRow'); 
-                    const downloadTotalDiv = downloadableInvoiceDiv.querySelector('#downloadInvoiceTotal').closest('div'); // Total (Net) Div
+                    const downloadTotalDiv = downloadableInvoiceDiv.querySelector('#downloadInvoiceTotal').closest('div'); 
                     
                     if (discountAmount <= 0) {
                         downloadDiscountDiv.classList.add('hidden');
-                        downloadTotalDiv.classList.add('hidden'); // Total Net ও হাইড হবে
+                        downloadTotalDiv.classList.add('hidden'); 
                     } else {
                         downloadDiscountDiv.classList.remove('hidden');
-                        downloadTotalDiv.classList.remove('hidden'); // Total Net visible হবে
+                        downloadTotalDiv.classList.remove('hidden'); 
                     }
                     // **👆 নতুন ডিসকাউন্ট হাইড লজিক**
 
+                    // Hide Paid row if paid amount is 0
+                    const downloadPaidDiv = downloadableInvoiceDiv.querySelector('#downloadInvoicePaid').closest('div');
+                    if (purchase.paidAmount <= 0) {
+                         downloadPaidDiv.classList.add('hidden');
+                    } else {
+                         downloadPaidDiv.classList.remove('hidden');
+                    }
+
+                    // Display Due row based on the FINAL OUTSTANDING DUE
                     const downloadDueDiv = downloadableInvoiceDiv.querySelector('#downloadInvoiceDue').closest('div');
-                    if (purchase.dueAmount <= 0) {
+                    if (finalOutstandingDueAfterTransaction <= 0) { // Check the FINAL DUE
                         downloadDueDiv.classList.add('hidden');
                     } else {
                         downloadDueDiv.classList.remove('hidden');
                     }
-                    downloadableInvoiceDiv.querySelector('#downloadInvoicePaid').closest('div').classList.remove('hidden');
 
 
                     downloadableInvoiceDiv.style.position = 'absolute';
@@ -2072,8 +2258,9 @@
                     downloadableInvoiceDiv.classList.remove('hidden');
 
                     try {
+                        // Check for html2canvas to ensure it has loaded with 'defer'
                         if (typeof html2canvas === 'undefined') {
-                            console.error("html2canvas library not loaded. Please check the CDN link.");
+                            console.error("html2canvas library not loaded. Waiting for defer.");
                             alert("Error: Image generation library not loaded. Cannot download invoice.");
                             return;
                         }
@@ -2093,16 +2280,24 @@
 
                                 if (clonedDiscountAmount <= 0) {
                                     clonedDiscountRow.classList.add('hidden'); 
-                                    clonedTotalNetRow.classList.add('hidden'); // Total Net ও হাইড হবে
+                                    clonedTotalNetRow.classList.add('hidden'); 
                                 } else {
                                     clonedDiscountRow.classList.remove('hidden');
-                                    clonedTotalNetRow.classList.remove('hidden'); // Total Net visible হবে
+                                    clonedTotalNetRow.classList.remove('hidden'); 
                                 }
                                 // 👆 ক্লোন লজিক শেষ
-
-                                document.querySelector('#downloadableInvoice #downloadInvoicePaid').closest('div').classList.remove('hidden');
-                                const clonedDueAmount = parseFloat(document.getElementById('downloadInvoiceDue').textContent.replace(' TK', '')) || 0;
-                                if (clonedDueAmount <= 0) {
+                                
+                                // Paid Logic for clone
+                                const clonedPaidAmount = parseFloat(document.getElementById('downloadInvoicePaid').textContent.replace(' TK', '')) || 0;
+                                if (clonedPaidAmount <= 0) {
+                                    document.querySelector('#downloadableInvoice #downloadInvoicePaid').closest('div').classList.add('hidden');
+                                } else {
+                                    document.querySelector('#downloadableInvoice #downloadInvoicePaid').closest('div').classList.remove('hidden');
+                                }
+                                
+                                // Final Due Logic for clone
+                                const clonedFinalDue = parseFloat(document.getElementById('downloadInvoiceDue').textContent.replace(' TK', '')) || 0;
+                                if (clonedFinalDue <= 0) {
                                     document.querySelector('#downloadableInvoice #downloadInvoiceDue').closest('div').classList.add('hidden');
                                 } else {
                                     document.querySelector('#downloadableInvoice #downloadInvoiceDue').closest('div').classList.remove('hidden');
@@ -2177,7 +2372,7 @@
                 }
             });
 
-            // --- NEW: Dynamic Calculation & Conditional Discount Display ---
+            // --- Dynamic Calculation & Conditional Discount Display ---
             applyDiscountCheckbox.addEventListener('change', calculateDueAmount); 
 
             discountAmountInput.addEventListener('input', calculateDueAmount);
@@ -2188,7 +2383,7 @@
 
 
             // --- Event Listeners for Navigation Buttons ---
-            btnStockView.addEventListener('click', renderStockView);
+            btnStockView.addEventListener('click', () => { hideAllSections(); renderStockView(); }); // Added hideAllSections here
             btnStockEntry.addEventListener('click', () => { hideAllSections(); stockEntrySection.classList.remove('hidden'); });
             btnStockOut.addEventListener('click', () => { hideAllSections(); stockOutSection.classList.remove('hidden'); });
             btnShowAllData.addEventListener('click', renderAllData);
@@ -2229,9 +2424,8 @@
                     invoiceCustomerNameDisplay.textContent = existingCustomer.name || 'N/A';
                     invoiceCustomerPhoneDisplay.textContent = existingCustomer.phone || 'N/A';
 
-                    existingCustomer.purchases.forEach(purchase => {
-                        totalDue += purchase.dueAmount || 0;
-                    });
+                    // ✅ New Logic: Sum of all outstanding due amounts
+                    totalDue = getCustomerTotalDue(existingCustomer); 
                 } else {
                     if (!customerNameInput.dataset.userEdited) {
                         customerNameInput.value = '';
@@ -2257,6 +2451,9 @@
             
             // Initial call to set current month/year on load
             initializeYearDropdown(); 
+            
+            // The initial renderStockView() call is no longer needed here because onValue(stockDataRef, ...) calls it automatically.
+            // However, we ensure all elements are ready to receive the data.
         });
     </script>
 </body>
