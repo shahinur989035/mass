@@ -95,24 +95,40 @@
             text-align: center;
         }
         
-        /* Table Styling */
-        table {
+        /* 🎨 Universal Table Styling (APPLIED TO ALL TABLES EXCEPT DOWNLOADABLE INVOICE) */
+        table:not(#downloadableInvoice table) {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 5px;
+            margin-top: 15px;
             background-color: #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-radius: 4px;
         }
-        table th, table td {
+        table:not(#downloadableInvoice table) th, table:not(#downloadableInvoice table) td {
             width: auto;
-            border: 1px solid #ddd;
-            padding: 5px;
+            border: 2px solid #eee;
+            padding: 8px 5px;
             text-align: center;
-            font-size: 12px;
+            font-size: 11px;
         }
-        table th {
+        table:not(#downloadableInvoice table) th {
             background-color: #e9e9e9;
+            font-weight: bold;
+            color: #333;
+            font-size: 11px;
         }
         
+        /* Zebra Stripping: Alternating row colors for all tables (EXCEPT DOWNLOADABLE INVOICE) */
+        table:not(#downloadableInvoice table) tbody tr:nth-child(even) { 
+            background-color: #f7f7f7;
+        }
+        
+        /* Hover effect for better usability (EXCEPT DOWNLOADABLE INVOICE) */
+        table:not(#downloadableInvoice table) tbody tr:hover {
+            background-color: #eef;
+        }
+        /* End of Universal Table Styling */
+
         /* Form Styling (simplified) */
         form {
             background-color: #f9f9f9;
@@ -135,7 +151,55 @@
             font-weight: bold;
         }
 
-        /* INVOICE SPECIFIC STYLES - FROM ORIGINAL REQUEST WITH WATERMARK */
+        /* 🎨 DOWNLOADABLE INVOICE SPECIFIC STYLES (Kept Original/Required styles) */
+        
+        /* লোগোর Ass (আকার) পরিবর্তন করার জন্য নতুন স্টাইল */
+        #invoiceContainer .invoice-logo {
+            max-width: 100px;
+            height: auto;
+            margin: 0 auto 10px auto;
+            display: block !important; 
+        }
+        
+        #invoiceContainer h3 {
+            text-align: center;
+            font-size: 24px;
+            color: #244850;
+            margin-bottom: 20px;
+        }
+        
+        /* New Styles for Centering and Improving Customer Details Form */
+        #customerDetailsForm {
+            width: 90%;
+            max-width: 400px;
+            margin: 0px auto 20px auto;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Input ফিল্ডগুলোর জন্য স্টাইল যা স্টক এন্ট্রি ফর্মের ইনপুটের মতো */
+        #customerDetailsForm input[type="text"], 
+        #customerDetailsForm input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        /* লেবেলের স্টাইল ঠিক করা */
+        #customerDetailsForm label { 
+            display: block;
+            margin-bottom: 5px; 
+            font-weight: bold; 
+            width: 100%;
+        }
+        /* End of new styles for #customerDetailsForm */
+
         #downloadableInvoice {
             position: relative; 
             overflow: hidden; 
@@ -147,6 +211,32 @@
             box-sizing: border-box;
             font-size: 15px;
         }
+        
+        /* CRITICAL: Styles for the TABLE inside the downloadable invoice (Kept the old minimal style) */
+        #downloadableInvoice table {
+            width: 100%;
+            border-collapse: collapse; /* Ensure table collapse is maintained */
+            margin-top: 15px;
+            box-shadow: none; /* Remove box shadow */
+            background-color: transparent;
+        }
+        
+        #downloadableInvoice table th, #downloadableInvoice table td {
+            width: auto;
+            border: 1px solid #ccc; /* Stronger border for print/image */
+            padding: 8px 5px;
+            text-align: center;
+            font-size: 13px;
+        }
+        
+        #downloadableInvoice table th {
+            background-color: #eee;
+            font-weight: bold;
+            color: #333;
+            font-size: 11px;
+        }
+        /* CRITICAL END */
+
 
         /* Watermark Logo Styling */
         .invoice-watermark {
@@ -179,9 +269,9 @@
         }
 
         .download-invoice-header .invoice-logo {
-            max-width: 90px; 
+            max-width: 80px;
             height: auto;
-            margin: 0 25px 0 0; 
+            margin: 0 10px 0 0;
             display: block !important;
         }
 
@@ -189,7 +279,7 @@
             text-align: left; 
             color: #244950;
             margin: 0; 
-            font-size: 20px; 
+            font-size: 18px;
             line-height: 1.2;
             padding-top: 5px; 
         }
@@ -234,10 +324,9 @@
             position: relative;
             z-index: 1;
         }
-        /* End of Invoice Specific Styles */
+        /* End of Downloadable Invoice Specific Styles */
 
         /* Existing Styles from user provided code (continued) */
-        #currentStockTable tr:nth-child(even) { background-color: #f2f2f2; }
         form label { display: inline-block; margin-bottom: 8px; font-weight: bold; width: 120px; }
         form input[type="text"], form input[type="number"] { width: calc(100% - 130px); padding: 8px; margin-bottom: 5px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
         form button[type="submit"] { background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 8px; margin-top: 10px; }
@@ -249,15 +338,28 @@
         #invoiceActions { text-align: right; margin-top: 15px; }
         #finalizeSaleBtn { background-color: #007bff; color: white; }
         #clearInvoiceBtn { background-color: #dc3545; color: white; }
-        .add-to-cart-form { display: flex; align-items: center; gap: 5px; margin-top: 1px; }
+        .add-to-cart-form { 
+            display: flex; align-items: center; gap: 5px; margin-top: 1px; }
         .add-to-cart-form input[type="number"] { width: 30px; height: 10px; margin-bottom: 0; padding: 5px; box-sizing: border-box; }
         .add-to-cart-form button { background-color: #17a2b8; color: white; padding: 3px 10px; border: none; border-radius: 4px; cursor: pointer; font-size: 10px; margin-top: 0; }
         .cart-checkout-buttons { text-align: right; margin-top: 20px; }
         #goToInvoiceBtn { background-color: #28a745; color: white; }
+        #clearCartBtn { background-color: #dc3545; color: white; }
         .pay-due-btn, .download-customer-invoice-btn { background-color: #28a745; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; font-size: 10px; margin-top: 5px; margin-right: 5px; }
         .download-customer-invoice-btn { background-color: #ffc107; color: #333; }
-        #monthlyReportControls { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; background-color: #e6f7ff; display: flex; gap: 15px; align-items: center; }
-        #monthlyReportControls select, #monthlyReportControls button { padding: 8px 12px; border-radius: 4px; border: 1px solid green; }
+        #monthlyReportControls { 
+    
+            margin-bottom: 20px; padding: 5px; border: 1px solid #ddd; border-radius: 5px; background-color: #e6f7ff; display: flex; gap: 5px; align-items: center; }
+        #monthlyReportControls select, #monthlyReportControls button { 
+            width="80%"
+            padding: 8px 12px; border-radius: 5px; border: 1px solid green;
+            background:#ffc107;
+        }
+            
+        .cart-quantity-input{
+            width:40px ;
+            text-align:center;
+        }
     </style>
 </head>
 <body>
@@ -299,7 +401,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td colspan="5" style="text-align: center;">Loading stock data... Please wait.</td></tr> 
+                    <tr><td colspan="5" style="text-align: center;">Click the current stock button for view data</td></tr> 
                 </tbody>
             </table>
         </section>
@@ -553,8 +655,8 @@
                     <label for="customerPhone">Phone Number:</label>
                     <input type="text" id="customerPhone" placeholder="e.g., 01XXXXXXXXX"><br>
                     <label for="customerName">Customer Name:</label>
-                    <input type="text" id="customerName" placeholder="e.g., John Doe"><br>
-                    <label for="customerAddress">Address:</label><br>
+                    <input type="text" id="customerName" placeholder="e.g., Customer Name"><br>
+                    <label for="customerAddress">Address:</label>
                     <input type="text" id="customerAddress" placeholder="e.g., 123 Main St"><br>
                 </div>
                 <div class="invoice-details">
@@ -678,8 +780,8 @@
                 </div>
             <div class="invoice-footer">
                 Thank you for your business!<br>
-                Modern Apparel Style Solution (MASS),Tongi, Dhaka, Bangladesh<br>
-                Phone number:01710989035,
+                Modern Apparel Style Solution (MASS), Gazipura-27 ,Tongi, Dhaka, Bangladesh<br>
+                Phone number:  01710989035    , Gmail :  Mass.info247@gmail.com <br>
                 Date Generated: <span id="generatedDateTime"></span>
             </div>
         </div>
@@ -731,8 +833,8 @@
 
     </main>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
     <script type="module" defer>
         // Import Firebase functions
@@ -796,6 +898,42 @@
             }
             return parseFloat(totalDue.toFixed(2));
         }
+
+        // 🎯 MODIFIED FUNCTION: generateInvoiceNumber (INV-DDMMYY-XXX)
+        // Function to generate invoice number in the format: INV-DDMMYY-XXX
+        function generateInvoiceNumber() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1; // 1-12
+            const day = now.getDate(); // 1-31
+            
+            const yearString = year.toString().slice(-2);
+            const monthString = month.toString().padStart(2, '0');
+            const dayString = day.toString().padStart(2, '0');
+            
+            // Calculate total invoices for the current month across ALL customers
+            let monthlyInvoiceCount = 0;
+            
+            customers.forEach(customer => {
+                if (customer.purchases) {
+                    customer.purchases.forEach(purchase => {
+                        // Assuming purchase.date is in "DD/MM/YYYY" format
+                        const [purchaseDay, purchaseMonth, purchaseYear] = purchase.date.split('/').map(Number);
+                        
+                        if (purchaseMonth === month && purchaseYear === year) {
+                            monthlyInvoiceCount++;
+                        }
+                    });
+                }
+            });
+            
+            // The next invoice number will be the current count + 1
+            const nextInvoiceNumber = monthlyInvoiceCount + 1;
+            
+            // Desired format: INV-DDMMYY-XXX (e.g., INV-271025-007)
+            return `INV-${dayString}${monthString}${yearString}-${nextInvoiceNumber.toString().padStart(3, '0')}`;
+        }
+        // 🎯 END MODIFIED FUNCTION
 
         // --- Firebase Data Listener (Primary Data Source) ---
         // We move the DOMContentLoaded listener setup *inside* the script tag, but the script itself is *deferred*.
@@ -985,18 +1123,6 @@
                 document.querySelectorAll('section').forEach(section => {
                     section.classList.add('hidden');
                 });
-            }
-
-            // Function to generate a simple invoice number
-            function generateInvoiceNumber() {
-                const now = new Date();
-                const year = now.getFullYear().toString().slice(-2);
-                const month = (now.getMonth() + 1).toString().padStart(2, '0');
-                const day = now.getDate().toString().padStart(2, '0');
-                const hour = now.getHours().toString().padStart(2, '0');
-                const minute = now.getMinutes().toString().padStart(2, '0');
-                const second = now.getSeconds().toString().padStart(2, '0');
-                return `INV-${year}${month}${day}-${hour}${minute}${second}`;
             }
 
             // Helper function to format currency
@@ -1616,9 +1742,10 @@
                 const month = String(now.getMonth() + 1).padStart(2, '0');
                 const year = now.getFullYear();
                 invoiceDateDisplay.textContent = `${day}/${month}/${year}`;
-                if (!invoiceNoDisplay.textContent || invoiceNoDisplay.textContent.startsWith('INV-')) {
-                    invoiceNoDisplay.textContent = generateInvoiceNumber();
-                }
+                
+                // 🎯 MODIFIED: Always generate new invoice number on this page load
+                invoiceNoDisplay.textContent = generateInvoiceNumber();
+
 
                 const phone = customerPhoneInput.value.trim();
                 const existingCustomer = customers.find(c => c.phone === phone);
@@ -2261,7 +2388,7 @@
                         // Check for html2canvas to ensure it has loaded with 'defer'
                         if (typeof html2canvas === 'undefined') {
                             console.error("html2canvas library not loaded. Waiting for defer.");
-                            alert("Error: Image generation library not loaded. Cannot download invoice.");
+                            alert("Error: Image generation library not loaded. Cannot download invoice. Try reloading the page.");
                             return;
                         }
 
@@ -2318,7 +2445,7 @@
 
                     } catch (error) {
                         console.error('Error generating invoice image:', error);
-                        alert('Failed to generate invoice image. Please check the console for details and ensure all content is properly rendered. This could be due to a "tainted canvas" issue if external content (like images from another domain) is present.');
+                        alert('Failed to generate invoice image. Please check the console for details and ensure the "img.png" logo is in the same folder as the HTML file.');
                     } finally {
                         downloadableInvoiceDiv.classList.add('hidden');
                         downloadableInvoiceDiv.style.position = '';
