@@ -4,86 +4,390 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modern Apparel Style Solution - Stock & Sales Management (Optimized)</title>
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
     <style>
         /* Base Styles */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f7f6; /* Lighter background */
+            background-color: #f4f7f6;
             color: #333;
+            padding-top: 100px !important;
+            padding-bottom: 85px !important;
         }
         
-        /* Header Logo Styling */
+        /* Fixed Header Styling */
         .main-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 10px 0;
-            background-color: #fff;
+            background: linear-gradient(135deg, #f0fdff 0%, #fffccc 100%);
             border-bottom: 2px solid #ddd;
-            border-radius: 20px;
+            border-radius: 0 0 20px 20px;
+            z-index: 10000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
          
         .header-logo {
-            max-width: 80px;
+            max-width: 60px;
             height: auto;
-            margin-right: 15px;
-            margin-top: 0px;
+            margin-right: 10px;
         }
 
         .header-text {
             text-align: left;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
 
         .header-text h3 {
             margin: 0;
             color: #244850;
-            font-size: 26px;
+            font-size: 22px;
         }
 
         .header-text h4 {
-            margin: 5px;
+            margin: 3px 0;
             color: #555;
-            font-size: 14px;
+            font-size: 12px;
         }
 
-        /* Navigation Styling */
+        /* Fixed Navigation Styling - IMPROVED */
         nav {
-            width: 99%;
-            margin-top: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 65px;
+            background-color: #ffffff;
             display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -2px 15px rgba(0,0,0,0.1);
+            z-index: 9999;
+            padding: 0;
+            overflow-x: auto;
+            scrollbar-width: none;
         }
-        nav button {
-            background-color: #5cb85c;
-            color: white;
-            padding: 10px 15px;
-            border: none;
+
+        nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* বাটন স্টাইল */
+        .modern-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: none !important;
+            border: none !important;
+            color: #555 !important;
             cursor: pointer;
-            margin: 5px;
-            border-radius: 4px;
-            font-size: 8px;
-            white-space: nowrap;
-            transition: background-color 0.3s;
+            flex: 1;
+            min-width: 30px;
+            padding: 5px 0 !important;
+            transition: all 0.3s ease;
         }
-        nav button:hover {
-            background-color: #4cae4c;
+
+        .modern-btn.active {
+            color: #007bff !important;
         }
-        
+
+        .modern-btn.active i {
+            color: #007bff !important;
+        }
+
+        /* আইকন সাইজ */
+        .modern-btn i {
+            font-size: 25px !important;
+            margin-bottom: 3px !important;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        /* বাটন টেক্সট */
+        .modern-btn span {
+            font-size: 10px !important;
+            font-weight: 600;
+        }
+
+        /* ক্লিক করলে কালার পরিবর্তন */
+        .modern-btn:active {
+            transform: scale(0.9);
+            color: #007bff !important;
+        }
+
+        /* নির্দিষ্ট কালার */
+        #btnDashboard { color: #244850 !important; }
+        #btnStockView { color: #5cb85c !important; }
+        #btnStockEntry { color: #007bff !important; }
+        #btnSellInvoice { color: #20c997 !important; }
+        #btnCustomers { color: #6f42c1 !important; }
+        #btnMonthlyReport { color: #ffc107 !important; }
+        #btnOverallDataView { color: #dc3545 !important; }
+
+        /* Cart count badge */
+        .cart-count-badge {
+            background: #dc3545;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 9px;
+            margin-left: 3px;
+        }
+
         /* Main Content Styling */
         main {
             position: relative;
             width: 100%;
-            height: auto;
+            min-height: calc(100vh - 180px);
             border-radius: 20px;
             padding: 1px;
-            margin-top: 40px;
+            margin-top: 10px;
             box-sizing: border-box;
             background: #ecf0f3;
             box-shadow: 14px 14px 20px #cbced1, -14px -14px 20px white;
+            overflow-y: auto;
+        }
+
+        /* Initially hide all sections */
+        main > section {
+            display: none;
+            padding: 20px;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+
+        main > section:not(.hidden) {
+            display: block;
+        }
+        
+        /* Dashboard Section */
+        #dashboardSection {
+            display: block;
+            padding: 20px;
+        }
+        
+        /* Dashboard Cards */
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .dashboard-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .dashboard-card i {
+            font-size: 30px;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 25%;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .card-icon-1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .card-icon-2 {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .card-icon-3 {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .card-icon-4 {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        
+        .card-content {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .card-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: darkorange;
+            margin-bottom: 5px;
+        }
+        
+        .card-value1 {
+           font-size: 24px;
+           font-weight: bold;
+           color: red;
+           margin-bottom: 5px;
+        }
+        
+        .card-value2 {
+            font-size: 24px;
+            font-weight: bold;
+            color: green;
+            margin-bottom: 5px;
+        }
+        
+        .card-label {
+            font-size: 10px;
+            color: #666;
+        }
+        
+        /* New Pie Chart Styles - UPDATED */
+        .pie-chart-container {
+            width: 60px;
+            height: 60px;
+            position: relative;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .pie-chart {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .pie-segment {
+            fill: none;
+            stroke-width: 32;
+            stroke-linecap: round;
+            transition: stroke-dasharray 0.5s ease;
+        }
+
+        .pie-center-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 8px;
+            
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            background: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Pie Chart Item Labels Inside Pie */
+        .item-label {
+            position: absolute;
+            font-size: 5px !important;
+            font-weight: bold;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            pointer-events: none;
+            white-space: nowrap;
+            transform-origin: center;
+            z-index: 2;
+        }
+
+        /* Pie Chart Outer Text - Total Stock Quantity */
+        .pie-outer-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+            font-weight: bold;
+            color: darkorange;
+            text-align: center;
+            pointer-events: none;
+            z-index: 1;
+            margin-top: 85px;
+        }
+
+        /* Color classes for different items */
+        .color-item-1 { background-color: #667eea; }
+        .color-item-2 { background-color: #f093fb; }
+        .color-item-3 { background-color: #4facfe; }
+        .color-item-4 { background-color: #43e97b; }
+        .color-item-5 { background-color: #ffc107; }
+        .color-item-6 { background-color: #dc3545; }
+        .color-item-7 { background-color: #6f42c1; }
+        .color-item-8 { background-color: #20c997; }
+        .color-item-9 { background-color: #17a2b8; }
+        .color-item-10 { background-color: #fd7e14; }
+        
+        /* SVG stroke colors */
+        .stroke-color-1 { stroke: #667eea; }
+        .stroke-color-2 { stroke: #f093fb; }
+        .stroke-color-3 { stroke: #4facfe; }
+        .stroke-color-4 { stroke: #43e97b; }
+        .stroke-color-5 { stroke: #ffc107; }
+        .stroke-color-6 { stroke: #dc3545; }
+        .stroke-color-7 { stroke: #6f42c1; }
+        .stroke-color-8 { stroke: #20c997; }
+        .stroke-color-9 { stroke: #17a2b8; }
+        .stroke-color-10 { stroke: #fd7e14; }
+        
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .action-btn {
+            background: white;
+            border: none;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .action-btn:hover {
+            background: #f8f9fa;
+            transform: translateY(-3px);
+        }
+        
+        .action-btn i {
+            font-size: 24px;
+            color: #007bff;
+        }
+        
+        .action-btn span {
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
         }
         
         /* Section Header */
@@ -95,6 +399,35 @@
             text-align: center;
         }
         
+        /* Stock Summary */
+        .stock-summary {
+            display: flex;
+            justify-content: space-around;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .summary-item {
+            text-align: center;
+        }
+
+        .summary-label {
+            display: block;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .summary-value {
+            display: block;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
         /* 🎨 Universal Table Styling (APPLIED TO ALL TABLES EXCEPT DOWNLOADABLE INVOICE) */
         table:not(#downloadableInvoice table) {
             width: 100%;
@@ -112,35 +445,60 @@
             font-size: 11px;
         }
         table:not(#downloadableInvoice table) th {
-            background-color: #e9e9e9;
+            background-color: #ffffe0b2;
             font-weight: bold;
             color: #333;
-            font-size: 11px;
+            font-size: 12px;
         }
         
         /* Zebra Stripping: Alternating row colors for all tables (EXCEPT DOWNLOADABLE INVOICE) */
         table:not(#downloadableInvoice table) tbody tr:nth-child(even) { 
             background-color: #f7f7f7;
         }
-        
+        table th {
+            font-weight: 600;
+            font-size: 13px;
+            padding: 15px 10px;
+            text-align: center;
+            border: none;
+            position: relative;
+        }
+
         /* Hover effect for better usability (EXCEPT DOWNLOADABLE INVOICE) */
         table:not(#downloadableInvoice table) tbody tr:hover {
             background-color: #eef;
         }
-        /* End of Universal Table Styling */
+
+        /* Add to Cart icon style */
+        .add-to-cart-icon {
+            background: none;
+            border: none;
+            color: #28a745;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 5px;
+            transition: transform 0.2s;
+        }
+
+        .add-to-cart-icon:hover {
+            transform: scale(1.2);
+            color: #218838;
+        }
 
         /* Form Styling (simplified) */
         form {
-            background-color: #f9f9f9;
+            
             padding: 20px;
-            border-radius: 8px;
+            border-radius: 10px;
             box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05);
             margin-bottom: 20px;
+            color: #000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
         
         /* Utility */
         .hidden {
-            display: none;
+            display: none !important;
         }
         .due-amount-highlight {
             color: red;
@@ -151,9 +509,176 @@
             font-weight: bold;
         }
 
-        /* 🎨 DOWNLOADABLE INVOICE SPECIFIC STYLES (Kept Original/Required styles) */
-        
-        /* লোগোর Ass (আকার) পরিবর্তন করার জন্য নতুন স্টাইল */
+        /* Cart Summary Cards */
+        .cart-summary-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .summary-card {
+            flex: 1;
+            min-width: 200px;
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .summary-card i {
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: white;
+        }
+
+        .summary-card.stock-value i {
+            background: #28a745;
+        }
+
+        .summary-card.due-amount i {
+            background: #dc3545;
+        }
+
+        .summary-card.cart-total i {
+            background: #007bff;
+        }
+
+        .summary-content {
+            flex: 1;
+        }
+
+        /* Cart Table Improvements - FIXED QUANTITY INPUT */
+        .cart-quantity-input {
+            width: 70px !important;
+            padding: 8px !important;
+            text-align: center;
+            font-size: 14px !important;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .cart-action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .cart-action-buttons button {
+            padding: 5px 10px;
+            font-size: 12px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .remove-from-cart {
+            background: #dc3545;
+            color: white;
+        }
+
+        /* Modal for Invoice Editing */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 15px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+
+        .modal-actions button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #saveInvoiceBtn {
+            background: #28a745;
+            color: white;
+        }
+
+        #cancelEditBtn {
+            background: #6c757d;
+            color: white;
+        }
+
+        /* Invoice Edit Table */
+        #editableInvoiceTable input {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+
+        #editableInvoiceTable td {
+            padding: 5px;
+        }
+
+        .remove-item-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        /* 🎨 DOWNLOADABLE INVOICE SPECIFIC STYLES */
         #invoiceContainer .invoice-logo {
             max-width: 100px;
             height: auto;
@@ -168,7 +693,7 @@
             margin-bottom: 20px;
         }
         
-        /* New Styles for Centering and Improving Customer Details Form */
+        /* Customer Details Form */
         #customerDetailsForm {
             width: 90%;
             max-width: 400px;
@@ -180,7 +705,6 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
-        /* Input ফিল্ডগুলোর জন্য স্টাইল যা স্টক এন্ট্রি ফর্মের ইনপুটের মতো */
         #customerDetailsForm input[type="text"], 
         #customerDetailsForm input[type="number"] {
             width: 100%;
@@ -191,14 +715,12 @@
             box-sizing: border-box;
         }
 
-        /* লেবেলের স্টাইল ঠিক করা */
         #customerDetailsForm label { 
             display: block;
             margin-bottom: 5px; 
             font-weight: bold; 
             width: 100%;
         }
-        /* End of new styles for #customerDetailsForm */
 
         #downloadableInvoice {
             position: relative; 
@@ -212,18 +734,18 @@
             font-size: 15px;
         }
         
-        /* CRITICAL: Styles for the TABLE inside the downloadable invoice (Kept the old minimal style) */
+        /* CRITICAL: Styles for the TABLE inside the downloadable invoice */
         #downloadableInvoice table {
             width: 100%;
-            border-collapse: collapse; /* Ensure table collapse is maintained */
+            border-collapse: collapse;
             margin-top: 15px;
-            box-shadow: none; /* Remove box shadow */
+            box-shadow: none;
             background-color: transparent;
         }
         
         #downloadableInvoice table th, #downloadableInvoice table td {
             width: auto;
-            border: 1px solid #ccc; /* Stronger border for print/image */
+            border: 1px solid #ccc;
             padding: 8px 5px;
             text-align: center;
             font-size: 13px;
@@ -235,8 +757,6 @@
             color: #333;
             font-size: 11px;
         }
-        /* CRITICAL END */
-
 
         /* Watermark Logo Styling */
         .invoice-watermark {
@@ -252,12 +772,11 @@
             pointer-events: none;
         }
 
-        /* ইনভয়েসের টপ লোগো স্টাইল */
         #downloadableInvoice .invoice-logo {
             display: none; 
         }
 
-        /* নতুন Flex Header স্টাইল (পাশাপাশি রাখার জন্য) */
+        /* নতুন Flex Header স্টাইল */
         .download-invoice-header {
             display: flex;
             align-items: center; 
@@ -284,7 +803,6 @@
             padding-top: 5px; 
         }
         
-        /* পুরাতন ইনভয়েস হেডিং স্টাইল পরিবর্তন করা হয়েছে */
         #downloadableInvoice h1 {
             font-size: 25px;
             text-align: center;
@@ -324,7 +842,6 @@
             position: relative;
             z-index: 1;
         }
-        /* End of Downloadable Invoice Specific Styles */
 
         /* Existing Styles from user provided code (continued) */
         form label { display: inline-block; margin-bottom: 8px; font-weight: bold; width: 120px; }
@@ -347,18 +864,378 @@
         #clearCartBtn { background-color: #dc3545; color: white; }
         .pay-due-btn, .download-customer-invoice-btn { background-color: #28a745; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; font-size: 10px; margin-top: 5px; margin-right: 5px; }
         .download-customer-invoice-btn { background-color: #ffc107; color: #333; }
+        
+        /* UPDATED: Monthly Report Controls - Single Date Range Picker */
         #monthlyReportControls { 
-    
-            margin-bottom: 20px; padding: 5px; border: 1px solid #ddd; border-radius: 5px; background-color: #e6f7ff; display: flex; gap: 5px; align-items: center; }
-        #monthlyReportControls select, #monthlyReportControls button { 
-            width="80%"
-            padding: 8px 12px; border-radius: 5px; border: 1px solid green;
-            background:#ffc107;
+            margin-bottom: 20px; 
+            padding: 20px; 
+            border: 1px solid #ddd; 
+            border-radius: 10px; 
+            background-color: #f8f9fa; 
+            display: flex; 
+            flex-wrap: wrap;
+            gap: 15px; 
+            align-items: center; 
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
+        
+        .date-range-picker-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #28a745;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            min-width: 300px;
+        }
+        
+        .date-range-picker-container label {
+            font-weight: bold;
+            color: #244850;
+            margin: 0;
+            white-space: nowrap;
+        }
+        
+        #dateRangeInput {
+            padding: 10px 12px;
+            border: 1px solid #28a745;
+            border-radius: 5px;
+            font-size: 14px;
+            background: #fff;
+            cursor: pointer;
+            text-align: center;
+        }
+        
+        .date-range-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #244850;
+            background: #e9ecef;
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: 1px solid #ced4da;
+            min-width: 300px;
+        }
+        
+        .date-range-display span {
+            padding: 5px 10px;
+            border-radius: 4px;
+            background: white;
+            border: 1px solid #ddd;
+        }
+        
+        .date-range-separator {
+            color: #28a745;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        #setDateRangeBtn {
+            padding: 10px 25px;
+            border-radius: 5px;
+            border: 1px solid #ffc107;
+            background: #ffc107;
+            color: #333;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        #setDateRangeBtn:hover {
+            background: #e0a800;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+        }
+        
+        .preview-highlight {
+            background-color: #fff3cd !important;
+            border: 2px solid #ffc107 !important;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 193, 7, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
+        }
+        
+        /* New Styles for Stock Entry Form */
+        .stock-form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .stock-form-actions button {
+            flex: 1;
+            padding: 10px;
+            font-size: 12px;
+        }
+        
+        #addStockBtn {
+            background-color: #28a745;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            border-radius: 5px;
+    font-size: 16px;
             
-        .cart-quantity-input{
-            width:40px ;
-            text-align:center;
+        }
+        
+        #removeStockBtn {
+            background-color: #dc3545;
+            color: white;
+            border-radius: 5px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            font-size: 16px;
+        }
+        
+        /* Customer Edit Form Styles */
+        .customer-edit-form {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+        }
+        
+        .customer-edit-form h4 {
+            margin-top: 0;
+            color: #495057;
+            margin-bottom: 15px;
+        }
+        
+        .customer-edit-form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            width: 100%;
+        }
+        
+        .customer-edit-form input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        .customer-edit-form .form-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .customer-edit-form .form-buttons button {
+            flex: 1;
+            padding: 8px;
+            font-size: 12px;
+        }
+        
+        .save-customer-btn {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .cancel-edit-btn {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        /* Button Styles */
+        .edit-customer-btn {
+            background-color: #17a2b8;
+            color: white;
+            padding: 3px 8px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 10px;
+            margin: 2px;
+        }
+        
+        .edit-customer-btn:hover {
+            background-color: #138496;
+        }
+        
+        /* Animation for cart addition */
+        @keyframes cartAdd {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+        
+        .cart-add-animation {
+            animation: cartAdd 0.5s ease-in-out;
+        }
+        
+        /* Quantity input in cart - FIXED */
+        .cart-quantity-input {
+            width: 60px !important;
+            padding: 8px !important;
+            text-align: center;
+            font-size: 14px !important;
+            border: 2px solid #007bff !important;
+            border-left: none !important;
+            border-right: none !important;
+            border-radius: 0 !important;
+            background-color: white;
+            font-weight: bold;
+        }
+        
+        .cart-quantity-input:focus {
+            outline: none;
+            border-color: #0056b3 !important;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+        
+        /* Quantity control buttons */
+        .quantity-btn {
+            padding: 8px 12px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .quantity-btn.plus {
+            background: #28a745;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .quantity-btn.minus {
+            background: #dc3545;
+            border-radius: 4px 0 0 4px;
+        }
+        
+        /* Quantity control container */
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            justify-content: center;
+        }
+        
+        /* Table containers for scrollable areas - স্ক্রলিং ছাড়া */
+        .table-container {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: visible; /* স্ক্রলিং রিমুভ */
+        }
+        
+        .table-container table {
+            margin-top: 0;
+        }
+        
+        /* NEW: Purchase invoice card styling for better visibility */
+        .purchase-invoice-card {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            background-color: #fefefe;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .purchase-invoice-card h4 {
+            margin-top: 0;
+            color: #244850;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+        
+        /* NEW: Improved invoice view */
+        .invoice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .invoice-item {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        /* Scrollable content - স্ক্রলিং ছাড়া */
+        .scrollable-content {
+            position: relative;
+            overflow: visible; /* স্ক্রলিং রিমুভ */
+        }
+        
+        #backToAllData,#backToCustomersList{
+            background: blue;
+            border-radius: 10px;
+            color: whitesmoke;
+            height: 30px;
+        box-shadow:inset 0 1px 0 #FFE5C4, inset 0 -3px 0 #915100;
+        }
+        
+        /* নতুন: ট্যাব স্টাইল */
+        .tab-navigation {
+            display: flex;
+            gap: 10px;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            margin: 20px 0;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 5px;
+            background: #e9ecef;
+            color: #495057;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .tab-btn:hover {
+            background: #dee2e6;
+            transform: translateY(-2px);
+        }
+        
+        .tab-btn.active {
+            background: #007bff;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,123,255,0.3);
+        }
+        
+        .tab-content-container {
+            position: relative;
+            min-height: 400px;
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
     </style>
 </head>
@@ -373,35 +1250,123 @@
             </div>
         </div>
         
-        <nav>
-            <button id="btnStockView">Current Stock</button>
-            <button id="btnStockEntry">Stock Entry</button>
-            <button id="btnStockOut">Stock Out (Direct)</button>
-            <button id="btnOverallReport">Overall Report</button>
-            <button id="btnMonthlyReport" style="background-color: #ffc107; color: #333;">Monthly Sales Report</button>
-            <button id="btnShowAllData">Show All Data</button>
-            <button id="btnSellInvoice" style="background-color: #20c997;">Generate Invoice</button>
-            <button id="btnCustomers" style="background-color: #6f42c1; color: white;">Customers</button>
-            <button id="btnJsonEdit" style="background-color: #17a2b8;">JSON Edit</button>
-        </nav>
+    <nav>
+        <button id="btnDashboard" class="modern-btn"><i class="fa-solid fa-home"></i><span>Dashboard</span></button>
+        <button id="btnStockView" class="modern-btn"><i class="fa-solid fa-layer-group"></i><span>Stock</span></button>
+        <button id="btnStockEntry" class="modern-btn"><i class="fa-solid fa-circle-plus"></i><span>Entry</span></button>
+        <button id="btnSellInvoice" class="modern-btn"><i class="fa-solid fa-file-invoice"></i><span>Invoice</span></button>
+        <button id="btnCustomers" class="modern-btn"><i class="fa-solid fa-user-group"></i><span>Customers</span></button>
+        <button id="btnMonthlyReport" class="modern-btn"><i class="fa-solid fa-calendar-check"></i><span>Monthly</span></button>
+        <button id="btnOverallDataView" class="modern-btn"><i class="fa-solid fa-database"></i><span>All Data</span></button>
+    </nav>
+
     </header>
 
     <main id="content">
-        <section id="stockViewSection">
+        <!-- Dashboard Section (Default View) -->
+        <section id="dashboardSection">
+            <h2>Dashboard Overview</h2>
+            
+            <div class="dashboard-cards">
+                <div class="dashboard-card">
+                    <i class="fas fa-boxes card-icon-1"></i>
+                    <div class="card-content">
+                        <div class="card-value2" id="dashboardStockValue">0.00 TK</div>
+                        <div class="card-label">Total Stock Value</div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <i class="fas fa-users card-icon-2"></i>
+                    <div class="card-content">
+                        <div class="card-value1" id="dashboardCustomerDue">0.00 TK</div>
+                        <div class="card-label">Customer Outstanding Due</div>
+                    </div>
+                </div>
+                
+                <!-- Pie Chart Card (Updated) -->
+                <div class="dashboard-card">
+                    <div class="pie-chart-container">
+                        <svg id="stockPieChart" class="pie-chart" viewBox="0 0 32 32">
+                            <!-- Pie chart segments will be added dynamically -->
+                        </svg>
+                        <div class="pie-center-text" id="pieChartTotal">0</div>
+                        <!-- Item labels will be added dynamically -->
+                        <!-- Outer text for total stock quantity -->
+                        <div class="pie-outer-text" id="pieOuterTotal">0</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-value" id="pieChartLabel">0</div>
+                        <div class="card-label">Total Stock Quantity</div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <i class="fas fa-shopping-cart card-icon-4"></i>
+                    <div class="card-content">
+                        <div class="card-value" id="dashboardCartItems">0</div>
+                        <div class="card-label">Items in Cart</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="quick-actions">
+                <button class="action-btn" id="quickStockView">
+                    <i class="fas fa-layer-group"></i>
+                    <span>View Stock</span>
+                </button>
+                
+                <button class="action-btn" id="quickStockEntry">
+                    <i class="fas fa-circle-plus"></i>
+                    <span>Add Stock</span>
+                </button>
+                
+                <button class="action-btn" id="quickSell">
+                    <i class="fas fa-file-invoice"></i>
+                    <span>Create Invoice</span>
+                </button>
+                
+                <button class="action-btn" id="quickCustomers">
+                    <i class="fas fa-user-group"></i>
+                    <span>Manage Customers</span>
+                </button>
+            </div>
+            
+
+        </section>
+
+        <section id="stockViewSection" class="hidden">
             <h2 id="h2">Current Stock Data</h2>
-            <p id="hint">Select items below and add them to your cart before generating an invoice.</p>
+            
+            <!-- Stock Summary -->
+            <div class="stock-summary">
+                <div class="summary-item">
+                    <span class="summary-label">Total Items:</span>
+                    <span class="summary-value" id="totalItemsCount">0</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Total Quantity:</span>
+                    <span class="summary-value" id="totalQuantity">0</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Total Value:</span>
+                    <span class="summary-value" id="totalStockValueMain">0.00 TK</span>
+                </div>
+            </div>
+          
             <table id="currentStockTable">
                 <thead>
                     <tr>
                         <th>Item Name</th>
                         <th>Size</th>
-                        <th>Available Quantity</th>
-                        <th>Price (per unit) (TK)</th>
+                        <th>Available</th>
+                        <th>Price</th>
+                        <th>Total Value</th>
                         <th>Add to Cart</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td colspan="5" style="text-align: center;">Click the current stock button for view data</td></tr> 
+                     
                 </tbody>
             </table>
         </section>
@@ -421,93 +1386,16 @@
                 <label for="entryPrice">Price (per unit) (TK):</label>
                 <input type="number" id="entryPrice" min="0" step="0.01" required><br><br>
 
-                <button type="submit">Add Stock</button>
+                <div class="stock-form-actions">
+                    <button type="button" id="addStockBtn">Add Stock</button>
+                    <button type="button" id="removeStockBtn">Remove Stock</button>
+                </div>
             </form>
         </section>
 
-        <section id="stockOutSection" class="hidden">
-            <h2>Stock Out (Direct Removal)</h2>
-            <p>Use this for direct removal of stock not related to an invoice/sale.</p>
-            <form id="stockOutForm">
-                <label for="outItemName">Item Name:</label>
-                <input type="text" id="outItemName" required><br><br>
-
-                <label for="outItemSize">Size:</label>
-                <input type="text" id="outItemSize" required><br><br>
-
-                <label for="outQuantity">Quantity to Remove:</label>
-                <input type="number" id="outQuantity" min="1" required><br><br>
-
-                <button type="submit">Remove Stock Directly</button>
-            </form>
-        </section>
-
-        <section id="overallReportSection" class="hidden">
-            <h2>Overall Stock & Due Report</h2>
-            <p><strong>Total Stock Quantity:</strong> <span id="totalStockQuantityReport">0</span></p>
-            <p id="tsv"><strong>Total Stock Value:</strong> <span id="totalStockValueReport">0.00 TK</span></p>
-            <p><strong>Total Customer Due:</strong> <span id="totalCustomerDueReport" class="due-amount-highlight">0.00 TK</span></p>
-        </section>
-
-        <section id="reportByMonthSection" class="hidden">
-            <h2>Monthly Sales Report (Invoice Summary)</h2>
-            <div id="monthlyReportControls">
-                <label for="reportMonth">Select Month:</label>
-                <select id="reportMonth">
-                    <option value="1">January</option>
-                    <option value="2">February</option>
-                    <option value="3">March</option>
-                    <option value="4">April</option>
-                    <option value="5">May</option>
-                    <option value="6">June</option>
-                    <option value="7">July</option>
-                    <option value="8">August</option>
-                    <option value="9">September</option>
-                    <option value="10">October</option>
-                    <option value="11">November</option>
-                    <option value="12">December</option>
-                </select>
-
-                <label for="reportYear">Select Year:</label>
-                <select id="reportYear"></select>
-
-                <button id="generateMonthlyReportBtn">Generate Report</button>
-            </div>
+        <section id="overallDataViewSection" class="hidden">
+            <h2>Overall Data View</h2>
             
-            <h3>Summary for Selected Month:</h3>
-            <table id="monthlyReportTable">
-                <thead>
-                    <tr>
-                        <th>Total Invoices</th>
-                        <th>Total Gross Sales (Subtotal)</th>
-                        <th>Total Discount Given</th>
-                        <th>Total Net Sales (Grand Total)</th>
-                        <th>Total Paid Amount</th>
-                        <th>Total New Due Generated</th>
-                    </tr>
-                </thead>
-                <tbody id="monthlyReportSummaryBody">
-                </tbody>
-            </table>
-
-            <h3>Detailed Invoice List:</h3>
-            <table id="monthlyReportDetailTable">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Invoice No</th>
-                        <th>Customer Name</th>
-                        <th>Net Sale (TK)</th>
-                        <th>Discount (TK)</th>
-                        <th>Due (TK)</th>
-                    </tr>
-                </thead>
-                <tbody id="monthlyReportDetailBody">
-                </tbody>
-            </table>
-        </section>
-        <section id="showAllDataSection" class="hidden">
-            <h2>All Stock Data</h2>
             <h3>Current Aggregated Stock:</h3>
             <table id="allCurrentStockTable">
                 <thead>
@@ -593,36 +1481,22 @@
                 <tbody></tbody>
             </table>
         </section>
-
-        <section id="jsonEditorSection" class="hidden">
-            <h2>Edit Raw Data (JSON)</h2>
-            <p><strong>Warning:</strong> Editing this data directly can cause issues if the JSON is malformed. Use with caution.</p>
-
-            <h3>Current Stock Data (`massStockData`)</h3>
-            <textarea id="jsonStockData" rows="10"></textarea>
-            <button id="saveStockDataJson" class="save">Save Stock Data</button>
-
-            <h3>Stock In Log (`massStockInLog`)</h3>
-            <textarea id="jsonStockInLog" rows="10"></textarea>
-            <button id="saveStockInLogJson" class="save">Save Stock In Log</button>
-
-            <h3>Stock Out Log (`massStockOutLog`)</h3>
-            <textarea id="jsonStockOutLog" rows="10"></textarea>
-            <button id="saveStockOutLogJson" class="save">Save Stock Out Log</button>
-
-            <h3>Cart Data (`massCartItems`)</h3>
-            <textarea id="jsonCartData" rows="5"></textarea>
-            <button id="saveCartDataJson" class="save">Save Cart Data</button>
-
-            <h3>Customer Data (`massCustomers`)</h3>
-            <textarea id="jsonCustomerData" rows="10"></textarea>
-            <button id="saveCustomerDataJson" class="save">Save Customer Data</button>
-
-            <button id="cancelJson" class="cancel">Cancel</button>
-        </section>
         
         <section id="cartViewSection" class="hidden">
             <h2>Your Cart</h2>
+            
+            <!-- Cart Summary Cards -->
+            <div class="cart-summary-cards">
+               
+                <div class="summary-card cart-total">
+                    <i class="fas fa-shopping-cart"></i>
+                    <div class="summary-content">
+                        <span class="summary-label">Cart Total</span>
+                        <span class="summary-value" id="cartTotalValue">0.00 TK</span>
+                    </div>
+                </div>
+            </div>
+            
             <table id="cartTable">
                 <thead>
                     <tr>
@@ -770,13 +1644,13 @@
                 </tbody>
             </table>
             <div class="invoice-total-summary"> 
-                <div>Subtotal: <span id="downloadInvoiceSubTotal">0>0.00 TK</span></div>
-                <div id="downloadDiscountRow">Discount: <span id="downloadInvoiceDiscount">00.00 TK</span></div>  
-                <div>Total (Net): <span id="downloadInvoiceTotal"></span></div>
-                <div>Previous Due: <span id="downloadInvoicePreviousDue" class="due-amount-highlight">00.00 TK</span></div>
-                <div>Total Payable:  <span id="downloadInvoiceTotalPayable" class="payable-amount-highlight">00.00 TK</span></div>
-                <div>Paid: <span id="downloadInvoicePaid">00.00 TK</span></div>
-                <div>Due: <span id="downloadInvoiceDue" class="due-amount-highlight">00.00 TK</span></div>
+                <div>Subtotal: <span id="downloadInvoiceSubTotal">0.00 TK</span></div>
+                <div id="downloadDiscountRow">Discount: <span id="downloadInvoiceDiscount">0.00 TK</span></div>  
+                <div>Total (Net): <span id="downloadInvoiceTotal">0.00 TK</span></div>
+                <div>Previous Due: <span id="downloadInvoicePreviousDue" class="due-amount-highlight">0.00 TK</span></div>
+                <div>Total Payable:  <span id="downloadInvoiceTotalPayable" class="payable-amount-highlight">0.00 TK</span></div>
+                <div>Paid: <span id="downloadInvoicePaid">0.00 TK</span></div>
+                <div>Due: <span id="downloadInvoiceDue" class="due-amount-highlight">0.00 TK</span></div>
                 </div>
             <div class="invoice-footer">
                 Thank you for your business!<br>
@@ -788,46 +1662,144 @@
 
         <section id="customersSection" class="hidden">
             <h2>Customer List</h2>
-            <table id="customerListTable">
-                <thead>
-                    <tr>
-                        <th>Phone Number</th>
-                        <th>Customer Name</th>
-                        <th>Total Purchases (TK)</th>
-                        <th>Outstanding Due (TK)</th>
-                        <th>Number of Orders</th>
-                    </tr>
-                </thead>
-                <tbody id="customerListTableBody">
-                </tbody>
-            </table>
+            <div id="customerEditFormContainer" class="customer-edit-form hidden">
+                <h4>Edit Customer Details</h4>
+                <label for="editCustomerPhone">Phone Number:</label>
+                <input type="text" id="editCustomerPhone" readonly><br>
+                
+                <label for="editCustomerName">Customer Name:</label>
+                <input type="text" id="editCustomerName"><br>
+                
+                <label for="editCustomerAddress">Address:</label>
+                <input type="text" id="editCustomerAddress"><br>
+                
+                <div class="form-buttons">
+                    <button type="button" id="saveCustomerEditBtn" class="save-customer-btn">Save Changes</button>
+                    <button type="button" id="cancelCustomerEditBtn" class="cancel-edit-btn">Cancel</button>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table id="customerListTable">
+                    <thead>
+                        <tr>
+                            <th>Phone Number</th>
+                            <th>Customer Name</th>
+                            <th>Total Purchases (TK)</th>
+                            <th>Outstanding Due (TK)</th>
+                            <th>Number of Orders</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customerListTableBody">
+                    </tbody>
+                </table>
+               
+            </div>
         </section>
 
         <section id="customerReportSection" class="hidden">
             <h2>Customer Purchase History: <span id="customerReportName"></span> (<span id="customerReportPhone"></span>)</h2>
             <button id="backToCustomersList">Back to Customer List</button>
-            <h3>All Purchases</h3>
-            <div id="customerPurchaseHistory">
+            
+            <!-- নতুন ট্যাব নেভিগেশন -->
+            <div class="tab-navigation">
+                <button class="tab-btn active" data-tab="allPurchases">All Purchase History</button>
+                <button class="tab-btn" data-tab="duePayments">Due Payment Log</button>
             </div>
             
-            <h3>Payment Log (Due Payments Only):</h3>
-            <table id="customerPaymentsLogTable" style="margin-bottom: 20px;">
+            <!-- ট্যাব কন্টেন্ট কন্টেইনার -->
+            <div class="tab-content-container">
+                <!-- ট্যাব 1: All Purchase History -->
+                <div id="allPurchasesTab" class="tab-content active">
+                    <h3>All Purchases</h3>
+                    <div id="customerPurchaseHistory" class="table-container scrollable-content">
+                        <!-- Purchase invoices will be dynamically added here -->
+                    </div>
+                    
+                    <div class="purchase-summary">
+                        <strong>Sum Total of All Purchases:</strong> <span id="customerTotalSpent">0.00 TK</span><br>
+                        <strong>Total Outstanding Due:</strong> <span id="customerTotalDue" class="due-amount-highlight">0.00 TK</span>
+                    </div>
+                </div>
+                
+                <!-- ট্যাব 2: Due Payment Log -->
+                <div id="duePaymentsTab" class="tab-content">
+                    <h3>Payment Log (Due Payments Only):</h3>
+                    <div class="table-container scrollable-content">
+                        <table id="customerPaymentsLogTable" style="margin-bottom: 20px;">
+                            <thead>
+                                <tr>
+                                    <th>Date & Time</th>
+                                    <th>Payment Amount (TK)</th>
+                                    <th>Ref. Invoice No</th>
+                                    <th>Cleared From Oldest Due</th>
+                                </tr>
+                            </thead>
+                            <tbody id="customerPaymentsLogBody">
+                                <tr><td colspan="4" style="text-align: center;">No due payments recorded.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="reportByMonthSection" class="hidden">
+            <h2>Sales Report (Date Range)</h2>
+            <div id="monthlyReportControls">
+                <div class="date-range-picker-container">
+                    <label for="dateRangeInput">
+                        <i class="fa-solid fa-calendar" style="margin-right: 5px; color: #28a745;"></i> Select Date
+                    </label>
+                    <input type="text" id="dateRangeInput" placeholder="Click to select dates">
+                </div>
+                
+                <div class="date-range-display">
+                    <span id="startDateDisplay">DD/MM/YYYY</span>
+                    <span class="date-range-separator">to</span>
+                    <span id="endDateDisplay">DD/MM/YYYY</span>
+                </div>
+                
+                <button id="setDateRangeBtn">Generate Report</button>
+            </div>
+            
+            <h3>Summary for Selected Date Range:</h3>
+            <table id="monthlyReportTable">
                 <thead>
                     <tr>
-                        <th>Date & Time</th>
-                        <th>Payment Amount (TK)</th>
-                        <th>Ref. Invoice No</th>
-                        <th>Cleared From Oldest Due</th>
+                        <th>Total Invoices</th>
+                        <th>Total Gross Sales (Subtotal)</th>
+                        <th>Total Discount Given</th>
+                        <th>Total Net Sales (Grand Total)</th>
+                        <th>Total Paid Amount</th>
+                        <th>Total New Due Generated</th>
                     </tr>
                 </thead>
-                <tbody id="customerPaymentsLogBody">
-                    <tr><td colspan="4" style="text-align: center;">No due payments recorded.</td></tr>
+                <tbody id="monthlyReportSummaryBody">
                 </tbody>
             </table>
-            
-            <div class="purchase-summary">
-                <strong>Sum Total of All Purchases:</strong> <span id="customerTotalSpent">0.00 TK</span><br>
-                <strong>Total Outstanding Due:</strong> <span id="customerTotalDue" class="due-amount-highlight">0.00 TK</span>
+
+            <h3>Detailed Invoice List:</h3>
+            <div class="table-container scrollable-content">
+                <table id="monthlyReportDetailTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Invoice No</th>
+                            <th>Customer Name</th>
+                            <th>Net Sale (TK)</th>
+                            <th>Discount (TK)</th>
+                            <th>Due (TK)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="monthlyReportDetailBody">
+                    </tbody>
+                </table>
+                <div class="scroll-indicator">
+                    <i class="fas fa-chevron-down"></i>
+                    <span>Scroll down for more invoices</span>
+                </div>
             </div>
         </section>
 
@@ -872,6 +1844,12 @@
         let cartItems = []; // Cart is now just a temporary in-memory variable
         let customers = [];
         let currentCustomerPreviousDue = 0; // Global for previous due
+        let editingCustomerPhone = null; // For customer edit functionality
+
+        // --- NEW: Date Range Variables ---
+        let selectedStartDate = null;
+        let selectedEndDate = null;
+        let flatpickrInstance = null;
 
         // --- Utility Functions for Data Handling ---
 
@@ -887,11 +1865,9 @@
         }
 
         // ✅ CRITICAL FIX APPLIED: Function to calculate a single customer's total outstanding due
-        // New Lgical Fix: Sum the dueAmount from ALL purchases that have a due > 0 (FIFO requirement)
         function getCustomerTotalDue(customer) {
             let totalDue = 0;
             if (customer && customer.purchases && customer.purchases.length > 0) {
-                // Sum the dueAmount from ALL purchases that have a due > 0
                 customer.purchases.forEach(purchase => {
                     totalDue += purchase.dueAmount || 0;
                 });
@@ -900,24 +1876,21 @@
         }
 
         // 🎯 MODIFIED FUNCTION: generateInvoiceNumber (INV-DDMMYY-XXX)
-        // Function to generate invoice number in the format: INV-DDMMYY-XXX
         function generateInvoiceNumber() {
             const now = new Date();
             const year = now.getFullYear();
-            const month = now.getMonth() + 1; // 1-12
-            const day = now.getDate(); // 1-31
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
             
             const yearString = year.toString().slice(-2);
             const monthString = month.toString().padStart(2, '0');
             const dayString = day.toString().padStart(2, '0');
             
-            // Calculate total invoices for the current month across ALL customers
             let monthlyInvoiceCount = 0;
             
             customers.forEach(customer => {
                 if (customer.purchases) {
                     customer.purchases.forEach(purchase => {
-                        // Assuming purchase.date is in "DD/MM/YYYY" format
                         const [purchaseDay, purchaseMonth, purchaseYear] = purchase.date.split('/').map(Number);
                         
                         if (purchaseMonth === month && purchaseYear === year) {
@@ -927,29 +1900,311 @@
                 }
             });
             
-            // The next invoice number will be the current count + 1
             const nextInvoiceNumber = monthlyInvoiceCount + 1;
             
-            // Desired format: INV-DDMMYY-XXX (e.g., INV-271025-007)
             return `INV-${dayString}${monthString}${yearString}-${nextInvoiceNumber.toString().padStart(3, '0')}`;
         }
-        // 🎯 END MODIFIED FUNCTION
+
+        // Function to format currency
+        function formatCurrency(amount) {
+            return `${parseFloat(amount).toFixed(2)} TK`;
+        }
+
+        // Function to calculate total stock value
+        function calculateTotalStockValue() {
+            let totalValue = 0;
+            stockData.forEach(item => {
+                totalValue += item.quantity * item.price;
+            });
+            return totalValue;
+        }
+
+        // Function to calculate total customer due
+        function calculateTotalCustomerDue() {
+            let totalDue = 0;
+            customers.forEach(customer => {
+                if (customer.purchases) {
+                    customer.purchases.forEach(purchase => {
+                        totalDue += purchase.dueAmount || 0;
+                    });
+                }
+            });
+            return totalDue;
+        }
+
+        // Function to calculate total quantity in stock
+        function calculateTotalQuantity() {
+            let totalQty = 0;
+            stockData.forEach(item => {
+                totalQty += item.quantity;
+            });
+            return totalQty;
+        }
+
+        // --- NEW: Function to update Pie Chart with item quantities inside and total outside ---
+        function updatePieChart() {
+            const pieChart = document.getElementById('stockPieChart');
+            const pieChartContainer = document.querySelector('.pie-chart-container');
+            const pieCenterText = document.getElementById('pieChartTotal');
+            const pieOuterText = document.getElementById('pieOuterTotal');
+            const pieChartLabel = document.getElementById('pieChartLabel');
+            
+            if (!pieChart) return;
+            
+            // Clear existing pie chart and item labels
+            pieChart.innerHTML = '';
+            
+            // Remove existing item labels
+            const existingLabels = document.querySelectorAll('.item-label');
+            existingLabels.forEach(label => label.remove());
+            
+            // Aggregate stock data by item name
+            const itemAggregation = {};
+            let totalQuantity = 0;
+            
+            stockData.forEach(item => {
+                const itemName = item.itemName;
+                if (!itemAggregation[itemName]) {
+                    itemAggregation[itemName] = {
+                        name: itemName,
+                        quantity: 0,
+                        colorIndex: 0
+                    };
+                }
+                itemAggregation[itemName].quantity += item.quantity;
+                totalQuantity += item.quantity;
+            });
+            
+            // Convert to array and sort by quantity (descending)
+            const items = Object.values(itemAggregation);
+            items.sort((a, b) => b.quantity - a.quantity);
+            
+            // Assign colors to items
+            const colorClasses = [
+                'stroke-color-1', 'stroke-color-2', 'stroke-color-3', 
+                'stroke-color-4', 'stroke-color-5', 'stroke-color-6',
+                'stroke-color-7', 'stroke-color-8', 'stroke-color-9', 
+                'stroke-color-10'
+            ];
+            
+            items.forEach((item, index) => {
+                item.colorIndex = Math.min(index, colorClasses.length - 1);
+            });
+            
+            // Update center text with number of items
+            if (pieCenterText) {
+                pieCenterText.textContent = items.length;
+            }
+            
+            // Update outer text with total stock quantity
+            if (pieOuterText) {
+                pieOuterText.textContent = totalQuantity;
+                pieOuterText.title = `Total Stock: ${totalQuantity} units`;
+            }
+            
+            // Update pie chart label
+            if (pieChartLabel) {
+                pieChartLabel.textContent = totalQuantity;
+            }
+            
+            // If no items, show empty state
+            if (items.length === 0) {
+                pieChart.innerHTML = '<circle cx="16" cy="16" r="15" fill="#f0f0f0"/>';
+                return;
+            }
+            
+            // Calculate pie chart segments
+            const radius = 15;
+            const circumference = 2 * Math.PI * radius;
+            let cumulativePercent = 0;
+            
+            items.forEach((item, index) => {
+                const percent = item.quantity / totalQuantity;
+                const dashArray = `${percent * circumference} ${circumference}`;
+                const dashOffset = -cumulativePercent * circumference;
+                
+                // Create pie segment
+                const segment = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                segment.setAttribute('cx', '16');
+                segment.setAttribute('cy', '16');
+                segment.setAttribute('r', radius);
+                segment.setAttribute('fill', 'none');
+                segment.setAttribute('stroke-width', '32');
+                segment.setAttribute('stroke-linecap', 'round');
+                segment.setAttribute('stroke-dasharray', dashArray);
+                segment.setAttribute('stroke-dashoffset', dashOffset);
+                segment.classList.add('pie-segment', colorClasses[item.colorIndex]);
+                segment.setAttribute('data-item-name', item.name);
+                segment.setAttribute('data-quantity', item.quantity);
+                
+                pieChart.appendChild(segment);
+                
+                // Calculate position for item label inside pie chart
+                if (percent > 0.10) { // Only show label if segment is big enough
+                    const middleAngle = (cumulativePercent + percent / 2) * 2 * Math.PI;
+                    
+                    // Calculate label position (inside the pie, closer to center)
+                    const labelRadius = radius * 0.4; // Place labels closer to center
+                    const labelX = 16 + labelRadius * Math.cos(middleAngle);
+                    const labelY = 16 + labelRadius * Math.sin(middleAngle);
+                    
+                    // Create item label
+                    const label = document.createElement('div');
+                    label.classList.add('item-label');
+                    
+                    // Display item quantity
+                    label.textContent = item.quantity;
+                    label.style.left = `calc(50% + ${(labelX - 16) * 1.9}px)`; // Scale for container
+                    label.style.top = `calc(50% + ${(labelY - 16) * 1.9}px)`;
+                    label.style.transform = `translate(-50%, -50%)`;
+                    label.style.color = 'white';
+                    label.style.textShadow = '1px 1px 2px rgba(0,0,0,0.7)';
+                    label.style.fontSize = '6px';
+                    label.style.fontWeight = 'bold';
+                    label.title = `${item.name}: ${item.quantity} units`;
+                    
+                    pieChartContainer.appendChild(label);
+                }
+                
+                cumulativePercent += percent;
+            });
+        }
+
+        // Function to update cart summary
+        function updateCartSummary() {
+            const totalStockValue = calculateTotalStockValue();
+            const totalCustomerDue = calculateTotalCustomerDue();
+            let cartTotal = 0;
+            
+            cartItems.forEach(item => {
+                cartTotal += item.quantity * item.price;
+            });
+            
+            if (document.getElementById('totalStockValue')) {
+                document.getElementById('totalStockValue').textContent = formatCurrency(totalStockValue);
+            }
+            if (document.getElementById('totalCustomerDue')) {
+                document.getElementById('totalCustomerDue').textContent = formatCurrency(totalCustomerDue);
+            }
+            if (document.getElementById('cartTotalValue')) {
+                document.getElementById('cartTotalValue').textContent = formatCurrency(cartTotal);
+            }
+            
+            // Update dashboard values
+            updateDashboard();
+        }
+
+        // Function to update dashboard
+        function updateDashboard() {
+            const totalStockValue = calculateTotalStockValue();
+            const totalCustomerDue = calculateTotalCustomerDue();
+            const totalQty = calculateTotalQuantity();
+            const cartItemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+            
+            if (document.getElementById('dashboardStockValue')) {
+                document.getElementById('dashboardStockValue').textContent = formatCurrency(totalStockValue);
+            }
+            if (document.getElementById('dashboardCustomerDue')) {
+                document.getElementById('dashboardCustomerDue').textContent = formatCurrency(totalCustomerDue);
+            }
+            if (document.getElementById('dashboardCartItems')) {
+                document.getElementById('dashboardCartItems').textContent = cartItemCount;
+            }
+            
+            // Update pie chart
+            updatePieChart();
+        }
+
+        // Function to update cart count on invoice button
+        function updateCartCount() {
+            const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+            const invoiceBtn = document.querySelector('#btnSellInvoice span');
+            
+            if (totalItems > 0) {
+                invoiceBtn.innerHTML = `Invoice <span class="cart-count-badge">${totalItems}</span>`;
+            } else {
+                invoiceBtn.innerHTML = 'Invoice';
+            }
+        }
+
+        // Separate function for adding to cart with animation
+        function addToCart(itemName, itemSize, quantity = 1) {
+            const availableItem = stockData.find(item =>
+                item.itemName.toLowerCase() === itemName.toLowerCase() &&
+                item.itemSize.toLowerCase() === itemSize.toLowerCase()
+            );
+
+            if (!availableItem) {
+                alert(`Item "${itemName}" with size "${itemSize}" not found in stock.`);
+                return;
+            }
+
+            let totalAvailableQuantity = 0;
+            stockData.filter(i =>
+                i.itemName.toLowerCase() === itemName.toLowerCase() &&
+                i.itemSize.toLowerCase() === itemSize.toLowerCase()
+            ).forEach(i => totalAvailableQuantity += i.quantity);
+
+            const currentCartQuantity = cartItems.find(item =>
+                item.itemName.toLowerCase() === itemName.toLowerCase() &&
+                item.itemSize.toLowerCase() === itemSize.toLowerCase()
+            )?.quantity || 0;
+
+            if ((currentCartQuantity + quantity) > totalAvailableQuantity) {
+                alert(`Not enough stock of "${itemName}" (${itemSize}). Available in stock: ${totalAvailableQuantity}. You already have ${currentCartQuantity} in cart.`);
+                return;
+            }
+
+            let itemInCart = cartItems.find(item =>
+                item.itemName.toLowerCase() === itemName.toLowerCase() &&
+                item.itemSize.toLowerCase() === itemSize.toLowerCase()
+            );
+
+            if (itemInCart) {
+                itemInCart.quantity += quantity;
+            } else {
+                cartItems.push({
+                    itemName: availableItem.itemName,
+                    itemSize: availableItem.itemSize,
+                    quantity: quantity,
+                    price: parseFloat(availableItem.price)
+                });
+            }
+
+            updateCartCount();
+            
+            // Animation effect without popup
+            const icon = document.querySelector(`[data-item-name="${itemName}"][data-item-size="${itemSize}"]`);
+            if (icon) {
+                icon.classList.add('cart-add-animation');
+                const originalHTML = icon.innerHTML;
+                icon.innerHTML = '<i class="fas fa-check"></i>';
+                
+                setTimeout(() => {
+                    icon.innerHTML = originalHTML;
+                    icon.classList.remove('cart-add-animation');
+                }, 500);
+            }
+            
+            // Update dashboard
+            updateDashboard();
+        }
 
         // --- Firebase Data Listener (Primary Data Source) ---
-        // We move the DOMContentLoaded listener setup *inside* the script tag, but the script itself is *deferred*.
-
         onValue(stockDataRef, (snapshot) => {
             if (snapshot.exists()) {
                 stockData = snapshot.val();
                 console.log("StockData from Firebase:", stockData);
-                renderStockView(); // Re-render UI after data update
-            } else {
-                stockData = []; // If data doesn't exist in Firebase, initialize as empty
-                console.log("No stockData in Firebase.");
-                // If no data, ensure the table shows 'No data' instead of 'Loading...'
-                if (document.getElementById('currentStockTable')) {
-                    document.querySelector('#currentStockTable tbody').innerHTML = '<tr><td colspan="5" style="text-align: center;">No stock data available.</td></tr>';
+                updateDashboard();
+                updatePieChart();
+                if (!document.getElementById('stockViewSection').classList.contains('hidden')) {
+                    renderStockView();
                 }
+                updateCartSummary();
+            } else {
+                stockData = [];
+                console.log("No stockData in Firebase.");
+                updatePieChart(); // Update pie chart even when empty
             }
         });
 
@@ -977,9 +2232,17 @@
             if (snapshot.exists()) {
                 customers = snapshot.val();
                 console.log("Customers from Firebase:", customers);
-                // Also update customer-dependent reports if they are currently visible
+                updateDashboard();
+                updateCartSummary();
+                
                 if (!document.getElementById('customersSection').classList.contains('hidden')) {
                     renderCustomersList();
+                }
+                if (!document.getElementById('customerReportSection').classList.contains('hidden')) {
+                    const customerPhone = document.getElementById('customerReportPhone').textContent;
+                    if (customerPhone) {
+                        renderCustomerReport(customerPhone);
+                    }
                 }
             } else {
                 customers = [];
@@ -988,41 +2251,49 @@
         });
         
         // JavaScript Logic
-        // The script is already deferred, so DOMContentLoaded is technically redundant for code execution flow, 
-        // but we wrap the main execution logic inside it for safety and best practice.
         document.addEventListener('DOMContentLoaded', () => {
             // DOM Elements
             const contentDiv = document.getElementById('content');
+            const dashboardSection = document.getElementById('dashboardSection');
             const stockViewSection = document.getElementById('stockViewSection');
             const stockEntrySection = document.getElementById('stockEntrySection');
-            const stockOutSection = document.getElementById('stockOutSection');
-            const showAllDataSection = document.getElementById('showAllDataSection');
+            const overallDataViewSection = document.getElementById('overallDataViewSection');
             const itemReportSection = document.getElementById('itemReportSection');
-            const jsonEditorSection = document.getElementById('jsonEditorSection');
             const cartViewSection = document.getElementById('cartViewSection');
             const sellInvoiceSection = document.getElementById('sellInvoiceSection');
             const customersSection = document.getElementById('customersSection');
             const customerReportSection = document.getElementById('customerReportSection');
-            const overallReportSection = document.getElementById('overallReportSection');
-            const reportByMonthSection = document.getElementById('reportByMonthSection'); 
+            const reportByMonthSection = document.getElementById('reportByMonthSection');
 
             // Buttons
+            const btnDashboard = document.getElementById('btnDashboard');
             const btnStockView = document.getElementById('btnStockView');
             const btnStockEntry = document.getElementById('btnStockEntry');
-            const btnStockOut = document.getElementById('btnStockOut');
-            const btnShowAllData = document.getElementById('btnShowAllData');
-            const btnJsonEdit = document.getElementById('btnJsonEdit');
             const btnSellInvoice = document.getElementById('btnSellInvoice');
             const btnCustomers = document.getElementById('btnCustomers');
-            const btnOverallReport = document.getElementById('btnOverallReport');
-            const btnMonthlyReport = document.getElementById('btnMonthlyReport'); 
+            const btnMonthlyReport = document.getElementById('btnMonthlyReport');
+            const btnOverallDataView = document.getElementById('btnOverallDataView');
             const backToAllDataBtn = document.getElementById('backToAllData');
-            const cancelJsonBtn = document.getElementById('cancelJson');
             const backToCustomersListBtn = document.getElementById('backToCustomersList');
+            
+            // Quick action buttons
+            const quickStockView = document.getElementById('quickStockView');
+            const quickStockEntry = document.getElementById('quickStockEntry');
+            const quickSell = document.getElementById('quickSell');
+            const quickCustomers = document.getElementById('quickCustomers');
 
-            // Forms
+            // Stock Entry Form Elements
             const stockEntryForm = document.getElementById('stockEntryForm');
-            const stockOutForm = document.getElementById('stockOutForm');
+            const addStockBtn = document.getElementById('addStockBtn');
+            const removeStockBtn = document.getElementById('removeStockBtn');
+
+            // Customer Edit Form Elements
+            const customerEditFormContainer = document.getElementById('customerEditFormContainer');
+            const editCustomerPhone = document.getElementById('editCustomerPhone');
+            const editCustomerName = document.getElementById('editCustomerName');
+            const editCustomerAddress = document.getElementById('editCustomerAddress');
+            const saveCustomerEditBtn = document.getElementById('saveCustomerEditBtn');
+            const cancelCustomerEditBtn = document.getElementById('cancelCustomerEditBtn');
 
             // Tables
             const currentStockTableBody = document.querySelector('#currentStockTable tbody');
@@ -1034,20 +2305,7 @@
             const itemCurrentReportTableBody = document.querySelector('#itemCurrentReportTable tbody');
             const customerListTableBody = document.getElementById('customerListTableBody');
             const cartTableBody = document.getElementById('cartTableBody');
-            const customerPaymentsLogBody = document.getElementById('customerPaymentsLogBody'); // NEW
-
-            // Textareas for JSON editing
-            const jsonStockDataTextarea = document.getElementById('jsonStockData');
-            const jsonStockInLogTextarea = document.getElementById('jsonStockInLog');
-            const jsonStockOutLogTextarea = document.getElementById('jsonStockOutLog');
-            const jsonCartDataTextarea = document.getElementById('jsonCartData');
-            const jsonCustomerDataTextarea = document.getElementById('jsonCustomerData');
-            const saveStockDataJsonBtn = document.getElementById('saveStockDataJson');
-            const saveStockInLogJsonBtn = document.getElementById('saveStockInLogJson');
-            const saveStockOutLogJsonBtn = document.getElementById('saveStockOutLogJson');
-            const saveCartDataJsonBtn = document.getElementById('saveCartDataJson');
-            const saveCustomerDataJsonBtn = document.getElementById('saveCustomerDataJson');
-
+            const customerPaymentsLogBody = document.getElementById('customerPaymentsLogBody');
 
             // Sell & Invoice Specific Elements
             const invoiceTableBody = document.getElementById('invoiceTableBody');
@@ -1078,7 +2336,6 @@
             const totalPayableDisplay = document.getElementById('totalPayableDisplay'); 
             const downloadInvoicePdfBtn = document.getElementById('downloadInvoicePdfBtn'); 
 
-
             // Elements for hidden downloadable invoice
             const downloadableInvoiceDiv = document.getElementById('downloadableInvoice');
             const downloadInvoiceDate = document.getElementById('downloadInvoiceDate');
@@ -1105,38 +2362,60 @@
             const customerTotalSpentSpan = document.getElementById('customerTotalSpent');
             const customerTotalDueSpan = document.getElementById('customerTotalDue');
 
-            // Overall Report Elements (New)
-            const totalStockQuantityReport = document.getElementById('totalStockQuantityReport');
-            const totalStockValueReport = document.getElementById('totalStockValueReport');
-            const totalCustomerDueReport = document.getElementById('totalCustomerDueReport');
-
-            // Monthly Report Elements (NEW)
-            const reportMonthSelect = document.getElementById('reportMonth');
-            const reportYearSelect = document.getElementById('reportYear');
-            const generateMonthlyReportBtn = document.getElementById('generateMonthlyReportBtn');
+            // NEW: Monthly Report Elements - SINGLE DATE RANGE PICKER
+            const dateRangeInput = document.getElementById('dateRangeInput');
+            const setDateRangeBtn = document.getElementById('setDateRangeBtn');
             const monthlyReportSummaryBody = document.getElementById('monthlyReportSummaryBody');
             const monthlyReportDetailBody = document.getElementById('monthlyReportDetailBody');
-
+            const startDateDisplay = document.getElementById('startDateDisplay');
+            const endDateDisplay = document.getElementById('endDateDisplay');
 
             // Helper function to hide all sections
             function hideAllSections() {
-                document.querySelectorAll('section').forEach(section => {
+                document.querySelectorAll('main > section').forEach(section => {
                     section.classList.add('hidden');
+                });
+                downloadableInvoiceDiv.classList.add('hidden');
+                
+                // Remove active class from all buttons
+                document.querySelectorAll('.modern-btn').forEach(btn => {
+                    btn.classList.remove('active');
                 });
             }
 
-            // Helper function to format currency
-            function formatCurrency(amount) {
-                return `${parseFloat(amount).toFixed(2)} TK`;
+            // Function to show a specific section and highlight the button
+            function showSection(sectionId, buttonId = null) {
+                hideAllSections();
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    section.classList.remove('hidden');
+                    
+                    // Highlight the active button
+                    if (buttonId) {
+                        const button = document.getElementById(buttonId);
+                        if (button) {
+                            button.classList.add('active');
+                        }
+                    }
+                }
+            }
+
+            // Function to show dashboard
+            function showDashboard() {
+                showSection('dashboardSection', 'btnDashboard');
+                updateDashboard();
             }
 
             // Function to render current stock view
             function renderStockView() {
-                // hideAllSections(); // We don't hide on initial load to keep the loading message visible
-                stockViewSection.classList.remove('hidden');
+                showSection('stockViewSection', 'btnStockView');
                 currentStockTableBody.innerHTML = '';
-
-                // Aggregate stock data to display correctly (if there are multiple entries for same item+size)
+                
+                let totalItems = 0;
+                let totalQuantity = 0;
+                let totalValue = 0;
+                
+                // Aggregate stock data
                 const aggregatedStock = {};
                 stockData.forEach(item => {
                     const key = `${item.itemName}_${item.itemSize}`;
@@ -1145,8 +2424,19 @@
                     } else {
                         aggregatedStock[key] = { ...item, price: parseFloat(item.price) || 0 };
                     }
+                    
+                    // Calculate totals
+                    totalItems++;
+                    totalQuantity += item.quantity;
+                    totalValue += item.quantity * item.price;
                 });
-
+                
+                // Update summary
+                document.getElementById('totalItemsCount').textContent = totalItems;
+                document.getElementById('totalQuantity').textContent = totalQuantity;
+                document.getElementById('totalStockValueMain').textContent = formatCurrency(totalValue);
+                
+                // Render table
                 for (const key in aggregatedStock) {
                     const item = aggregatedStock[key];
                     const row = currentStockTableBody.insertRow();
@@ -1154,240 +2444,149 @@
                     row.insertCell(1).textContent = item.itemSize;
                     row.insertCell(2).textContent = item.quantity;
                     row.insertCell(3).textContent = formatCurrency(item.price);
-
-                    const addCell = row.insertCell(4);
-                    const addForm = document.createElement('div');
-                    addForm.classList.add('add-to-cart-form');
-                    addForm.innerHTML = `
-                        <input type="number" min="1" value="1" class="quantity-to-add-to-cart" data-item-name="${item.itemName}" data-item-size="${item.itemSize}">
-                        <button class="add-to-cart-btn" data-item-name="${item.itemName}" data-item-size="${item.itemSize}">Add</button>
-                    `;
-                    addCell.appendChild(addForm);
+                    row.insertCell(4).textContent = formatCurrency(item.quantity * item.price);
+                    
+                    const addCell = row.insertCell(5);
+                    const addIcon = document.createElement('button');
+                    addIcon.classList.add('add-to-cart-icon');
+                    addIcon.innerHTML = '<i class="fas fa-cart-plus"></i>';
+                    addIcon.dataset.itemName = item.itemName;
+                    addIcon.dataset.itemSize = item.itemSize;
+                    addCell.appendChild(addIcon);
                 }
                 
                 if (stockData.length === 0) {
-                     currentStockTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No stock data available.</td></tr>';
+                    currentStockTableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No stock data available.</td></tr>';
                 }
             }
 
-            // --- Add to Cart Logic (from Stock View) ---
-            document.addEventListener('click', (e) => {
-                if (e.target.classList.contains('add-to-cart-btn')) {
-                    const btn = e.target;
-                    const itemName = btn.dataset.itemName;
-                    const itemSize = btn.dataset.itemSize;
-                    const quantityInput = btn.previousElementSibling;
-                    const quantityToAdd = parseInt(quantityInput.value);
-
-                    if (isNaN(quantityToAdd) || quantityToAdd <= 0) {
-                        alert('Please enter a valid quantity to add to cart.');
-                        return;
-                    }
-
-                    const availableItem = stockData.find(item =>
-                        item.itemName.toLowerCase() === itemName.toLowerCase() &&
-                        item.itemSize.toLowerCase() === itemSize.toLowerCase()
-                    );
-
-                    if (!availableItem) {
-                        alert(`Item "${itemName}" with size "${itemSize}" not found in stock.`);
-                        return;
-                    }
-
-                    // Check total available quantity in stock (aggregated)
-                    let totalAvailableQuantity = 0;
-                    stockData.filter(i =>
-                        i.itemName.toLowerCase() === itemName.toLowerCase() &&
-                        i.itemSize.toLowerCase() === itemSize.toLowerCase()
-                    ).forEach(i => totalAvailableQuantity += i.quantity);
-
-
-                    // Check quantity already in cart for this item
-                    const currentCartQuantity = cartItems.find(item =>
-                        item.itemName.toLowerCase() === itemName.toLowerCase() &&
-                        item.itemSize.toLowerCase() === itemSize.toLowerCase()
-                    )?.quantity || 0;
-
-                    if ((currentCartQuantity + quantityToAdd) > totalAvailableQuantity) {
-                         alert(`Not enough stock of "${itemName}" (${itemSize}). Available in stock: ${totalAvailableQuantity}. You already have ${currentCartQuantity} in cart.`);
-                         return;
-                    }
-
-                    let itemInCart = cartItems.find(item =>
-                        item.itemName.toLowerCase() === itemName.toLowerCase() &&
-                        item.itemSize.toLowerCase() === itemSize.toLowerCase()
-                    );
-
-                    if (itemInCart) {
-                        itemInCart.quantity += quantityToAdd;
-                    } else {
-                        cartItems.push({
-                            itemName: availableItem.itemName,
-                            itemSize: availableItem.itemSize,
-                            quantity: quantityToAdd,
-                            price: parseFloat(availableItem.price)
-                        });
-                    }
-
-                    alert(`${quantityToAdd} x "${itemName}" (${itemSize}) added to cart!`);
-                }
-            });
-
-            // Function to handle stock entry
-            stockEntryForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const itemName = document.getElementById('entryItemName').value.trim();
-                const itemSize = document.getElementById('entryItemSize').value.trim();
-                const quantity = parseInt(document.getElementById('entryQuantity').value);
-                const price = parseFloat(document.getElementById('entryPrice').value);
-                
-                const now = new Date();
-                const day = String(now.getDate()).padStart(2, '0');
-                const month = String(now.getMonth() + 1).padStart(2, '0');
-                const year = now.getFullYear();
-                const date = `${day}/${month}/${year}`;
-
-                if (itemName && itemSize && quantity > 0 && price >= 0) {
-                    // Create copies to avoid race conditions with the onValue listener
-                    const newStockData = [...stockData];
-                    const newStockInLog = [...stockInLog];
-
-                    const existingItemIndex = newStockData.findIndex(item =>
-                        item.itemName.toLowerCase() === itemName.toLowerCase() &&
-                        item.itemSize.toLowerCase() === itemSize.toLowerCase()
-                    );
-
-                    if (existingItemIndex !== -1) {
-                        newStockData[existingItemIndex].quantity += quantity;
-                        newStockData[existingItemIndex].price = price;
-                    } else {
-                        newStockData.push({ itemName, itemSize, quantity, price });
-                    }
-
-                    newStockInLog.push({ date, itemName, itemSize, quantity, price });
-
-                    // Save both to Firebase. The onValue listeners will automatically update local variables and UI.
-                    await saveToFirebase(stockDataRef, newStockData);
-                    await saveToFirebase(stockInLogRef, newStockInLog);
-
-                    alert('Stock added successfully!');
-                    stockEntryForm.reset();
-                } else {
-                    alert('Please fill in all fields correctly.');
-                }
-            });
-
-            // Function to handle stock out (direct removal - separate from invoice)
-            stockOutForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const itemName = document.getElementById('outItemName').value.trim();
-                const itemSize = document.getElementById('outItemSize').value.trim();
-                const quantityToRemove = parseInt(document.getElementById('outQuantity').value);
-                
-                const now = new Date();
-                const day = String(now.getDate()).padStart(2, '0');
-                const month = String(now.getMonth() + 1).padStart(2, '0');
-                const year = now.getFullYear();
-                const date = `${day}/${month}/${year}`;
-
-                if (itemName && itemSize && quantityToRemove > 0) {
-                    // Create copies to avoid race conditions with the onValue listener
-                    const newStockData = [...stockData];
-                    const newStockOutLog = [...stockOutLog];
-
-                    let itemFoundAndRemoved = false;
-                    const aggregatedItemIndex = newStockData.findIndex(item =>
-                        item.itemName.toLowerCase() === itemName.toLowerCase() &&
-                        item.itemSize.toLowerCase() === itemSize.toLowerCase()
-                    );
-
-                    if (aggregatedItemIndex !== -1) {
-                        if (newStockData[aggregatedItemIndex].quantity >= quantityToRemove) {
-                            newStockData[aggregatedItemIndex].quantity -= quantityToRemove;
-                            newStockOutLog.push({ date, itemName, itemSize, quantity: quantityToRemove, invoiceNo: 'DIRECT_OUT' });
-                            itemFoundAndRemoved = true;
-                            if (newStockData[aggregatedItemIndex].quantity === 0) {
-                                newStockData.splice(aggregatedItemIndex, 1);
-                            }
-                        } else {
-                            alert(`Not enough stock. Available: ${newStockData[aggregatedItemIndex].quantity}`);
-                            return;
-                        }
-                    }
-
-                    if (itemFoundAndRemoved) {
-                        await saveToFirebase(stockDataRef, newStockData);
-                        await saveToFirebase(stockOutLogRef, newStockOutLog);
-
-                        alert('Stock removed successfully!');
-                        stockOutForm.reset();
-                    } else {
-                        alert('Item not found or incorrect details.');
-                    }
-                } else {
-                    alert('Please fill in all fields correctly.');
-                }
-            });
-
-
-            // New: Render Overall Report
-            function renderOverallReport() {
-                hideAllSections();
-                overallReportSection.classList.remove('hidden');
-
-                let totalQuantity = 0;
-                let totalStockValue = 0;
-                stockData.forEach(item => {
-                    totalQuantity += item.quantity;
-                    totalStockValue += item.quantity * (parseFloat(item.price) || 0);
-                });
-
-                let totalCustomerDue = 0;
-                customers.forEach(customer => {
-                    // Using the fixed function to get the correct due amount (sum of all purchases due)
-                    totalCustomerDue += getCustomerTotalDue(customer);
-                });
-
-                totalStockQuantityReport.textContent = totalQuantity;
-                totalStockValueReport.textContent = formatCurrency(totalStockValue);
-                totalCustomerDueReport.textContent = formatCurrency(totalCustomerDue);
+            // Function to show stock entry section
+            function showStockEntry() {
+                showSection('stockEntrySection', 'btnStockEntry');
             }
 
-            // Function to initialize year dropdown for monthly report
-            function initializeYearDropdown() {
-                const currentYear = new Date().getFullYear();
-                reportYearSelect.innerHTML = '';
-                for (let i = currentYear; i >= currentYear - 5; i--) { // Show last 5 years
-                    const option = document.createElement('option');
-                    option.value = i;
-                    option.textContent = i;
-                    if (i === currentYear) {
-                        option.selected = true;
-                    }
-                    reportYearSelect.appendChild(option);
-                }
-                // Set current month as default
-                reportMonthSelect.value = new Date().getMonth() + 1;
+            // Function to show cart view section
+            function showCartView() {
+                showSection('cartViewSection', 'btnSellInvoice');
+                renderCartView();
             }
 
-            // NEW: Render Monthly Report Section
-            function renderMonthlyReportSection() {
-                hideAllSections();
-                reportByMonthSection.classList.remove('hidden');
-                initializeYearDropdown();
-                monthlyReportSummaryBody.innerHTML = `<tr><td colspan="6" style="text-align: center;">Select a month and year to generate the report.</td></tr>`;
+            // Function to show customers section
+            function showCustomers() {
+                showSection('customersSection', 'btnCustomers');
+                renderCustomersList();
+            }
+
+            // Function to show monthly report section
+            function showMonthlyReport() {
+                showSection('reportByMonthSection', 'btnMonthlyReport');
+                initializeDateRangePicker();
+                monthlyReportSummaryBody.innerHTML = `<tr><td colspan="6" style="text-align: center;">Select date range to generate report.</td></tr>`;
                 monthlyReportDetailBody.innerHTML = `<tr><td colspan="6" style="text-align: center;">No invoices found for this period.</td></tr>`;
             }
 
-            // NEW: Function to Generate Monthly Report
-            function generateMonthlyReport() {
-                const selectedMonth = parseInt(reportMonthSelect.value);
-                const selectedYear = parseInt(reportYearSelect.value);
+            // Function to show overall data view section
+            function showOverallDataView() {
+                showSection('overallDataViewSection', 'btnOverallDataView');
+                renderOverallDataView();
+            }
 
-                if (isNaN(selectedMonth) || isNaN(selectedYear)) {
-                    alert("Please select a valid month and year.");
+            // --- NEW: Initialize Date Range Picker (Flatpickr) ---
+            function initializeDateRangePicker() {
+                if (flatpickrInstance) {
+                    flatpickrInstance.destroy();
+                }
+                
+                flatpickrInstance = flatpickr("#dateRangeInput", {
+                    mode: "range",
+                    dateFormat: "d/m/Y",
+                    altInput: true,
+                    altFormat: "d/m/Y",
+                    locale: {
+                        firstDayOfWeek: 0,
+                        weekdays: {
+                            shorthand: ["রবি", "সোম", "মঙ্গল", "বুধ", "বৃহ", "শুক্র", "শনি"],
+                            longhand: ["রবিবার", "সোমবার", "মঙ্গলবার", "বুধবার", "বৃহস্পতিবার", "শুক্রবার", "শনিবার"]
+                        },
+                        months: {
+                            shorthand: ["জানু", "ফেব্রু", "মার্চ", "এপ্রিল", "মে", "জুন", "জুলাই", "আগস্ট", "সেপ্টে", "অক্টো", "নভে", "ডিসে"],
+                            longhand: ["জানুয়ারী", "ফেব্রুয়ারী", "মার্চ", "এপ্রিল", "মে", "জুন", "জুলাই", "আগস্ট", "সেপ্টেম্বর", "অক্টোবর", "নভেম্বর", "ডিসেম্বর"]
+                        }
+                    },
+                    onChange: function(selectedDates, dateStr, instance) {
+                        if (selectedDates.length === 2) {
+                            // Auto-sort: ছোট ডেটটা Start, বড় ডেটটা End
+                            const sortedDates = [...selectedDates].sort((a, b) => a - b);
+                            selectedStartDate = sortedDates[0];
+                            selectedEndDate = sortedDates[1];
+                            
+                            // Update display with preview highlight
+                            updateDateDisplay(true);
+                            
+                            // Show preview highlight
+                            startDateDisplay.classList.add('preview-highlight');
+                            endDateDisplay.classList.add('preview-highlight');
+                            
+                            // Update button text
+                            setDateRangeBtn.textContent = 'Set & Generate Report';
+                        }
+                    }
+                });
+                
+                // Reset display
+                updateDateDisplay(false);
+            }
+
+            // --- NEW: Update Date Display with/without preview ---
+            function updateDateDisplay(isPreview = false) {
+                const formatDate = (date) => {
+                    if (!date) return 'DD/MM/YYYY';
+                    const day = String(date.getDate()).padStart(2, '0');
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const year = date.getFullYear();
+                    return `${day}/${month}/${year}`;
+                };
+                
+                if (isPreview && selectedStartDate && selectedEndDate) {
+                    startDateDisplay.textContent = formatDate(selectedStartDate);
+                    endDateDisplay.textContent = formatDate(selectedEndDate);
+                } else {
+                    // Default display
+                    const today = new Date();
+                    const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+                    startDateDisplay.textContent = formatDate(firstDay);
+                    endDateDisplay.textContent = formatDate(today);
+                    
+                    // Remove preview highlight
+                    startDateDisplay.classList.remove('preview-highlight');
+                    endDateDisplay.classList.remove('preview-highlight');
+                    
+                    // Reset button text
+                    setDateRangeBtn.textContent = 'Generate Report';
+                    
+                    // Set default dates
+                    selectedStartDate = firstDay;
+                    selectedEndDate = today;
+                }
+            }
+
+            // --- NEW: Parse DD/MM/YYYY date string to Date object ---
+            function parseDate(dateStr) {
+                if (!dateStr) return null;
+                const [day, month, year] = dateStr.split('/').map(Number);
+                return new Date(year, month - 1, day);
+            }
+
+            // --- NEW: Generate Monthly Report with Date Range ---
+            function generateMonthlyReport() {
+                if (!selectedStartDate || !selectedEndDate) {
+                    alert("Please select a date range first.");
                     return;
                 }
+
+                // Adjust end date to include the entire day
+                const adjustedEndDate = new Date(selectedEndDate);
+                adjustedEndDate.setHours(23, 59, 59, 999);
 
                 let totalInvoices = 0;
                 let totalGrossSales = 0;
@@ -1399,16 +2598,14 @@
 
                 customers.forEach(customer => {
                     customer.purchases.forEach(purchase => {
-                        // Date format is "DD/MM/YYYY"
-                        const [day, month, year] = purchase.date.split('/').map(Number);
+                        const purchaseDate = parseDate(purchase.date);
                         
-                        if (month === selectedMonth && year === selectedYear) {
+                        if (purchaseDate && purchaseDate >= selectedStartDate && purchaseDate <= adjustedEndDate) {
                             totalInvoices++;
                             
-                            // Use the stored values in the purchase log (which already includes subtotal, discount, etc.)
-                            const subTotal = purchase.subTotal || purchase.totalAmount || 0; // Fallback for older data
+                            const subTotal = purchase.subTotal || purchase.totalAmount || 0;
                             const discount = purchase.discount || 0;
-                            const totalAmount = purchase.totalAmount || 0; // Net Sale after discount
+                            const totalAmount = purchase.totalAmount || 0;
                             const paidAmount = purchase.paidAmount || 0;
                             const dueAmount = purchase.dueAmount || 0;
                             
@@ -1417,9 +2614,6 @@
                             totalNetSales += totalAmount;
                             totalPaidAmount += paidAmount;
                             
-                            // Calculate new due generated in THIS invoice (excluding previous due)
-                            // Note: With the new FIFO logic, this calculation becomes complex because the paid amount is split.
-                            // For simplicity in reporting, we will calculate the DUE of the current invoice itself.
                             let newDueGenerated = totalAmount - Math.max(0, paidAmount - (purchase.previousDue || 0));
                             if (newDueGenerated < 0) newDueGenerated = 0; 
                             
@@ -1431,7 +2625,6 @@
                                 customerName: customer.name || customer.phone || 'Guest',
                                 netSale: totalAmount,
                                 discount: discount,
-                                // Due here should be the NEW due generated by this specific invoice.
                                 due: dueAmount 
                             });
                         }
@@ -1451,14 +2644,13 @@
                 // Render Details
                 monthlyReportDetailBody.innerHTML = '';
                 if (monthlyInvoices.length === 0) {
-                    monthlyReportDetailBody.innerHTML = `<tr><td colspan="6" style="text-align: center;">No invoices found for ${reportMonthSelect.options[reportMonthSelect.selectedIndex].text}, ${selectedYear}.</td></tr>`;
+                    const startFormatted = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedStartDate.getFullYear()}`;
+                    const endFormatted = `${selectedEndDate.getDate().toString().padStart(2, '0')}/${(selectedEndDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedEndDate.getFullYear()}`;
+                    monthlyReportDetailBody.innerHTML = `<tr><td colspan="6" style="text-align: center;">No invoices found between ${startFormatted} and ${endFormatted}.</td></tr>`;
                 } else {
-                    // Sort by date (oldest first)
                     monthlyInvoices.sort((a, b) => {
-                        const [dA, mA, yA] = a.date.split('/').map(Number);
-                        const [dB, mB, yB] = b.date.split('/').map(Number);
-                        const dateA = new Date(yA, mA - 1, dA);
-                        const dateB = new Date(yB, mB - 1, dB);
+                        const dateA = parseDate(a.date);
+                        const dateB = parseDate(b.date);
                         return dateA - dateB;
                     });
                     
@@ -1471,20 +2663,25 @@
                         detailRow.insertCell(4).textContent = formatCurrency(invoice.discount);
                         
                         const dueCell = detailRow.insertCell(5);
-                        // We will display the purchase.dueAmount from the log (which is the due of the current invoice).
                         dueCell.textContent = formatCurrency(invoice.due);
                         if (invoice.due > 0) {
                             dueCell.classList.add('due-amount-highlight');
                         }
                     });
                 }
+                
+                // Remove preview highlight after setting
+                startDateDisplay.classList.remove('preview-highlight');
+                endDateDisplay.classList.remove('preview-highlight');
+                
+                // Update button text
+                setDateRangeBtn.textContent = 'Generate Report';
             }
 
-
-            // Render All Data
-            function renderAllData() {
+            // Render Overall Data View
+            function renderOverallDataView() {
                 hideAllSections();
-                showAllDataSection.classList.remove('hidden');
+                overallDataViewSection.classList.remove('hidden');
 
                 // Render Current Aggregated Stock
                 allCurrentStockTableBody.innerHTML = '';
@@ -1593,92 +2790,6 @@
                 }
             }
 
-            // Function to display JSON editor
-            function renderJsonEditor() {
-                hideAllSections();
-                jsonEditorSection.classList.remove('hidden');
-
-                jsonStockDataTextarea.value = JSON.stringify(stockData, null, 2);
-                jsonStockInLogTextarea.value = JSON.stringify(stockInLog, null, 2);
-                jsonStockOutLogTextarea.value = JSON.stringify(stockOutLog, null, 2);
-                jsonCartDataTextarea.value = JSON.stringify(cartItems, null, 2);
-                jsonCustomerDataTextarea.value = JSON.stringify(customers, null, 2);
-            }
-
-            // Function to save JSON data
-            saveStockDataJsonBtn.addEventListener('click', async () => {
-                try {
-                    const newStockData = JSON.parse(jsonStockDataTextarea.value);
-                    if (!Array.isArray(newStockData)) {
-                        throw new Error("Parsed data must be an array.");
-                    }
-                    await saveToFirebase(stockDataRef, newStockData);
-                    alert('Stock Data JSON saved successfully!');
-                } catch (e) {
-                    alert('Error saving Stock Data: ' + e.message + '\nPlease check your JSON format.');
-                }
-            });
-
-            saveStockInLogJsonBtn.addEventListener('click', async () => {
-                try {
-                    const newStockInLog = JSON.parse(jsonStockInLogTextarea.value);
-                    if (!Array.isArray(newStockInLog)) {
-                        throw new Error("Parsed data must be an array.");
-                    }
-                    await saveToFirebase(stockInLogRef, newStockInLog);
-                    alert('Stock In Log JSON saved successfully!');
-                } catch (e) {
-                    alert('Error saving Stock In Log: ' + e.message + '\nPlease check your JSON format.');
-                }
-            });
-
-            saveStockOutLogJsonBtn.addEventListener('click', async () => {
-                try {
-                    const newStockOutLog = JSON.parse(jsonStockOutLogTextarea.value);
-                    if (!Array.isArray(newStockOutLog)) {
-                        throw new Error("Parsed data must be an array.");
-                    }
-                    await saveToFirebase(stockOutLogRef, newStockOutLog);
-                    alert('Stock Out Log JSON saved successfully!');
-                } catch (e) {
-                    alert('Error saving Stock Out Log: ' + e.message + '\nPlease check your JSON format.');
-                }
-            });
-
-            saveCustomerDataJsonBtn.addEventListener('click', async () => {
-                try {
-                    const newCustomerData = JSON.parse(jsonCustomerDataTextarea.value);
-                    if (!Array.isArray(newCustomerData)) {
-                        throw new Error("Parsed data must be an array.");
-                    }
-                    await saveToFirebase(customersRef, newCustomerData);
-                    alert('Customer Data JSON saved successfully!');
-                } catch (e) {
-                    alert('Error saving Customer Data: ' + e.message + '\nPlease check your JSON format.');
-                }
-            });
-
-            saveCartDataJsonBtn.addEventListener('click', () => {
-                try {
-                    const newCartData = JSON.parse(jsonCartDataTextarea.value);
-                    if (!Array.isArray(newCartData)) {
-                        throw new Error("Parsed data must be an array.");
-                    }
-                    cartItems = newCartData;
-                    alert('Cart Data JSON loaded successfully! This data is not saved to the cloud.');
-                } catch (e) {
-                    alert('Error loading Cart Data: ' + e.message + '\nPlease check your JSON format.');
-                }
-            });
-
-            // Function to cancel JSON editing
-            cancelJsonBtn.addEventListener('click', () => {
-                const confirmCancel = confirm("Are you sure you want to cancel? Any unsaved changes will be lost.");
-                if (confirmCancel) {
-                    renderStockView();
-                }
-            });
-
             // --- Cart and Invoice Logic ---
             function renderCartView() {
                 hideAllSections();
@@ -1687,6 +2798,7 @@
             
                 if (cartItems.length === 0) {
                     cartTableBody.innerHTML = `<tr><td colspan="6" style="text-align: center;">Your cart is empty.</td></tr>`;
+                    updateCartSummary();
                     return;
                 }
             
@@ -1697,19 +2809,132 @@
                     row.insertCell(1).textContent = item.itemSize;
             
                     const quantityCell = row.insertCell(2);
-                    quantityCell.innerHTML = `<input type="number" value="${item.quantity}" min="1" class="cart-quantity-input" data-index="${index}">`;
+                    
+                    // Create a container for quantity control
+                    const quantityContainer = document.createElement('div');
+                    quantityContainer.className = 'quantity-control';
+                    
+                    // Minus button
+                    const minusBtn = document.createElement('button');
+                    minusBtn.className = 'quantity-btn minus';
+                    minusBtn.innerHTML = '<i class="fas fa-minus"></i>';
+                    minusBtn.dataset.index = index;
+                    minusBtn.dataset.action = 'decrease';
+                    
+                    // Quantity input - FIXED: Changed to text input for free typing
+                    const quantityInput = document.createElement('input');
+                    quantityInput.type = 'text'; // Changed from 'number' to 'text'
+                    quantityInput.value = item.quantity;
+                    quantityInput.className = 'cart-quantity-input';
+                    quantityInput.dataset.index = index;
+                    quantityInput.placeholder = 'Qty';
+                    
+                    // Plus button
+                    const plusBtn = document.createElement('button');
+                    plusBtn.className = 'quantity-btn plus';
+                    plusBtn.innerHTML = '<i class="fas fa-plus"></i>';
+                    plusBtn.dataset.index = index;
+                    plusBtn.dataset.action = 'increase';
+                    
+                    // Function to update quantity
+                    function updateQuantity(index, newQuantity) {
+                        // Validate
+                        if (isNaN(newQuantity) || newQuantity < 1) {
+                            alert('Please enter a valid quantity (minimum 1)');
+                            return cartItems[index].quantity;
+                        }
+                        
+                        // Check stock availability
+                        const item = cartItems[index];
+                        const totalAvailableQuantity = stockData.filter(s => 
+                            s.itemName.toLowerCase() === item.itemName.toLowerCase() && 
+                            s.itemSize.toLowerCase() === item.itemSize.toLowerCase()
+                        ).reduce((acc, s) => acc + s.quantity, 0);
+                        
+                        if (newQuantity > totalAvailableQuantity) {
+                            alert(`Not enough stock of "${item.itemName}" (${item.itemSize}). Available: ${totalAvailableQuantity}.`);
+                            return cartItems[index].quantity;
+                        }
+                        
+                        // Update cart
+                        cartItems[index].quantity = newQuantity;
+                        renderCartView();
+                        return newQuantity;
+                    }
+                    
+                    // Button click events
+                    minusBtn.addEventListener('click', function() {
+                        const index = parseInt(this.dataset.index);
+                        const newQty = cartItems[index].quantity - 1;
+                        if (newQty >= 1) {
+                            updateQuantity(index, newQty);
+                        }
+                    });
+                    
+                    plusBtn.addEventListener('click', function() {
+                        const index = parseInt(this.dataset.index);
+                        const newQty = cartItems[index].quantity + 1;
+                        updateQuantity(index, newQty);
+                    });
+                    
+                    // Input blur event (when user finishes typing)
+                    quantityInput.addEventListener('blur', function() {
+                        const index = parseInt(this.dataset.index);
+                        const newValue = this.value.trim();
+                        
+                        if (newValue === '') {
+                            this.value = cartItems[index].quantity;
+                            return;
+                        }
+                        
+                        const newQuantity = parseInt(newValue);
+                        const updatedValue = updateQuantity(index, newQuantity);
+                        this.value = updatedValue;
+                    });
+                    
+                    // Enter key support
+                    quantityInput.addEventListener('keypress', function(e) {
+                        if (e.key === 'Enter') {
+                            this.blur();
+                        }
+                    });
+                    
+                    // Add elements to container
+                    quantityContainer.appendChild(minusBtn);
+                    quantityContainer.appendChild(quantityInput);
+                    quantityContainer.appendChild(plusBtn);
+                    quantityCell.appendChild(quantityContainer);
             
                     row.insertCell(3).textContent = formatCurrency(item.price);
                     row.insertCell(4).textContent = formatCurrency(subtotal);
+                    
                     const actionCell = row.insertCell(5);
                     actionCell.innerHTML = `
                         <div class="cart-action-buttons">
-                            <button class="update-cart" data-index="${index}">Update</button>
                             <button class="remove-from-cart" data-index="${index}">Remove</button>
                         </div>
                     `;
                 });
+                
+                updateCartSummary();
             }
+
+            // Remove from cart
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('remove-from-cart')) {
+                    const index = parseInt(e.target.dataset.index);
+                    cartItems.splice(index, 1);
+                    renderCartView();
+                }
+            });
+
+            clearCartBtn.addEventListener('click', () => {
+                const confirmClear = confirm('Are you sure you want to clear your cart?');
+                if (confirmClear) {
+                    cartItems = [];
+                    renderCartView();
+                }
+            });
 
             function renderInvoiceFromCart() {
                 hideAllSections();
@@ -1722,12 +2947,12 @@
                 }
 
                 invoiceTableBody.innerHTML = '';
-                let totalSubtotal = 0; // Rename local total to subtotal for clarity
+                let totalSubtotal = 0;
 
                 cartItems.forEach((item) => {
                     const row = invoiceTableBody.insertRow();
                     const subtotal = item.quantity * item.price;
-                    totalSubtotal += subtotal; // Accumulate subtotal
+                    totalSubtotal += subtotal;
 
                     row.insertCell(0).textContent = item.itemName;
                     row.insertCell(1).textContent = item.itemSize;
@@ -1743,9 +2968,7 @@
                 const year = now.getFullYear();
                 invoiceDateDisplay.textContent = `${day}/${month}/${year}`;
                 
-                // 🎯 MODIFIED: Always generate new invoice number on this page load
                 invoiceNoDisplay.textContent = generateInvoiceNumber();
-
 
                 const phone = customerPhoneInput.value.trim();
                 const existingCustomer = customers.find(c => c.phone === phone);
@@ -1757,71 +2980,58 @@
                     invoiceCustomerNameDisplay.textContent = existingCustomer.name || 'N/A';
                     invoiceCustomerPhoneDisplay.textContent = existingCustomer.phone || 'N/A';
                     
-                    // ✅ New Logic: Sum of all outstanding due amounts
                     totalDueForCustomer = getCustomerTotalDue(existingCustomer); 
                 } else {
                     invoiceCustomerNameDisplay.textContent = 'N/A';
                     invoiceCustomerPhoneDisplay.textContent = 'N/A';
                 }
 
-                // Set initial values for NEW Fields
                 currentCustomerPreviousDue = totalDueForCustomer;
                 customerOutstandingDueOnInvoice.textContent = formatCurrency(currentCustomerPreviousDue);
                 previousDueDisplay.textContent = formatCurrency(currentCustomerPreviousDue);
                 
-                // Reset Discount State
                 applyDiscountCheckbox.checked = false;
                 discountAmountInput.value = '0';
 
-                // Initialize paid amount (Total Subtotal is default paid)
                 paidAmountInput.value = totalSubtotal.toFixed(2);
                 
-                // Calculate all totals (Will also handle hiding/showing)
                 calculateDueAmount(); 
             }
 
-            // UPDATED: Function to calculate all totals (Subtotal, Discount, Grand Total, Total Payable, Due)
+            // UPDATED: Function to calculate all totals
             function calculateDueAmount() {
-                // 1. Subtotal (Gross total of items)
                 const subTotalAmount = cartItems.reduce((acc, item) => acc + (item.quantity * item.price), 0);
                 invoiceSubTotalDisplay.textContent = formatCurrency(subTotalAmount);
                 
-                // 2. Apply Discount (Conditional Logic)
                 let discountAmount = 0;
                 if (applyDiscountCheckbox.checked) {
                     discountAmount = parseFloat(discountAmountInput.value) || 0;
                     if (discountAmount < 0) discountAmount = 0;
-                    if (discountAmount > subTotalAmount) discountAmount = subTotalAmount; // Max discount is subtotal
+                    if (discountAmount > subTotalAmount) discountAmount = subTotalAmount;
                     discountAmountInput.value = discountAmount.toFixed(2);
                     
-                    // Show discount and grand total rows
                     discountInputRow.classList.remove('hidden');
                     invoiceTotalRow.classList.remove('hidden'); 
                 } else {
-                    // Hide discount and grand total rows
                     discountInputRow.classList.add('hidden');
                     invoiceTotalRow.classList.add('hidden'); 
                 }
                 
-                // 3. Grand Total (Net total after discount - Current Bill Amount)
                 const totalAmountAfterDiscount = Math.max(0, subTotalAmount - discountAmount);
-                invoiceTotalDisplay.textContent = formatCurrency(totalAmountAfterDiscount); // This is the amount for current bill
+                invoiceTotalDisplay.textContent = formatCurrency(totalAmountAfterDiscount);
 
-                // 4. Add Previous Due
                 const totalPayable = totalAmountAfterDiscount + currentCustomerPreviousDue;
                 totalPayableDisplay.textContent = formatCurrency(totalPayable); 
 
-                // 5. Calculate Final Due
                 const paidAmount = parseFloat(paidAmountInput.value) || 0;
                 let dueAmount = totalPayable - paidAmount;
 
                 if (dueAmount < 0) {
-                    dueAmount = 0; // No change return
+                    dueAmount = 0;
                 }
 
                 dueAmountDisplay.textContent = formatCurrency(dueAmount);
 
-                // Show/Hide Due Row based on total outstanding
                 if (dueAmount <= 0) {
                     dueAmountRow.classList.add('hidden');
                 } else {
@@ -1829,7 +3039,125 @@
                 }
             }
 
+            // Stock Entry and Remove functionality - ADDED FIX
+            addStockBtn.addEventListener('click', async () => {
+                const itemName = document.getElementById('entryItemName').value.trim();
+                const itemSize = document.getElementById('entryItemSize').value.trim();
+                const quantity = parseInt(document.getElementById('entryQuantity').value);
+                const price = parseFloat(document.getElementById('entryPrice').value);
 
+                if (!itemName || !itemSize || !quantity || !price || quantity <= 0 || price <= 0) {
+                    alert('Please fill all fields with valid values.');
+                    return;
+                }
+
+                const now = new Date();
+                const day = String(now.getDate()).padStart(2, '0');
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const year = now.getFullYear();
+                const date = `${day}/${month}/${year}`;
+
+                // Add to stock data
+                const newStockData = [...stockData];
+                const existingItemIndex = newStockData.findIndex(item => 
+                    item.itemName.toLowerCase() === itemName.toLowerCase() && 
+                    item.itemSize.toLowerCase() === itemSize.toLowerCase()
+                );
+
+                if (existingItemIndex !== -1) {
+                    // Update existing item
+                    newStockData[existingItemIndex].quantity += quantity;
+                    newStockData[existingItemIndex].price = price; // Update price
+                } else {
+                    // Add new item
+                    newStockData.push({
+                        itemName: itemName,
+                        itemSize: itemSize,
+                        quantity: quantity,
+                        price: price
+                    });
+                }
+
+                // Add to stock in log
+                const newStockInLog = [...stockInLog];
+                newStockInLog.push({
+                    date: date,
+                    itemName: itemName,
+                    itemSize: itemSize,
+                    quantity: quantity,
+                    price: price
+                });
+
+                // Save to Firebase
+                await saveToFirebase(stockDataRef, newStockData);
+                await saveToFirebase(stockInLogRef, newStockInLog);
+
+                alert('Stock added successfully!');
+                
+                // Clear form
+                stockEntryForm.reset();
+            });
+
+            removeStockBtn.addEventListener('click', async () => {
+                const itemName = document.getElementById('entryItemName').value.trim();
+                const itemSize = document.getElementById('entryItemSize').value.trim();
+                const quantity = parseInt(document.getElementById('entryQuantity').value);
+
+                if (!itemName || !itemSize || !quantity || quantity <= 0) {
+                    alert('Please fill all fields with valid values.');
+                    return;
+                }
+
+                const now = new Date();
+                const day = String(now.getDate()).padStart(2, '0');
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const year = now.getFullYear();
+                const date = `${day}/${month}/${year}`;
+
+                // Check if item exists in stock
+                const newStockData = [...stockData];
+                const existingItemIndex = newStockData.findIndex(item => 
+                    item.itemName.toLowerCase() === itemName.toLowerCase() && 
+                    item.itemSize.toLowerCase() === itemSize.toLowerCase()
+                );
+
+                if (existingItemIndex === -1) {
+                    alert(`Item "${itemName}" with size "${itemSize}" not found in stock.`);
+                    return;
+                }
+
+                if (newStockData[existingItemIndex].quantity < quantity) {
+                    alert(`Not enough stock. Available: ${newStockData[existingItemIndex].quantity}, Requested: ${quantity}`);
+                    return;
+                }
+
+                // Remove from stock
+                newStockData[existingItemIndex].quantity -= quantity;
+                if (newStockData[existingItemIndex].quantity <= 0) {
+                    newStockData.splice(existingItemIndex, 1);
+                }
+
+                // Add to stock out log (for manual removal)
+                const newStockOutLog = [...stockOutLog];
+                newStockOutLog.push({
+                    date: date,
+                    itemName: itemName,
+                    itemSize: itemSize,
+                    quantity: quantity,
+                    invoiceNo: 'MANUAL_REMOVAL'
+                });
+
+                // Save to Firebase
+                await saveToFirebase(stockDataRef, newStockData);
+                await saveToFirebase(stockOutLogRef, newStockOutLog);
+
+                alert('Stock removed successfully!');
+                
+                // Clear form
+                stockEntryForm.reset();
+            });
+
+            // Finalize Sale Button Event Listener
             finalizeSaleBtn.addEventListener('click', async () => {
                 if (cartItems.length === 0) {
                     alert('No items in the invoice to finalize. Add items to cart first.');
@@ -1853,15 +3181,13 @@
                 const customerName = customerNameInput.value.trim() || 'Guest';
                 const customerAddress = customerAddressInput.value.trim() || 'N/A';
                 
-                // Get All Calculated Totals (Run calculation one last time for safety)
                 calculateDueAmount();
                 const subTotalAmount = parseFloat(invoiceSubTotalDisplay.textContent.replace(' TK', ''));
-                const totalInvoiceAmount = parseFloat(invoiceTotalDisplay.textContent.replace(' TK', '')); // Net total after discount
+                const totalInvoiceAmount = parseFloat(invoiceTotalDisplay.textContent.replace(' TK', ''));
                 const discountAmount = applyDiscountCheckbox.checked ? parseFloat(discountAmountInput.value) || 0 : 0;
                 const totalPayable = parseFloat(totalPayableDisplay.textContent.replace(' TK', '')); 
                 let paidAmount = parseFloat(paidAmountInput.value);
                 
-                // Final calculation of the TOTAL OUTSTANDING DUE after this sale
                 let finalOutstandingDue = totalPayable - paidAmount; 
 
                 if (finalOutstandingDue < 0) {
@@ -1877,13 +3203,11 @@
                     return;
                 }
 
-                // Create copies to avoid race conditions with the onValue listener
                 const newStockData = [...stockData];
                 const newStockOutLog = [...stockOutLog];
-                const newCustomers = JSON.parse(JSON.stringify(customers)); // Deep clone for safe modification
+                const newCustomers = JSON.parse(JSON.stringify(customers));
 
-
-                // 1. Stock Check (Already done in renderInvoiceFromCart, but repeated for critical safety)
+                // 1. Stock Check
                 for (const soldItem of cartItems) {
                     let totalAvailableQuantity = 0;
                     stockData.filter(i =>
@@ -1920,9 +3244,9 @@
                     });
                 });
 
-                // 3. Customer & Due Update (FIFO Lgical Fix)
-                let currentInvoiceDue = totalInvoiceAmount; // Initialize current invoice due with net sale
-                let oldPaidAmount = 0; // The portion of paidAmount used to clear old dues
+                // 3. Customer & Due Update
+                let currentInvoiceDue = totalInvoiceAmount;
+                let oldPaidAmount = 0;
 
                 if (customerPhone) {
                     let existingCustomerIndex = newCustomers.findIndex(c => c.phone === customerPhone);
@@ -1938,16 +3262,15 @@
                             name: customerName,
                             address: customerAddress,
                             purchases: [],
-                            paymentsLog: [] // Initialize paymentsLog for new customer
+                            paymentsLog: []
                         };
                         newCustomers.push(customer);
                     }
                     
-                    let remainingPayment = paidAmount; // e.g., 20
-                    let oldDueCleared = 0; // Total amount cleared from previous invoices
+                    let remainingPayment = paidAmount;
+                    let oldDueCleared = 0;
                     let clearedInvoiceNo = '';
 
-                    // 3a. FIFO Distribution: Pay off old dues first (Sort by date ascending is implicit as purchases are logged chronologically)
                     customer.purchases.forEach(purchase => {
                         if (remainingPayment > 0 && purchase.dueAmount > 0) {
                             const amountToClear = Math.min(remainingPayment, purchase.dueAmount);
@@ -1957,16 +3280,14 @@
                             clearedInvoiceNo += (clearedInvoiceNo ? ', ' : '') + purchase.invoiceNo;
                         }
                     });
-                    oldPaidAmount = oldDueCleared; // This is the portion of 'paidAmount' that cleared old dues.
+                    oldPaidAmount = oldDueCleared;
 
-                    // 3b. Pay off current invoice
                     if (remainingPayment > 0) {
                         const amountToClear = Math.min(remainingPayment, currentInvoiceDue);
                         currentInvoiceDue = parseFloat((currentInvoiceDue - amountToClear).toFixed(2));
                         remainingPayment = parseFloat((remainingPayment - amountToClear).toFixed(2));
                     }
                     
-                    // 3c. Store the new purchase
                     const purchaseDetails = {
                         invoiceNo: currentInvoiceNo,
                         date: date,
@@ -1977,38 +3298,34 @@
                             unitPrice: item.price,
                             subtotal: item.quantity * item.price 
                         })),
-                        totalAmount: totalInvoiceAmount, // Net Total (Bill for current items)
-                        subTotal: subTotalAmount, // Subtotal before discount
-                        discount: discountAmount, // Discount amount
-                        previousDue: currentCustomerPreviousDue, // Total Due BEFORE this sale
-                        totalPayable: totalPayable, // Net Sale + Previous Due
-                        // This paid amount is the total cash received in this transaction (used for reporting)
-                        paidAmount: paidAmount, 
-                        // This due is ONLY for the current invoice (e.g., 18 in your example)
+                        totalAmount: totalInvoiceAmount,
+                        subTotal: subTotalAmount,
+                        discount: discountAmount,
+                        previousDue: currentCustomerPreviousDue,
+                        totalPayable: totalPayable,
+                        paidAmount: paidAmount,
                         dueAmount: Math.max(0, currentInvoiceDue) 
                     };
                     
                     customer.purchases.push(purchaseDetails);
 
-                    // 3d. Log Payment if any amount was paid (cleared old due + paid current invoice)
                     if (paidAmount > 0) {
                         if (!customer.paymentsLog) {
                             customer.paymentsLog = [];
                         }
                         
-                        let currentPaidForInvoices = paidAmount - oldDueCleared; // Amount paid specifically for the current invoice
+                        let currentPaidForInvoices = paidAmount - oldDueCleared;
                         let refInvoices = clearedInvoiceNo;
                         
-                        // If paid amount for current invoice is positive, log the current invoice number as cleared/partially cleared
                         if (currentPaidForInvoices > 0) {
                             refInvoices += (refInvoices ? ', ' : '') + currentInvoiceNo;
                         }
 
                         customer.paymentsLog.push({
                             dateTime: dateTime,
-                            paymentAmount: paidAmount, // Total cash received
-                            clearedAmount: oldDueCleared + currentPaidForInvoices, // Total value settled (old due + part of current bill)
-                            refInvoice: refInvoices.substring(0, 100) // Log the invoices cleared/paid (max 100 chars)
+                            paymentAmount: paidAmount,
+                            clearedAmount: oldDueCleared + currentPaidForInvoices,
+                            refInvoice: refInvoices.substring(0, 100)
                         });
                     }
 
@@ -2042,19 +3359,20 @@
                 discountInputRow.classList.add('hidden'); 
                 invoiceTotalRow.classList.add('hidden'); 
 
-                renderStockView();
+                showDashboard();
             });
-
 
             // --- Customer Section Logic ---
             function renderCustomersList() {
                 hideAllSections();
                 customersSection.classList.remove('hidden');
                 customerListTableBody.innerHTML = '';
+                customerEditFormContainer.classList.add('hidden');
+                editingCustomerPhone = null;
 
                 if (customers.length === 0) {
                     const row = customerListTableBody.insertRow();
-                    row.insertCell(0).colSpan = 5;
+                    row.insertCell(0).colSpan = 6;
                     row.cells[0].textContent = 'No customers found.';
                     row.cells[0].style.textAlign = 'center';
                     return;
@@ -2075,7 +3393,6 @@
                         totalPurchasesAmount += purchase.totalAmount || 0;
                     });
                     
-                    // ✅ Correct Logic: Sum of all outstanding due amounts
                     const totalOutstandingDue = getCustomerTotalDue(customer); 
                     
                     row.insertCell(2).textContent = formatCurrency(totalPurchasesAmount);
@@ -2087,7 +3404,66 @@
                     }
 
                     row.insertCell(4).textContent = customer.purchases.length;
+                    
+                    const actionCell = row.insertCell(5);
+                    const editButton = document.createElement('button');
+                    editButton.textContent = 'Edit';
+                    editButton.classList.add('edit-customer-btn');
+                    editButton.dataset.customerPhone = customer.phone;
+                    actionCell.appendChild(editButton);
                 });
+            }
+
+            // Function to show customer edit form
+            function showCustomerEditForm(customerPhone) {
+                const customer = customers.find(c => c.phone === customerPhone);
+                if (!customer) {
+                    alert('Customer not found!');
+                    return;
+                }
+                
+                editingCustomerPhone = customerPhone;
+                editCustomerPhone.value = customer.phone;
+                editCustomerName.value = customer.name || '';
+                editCustomerAddress.value = customer.address || '';
+                customerEditFormContainer.classList.remove('hidden');
+                
+                customerEditFormContainer.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            // Function to save customer edit
+            async function saveCustomerEdit() {
+                if (!editingCustomerPhone) return;
+                
+                const newName = editCustomerName.value.trim();
+                const newAddress = editCustomerAddress.value.trim();
+                
+                if (!newName) {
+                    alert('Customer name is required!');
+                    return;
+                }
+                
+                const newCustomers = JSON.parse(JSON.stringify(customers));
+                const customerIndex = newCustomers.findIndex(c => c.phone === editingCustomerPhone);
+                
+                if (customerIndex !== -1) {
+                    newCustomers[customerIndex].name = newName;
+                    newCustomers[customerIndex].address = newAddress;
+                    
+                    await saveToFirebase(customersRef, newCustomers);
+                    alert('Customer details updated successfully!');
+                    
+                    customerEditFormContainer.classList.add('hidden');
+                    editingCustomerPhone = null;
+                    
+                    renderCustomersList();
+                }
+            }
+
+            // Function to cancel customer edit
+            function cancelCustomerEdit() {
+                customerEditFormContainer.classList.add('hidden');
+                editingCustomerPhone = null;
             }
 
             function renderCustomerReport(customerPhone) {
@@ -2103,50 +3479,71 @@
 
                 customerReportNameSpan.textContent = customer.name || 'N/A';
                 customerReportPhoneSpan.textContent = customer.phone;
+                
+                // ট্যাব রিসেট করুন
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // ডিফল্ট ট্যাব সেট করুন
+                document.querySelector('.tab-btn[data-tab="allPurchases"]').classList.add('active');
+                document.getElementById('allPurchasesTab').classList.add('active');
+
+                // All Purchases ট্যাব রেন্ডার করুন
+                renderAllPurchasesTab(customer);
+                
+                // Due Payment Log ট্যাব রেন্ডার করুন
+                renderDuePaymentsTab(customer);
+            }
+
+            // All Purchases ট্যাব রেন্ডার করার ফাংশন
+            function renderAllPurchasesTab(customer) {
+                const customerPurchaseHistoryDiv = document.getElementById('customerPurchaseHistory');
                 customerPurchaseHistoryDiv.innerHTML = '';
 
                 let grandTotalSpent = 0;
-                
 
                 if (customer.purchases.length === 0) {
                     customerPurchaseHistoryDiv.innerHTML = '<p>No purchase history for this customer.</p>';
                 } else {
-                    customer.purchases.sort((a,b) => {
-                        // Custom sort for DD/MM/YYYY format dates
+                    // Sort purchases by date (newest first)
+                    const sortedPurchases = customer.purchases.sort((a,b) => {
                         const [dA, mA, yA] = a.date.split('/').map(Number);
                         const [dB, mB, yB] = b.date.split('/').map(Number);
                         const dateA = new Date(yA, mA - 1, dA);
                         const dateB = new Date(yB, mB - 1, dB);
-                        return dateB - dateA; // Descending order (newest first)
-                    }).forEach((purchase, purchaseIndex) => {
+                        return dateB - dateA;
+                    });
+                    
+                    // Display first 3 invoices in full view
+                    const invoicesToShowFull = Math.min(3, sortedPurchases.length);
+                    
+                    for (let i = 0; i < sortedPurchases.length; i++) {
+                        const purchase = sortedPurchases[i];
                         const purchaseDiv = document.createElement('div');
-                        purchaseDiv.style.border = '1px solid #ccc';
-                        purchaseDiv.style.padding = '10px';
-                        purchaseDiv.style.marginBottom = '15px';
-                        purchaseDiv.style.borderRadius = '5px';
-                        purchaseDiv.style.backgroundColor = '#fefefe';
-
+                        purchaseDiv.className = 'purchase-invoice-card';
+                        
                         grandTotalSpent += purchase.totalAmount;
                         
-                        // We must fetch the *current* total due for this customer every time.
                         const currentTotalDue = getCustomerTotalDue(customer);
 
                         let dueActionHtml = '';
-                        // This payment button is now for ALL outstanding due amounts
-                        if (currentTotalDue > 0) {
+                        if (currentTotalDue > 0 && i === 0) {
                              dueActionHtml = `
                                 <br>
                                 <strong>Record Payment Against ALL Dues:</strong>
-                                <input type="number" min="0" step="0.01" value="${currentTotalDue.toFixed(2)}" class="due-payment-input" id="dueInput_${customerPhone}">
-                                <button class="pay-due-btn" data-customer-phone="${customerPhone}">Record Payment</button>
+                                <input type="number" min="0" step="0.01" value="${currentTotalDue.toFixed(2)}" class="due-payment-input" id="dueInput_${customer.phone}">
+                                <button class="pay-due-btn" data-customer-phone="${customer.phone}">Record Payment</button>
                                 <p style="font-size: 10px; color: #888; margin-top: 5px;">*Recording payment here will clear the oldest outstanding invoices first.</p>
                             `;
                         }
 
-
                         purchaseDiv.innerHTML = `
                             <h4>Invoice No: ${purchase.invoiceNo} (Date: ${purchase.date})</h4>
-                            <p>
+                            <div style="margin-bottom: 10px;">
                                 <strong>Subtotal (Gross):</strong> ${formatCurrency(purchase.subTotal || purchase.totalAmount)}<br>
                                 <strong>Discount:</strong> ${formatCurrency(purchase.discount || 0)}<br>
                                 <strong>Total (Net):</strong> ${formatCurrency(purchase.totalAmount)}<br>
@@ -2154,7 +3551,7 @@
                                 <strong>Total Payable (at sale time):</strong> ${formatCurrency(purchase.totalPayable || purchase.totalAmount + (purchase.previousDue || 0))}<br>
                                 <strong>Paid Amount (at sale time):</strong> ${formatCurrency(purchase.paidAmount || 0)}<br>
                                 <strong>Due Amount (from this invoice):</strong> <span class="${purchase.dueAmount > 0 ? 'due-amount-highlight' : ''}">${formatCurrency(purchase.dueAmount || 0)}</span>
-                            </p>
+                            </div>
                             <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
                                 <thead>
                                     <tr>
@@ -2177,30 +3574,33 @@
                                     `).join('')}
                                 </tbody>
                             </table>
-                            <button class="download-customer-invoice-btn" data-invoice-no="${purchase.invoiceNo}" data-customer-phone="${customerPhone}">Download Invoice (JPEG)</button>
+                            <button class="download-customer-invoice-btn" data-invoice-no="${purchase.invoiceNo}" data-customer-phone="${customer.phone}" style="margin-top: 10px;">Download Invoice (JPEG)</button>
+                            ${i === 0 ? dueActionHtml : ''}
                         `;
                         
-                        // Only add the payment button once on the most recent invoice (first in the list)
-                        if (purchaseIndex === 0 && currentTotalDue > 0) {
-                             purchaseDiv.innerHTML += dueActionHtml;
-                        }
-                        
                         customerPurchaseHistoryDiv.appendChild(purchaseDiv);
-                    });
+                        
+                        // Add separator after first 3 invoices
+                        if (i === invoicesToShowFull - 1 && sortedPurchases.length > invoicesToShowFull) {
+                            const separator = document.createElement('div');
+                            separator.innerHTML = `<div class="scroll-indicator"><i class="fas fa-chevron-down"></i><span>Scroll down to view ${sortedPurchases.length - invoicesToShowFull} more invoices</span></div>`;
+                            customerPurchaseHistoryDiv.appendChild(separator);
+                        }
+                    }
                 }
                 
-                // ✅ Correct Logic: Sum of all outstanding due amounts
                 let grandTotalDue = getCustomerTotalDue(customer); 
                 
                 customerTotalSpentSpan.textContent = formatCurrency(grandTotalSpent);
                 customerTotalDueSpan.textContent = formatCurrency(grandTotalDue);
+            }
 
-                // --- Populate Payments Log Table (UPDATED) ---
+            // Due Payment Log ট্যাব রেন্ডার করার ফাংশন
+            function renderDuePaymentsTab(customer) {
                 const paymentsLogBody = document.getElementById('customerPaymentsLogBody');
                 paymentsLogBody.innerHTML = '';
 
                 if (customer.paymentsLog && customer.paymentsLog.length > 0) {
-                    // Sort by date/time (newest first)
                     customer.paymentsLog.sort((a, b) => {
                         const dateA = new Date(a.dateTime.replace(/(\d{2})\/(\d{2})\/(\d{4}), (\d{2}):(\d{2})/, '$3-$2-$1T$4:$5:00'));
                         const dateB = new Date(b.dateTime.replace(/(\d{2})\/(\d{2})\/(\d{4}), (\d{2}):(\d{2})/, '$3-$2-$1T$4:$5:00'));
@@ -2215,10 +3615,33 @@
                 } else {
                     paymentsLogBody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No due payments recorded.</td></tr>';
                 }
-                // ------------------------------------------
             }
 
-            // --- Record Due Payment Logic (UPDATED FOR FIFO & LOGGING) ---
+            // ট্যাব পরিবর্তন করার ইভেন্ট লিসেনার
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('tab-btn')) {
+                    const tabBtn = e.target;
+                    const tabId = tabBtn.dataset.tab;
+                    
+                    // ট্যাব বাটন সক্রিয় করুন
+                    document.querySelectorAll('.tab-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    tabBtn.classList.add('active');
+                    
+                    // ট্যাব কন্টেন্ট সক্রিয় করুন
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    const activeTab = document.getElementById(`${tabId}Tab`);
+                    if (activeTab) {
+                        activeTab.classList.add('active');
+                    }
+                }
+            });
+
+            // --- Record Due Payment Logic ---
             document.addEventListener('click', async (e) => {
                 if (e.target.classList.contains('pay-due-btn')) {
                     const btn = e.target;
@@ -2234,7 +3657,6 @@
                     const now = new Date();
                     const dateTime = now.toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false });
                     
-                    // Deep clone for safe modification
                     const newCustomers = JSON.parse(JSON.stringify(customers)); 
                     const customer = newCustomers.find(c => c.phone === customerPhone);
                     if (!customer) {
@@ -2252,12 +3674,10 @@
                     let oldDueCleared = 0;
                     let clearedInvoiceNo = '';
 
-                    // Initialize paymentsLog if it doesn't exist
                     if (!customer.paymentsLog) {
                         customer.paymentsLog = [];
                     }
 
-                    // FIFO Logic: Update old invoices first
                     customer.purchases.forEach(purchase => {
                         if (remainingPayment > 0 && purchase.dueAmount > 0) {
                             const amountToClear = Math.min(remainingPayment, purchase.dueAmount);
@@ -2268,12 +3688,11 @@
                         }
                     });
                     
-                    // Log the payment
                     customer.paymentsLog.push({
                         dateTime: dateTime,
                         paymentAmount: paymentAmount,
                         clearedAmount: oldDueCleared,
-                        refInvoice: clearedInvoiceNo.substring(0, 100), // Log the invoices cleared (max 100 chars)
+                        refInvoice: clearedInvoiceNo.substring(0, 100),
                     });
 
                     await saveToFirebase(customersRef, newCustomers);
@@ -2284,7 +3703,6 @@
                     renderCustomerReport(customerPhone);
                 }
             });
-
 
             // ✅ UPDATED LOGIC: Download Invoice from Customer Report Section
             document.addEventListener('click', async (e) => {
@@ -2305,12 +3723,9 @@
                         return;
                     }
 
-                    // --- নতুন লজিক: গ্রাহকের চূড়ান্ত বকেয়া গণনা করা হচ্ছে ---
-                    // Recalculate Final Outstanding Due: Total Payable - Paid Amount
                     const purchaseTotalPayable = purchase.totalPayable || (purchase.totalAmount + (purchase.previousDue || 0));
                     const purchasePaidAmount = purchase.paidAmount || 0;
                     const finalOutstandingDueAfterTransaction = Math.max(0, purchaseTotalPayable - purchasePaidAmount);
-                    // -------------------------------------------------------------------
 
                     downloadInvoiceDate.textContent = purchase.date;
                     downloadInvoiceNo.textContent = purchase.invoiceNo;
@@ -2336,7 +3751,6 @@
                         row.insertCell(4).textContent = formatCurrency(item.subtotal);
                     });
                     
-                    // FIELDS POPULATION
                     downloadInvoiceSubTotal.textContent = formatCurrency(purchase.subTotal || purchase.totalAmount || 0);
                     downloadInvoiceDiscount.textContent = formatCurrency(purchase.discount || 0);
                     downloadInvoicePreviousDue.textContent = formatCurrency(purchase.previousDue || 0);
@@ -2345,10 +3759,8 @@
                     downloadInvoiceTotal.textContent = formatCurrency(purchase.totalAmount);
                     downloadInvoicePaid.textContent = formatCurrency(purchase.paidAmount);
                     
-                    // ✅ CRITICAL FIX: The due amount here is the FINAL outstanding due to the customer (e.g., 565.00 TK)
                     downloadInvoiceDue.textContent = formatCurrency(finalOutstandingDueAfterTransaction); 
 
-                    // **👇 নতুন ডিসকাউন্ট হাইড লজিক**
                     const discountAmount = purchase.discount || 0;
                     const downloadDiscountDiv = downloadableInvoiceDiv.querySelector('#downloadDiscountRow'); 
                     const downloadTotalDiv = downloadableInvoiceDiv.querySelector('#downloadInvoiceTotal').closest('div'); 
@@ -2360,9 +3772,7 @@
                         downloadDiscountDiv.classList.remove('hidden');
                         downloadTotalDiv.classList.remove('hidden'); 
                     }
-                    // **👆 নতুন ডিসকাউন্ট হাইড লজিক**
 
-                    // Hide Paid row if paid amount is 0
                     const downloadPaidDiv = downloadableInvoiceDiv.querySelector('#downloadInvoicePaid').closest('div');
                     if (purchase.paidAmount <= 0) {
                          downloadPaidDiv.classList.add('hidden');
@@ -2370,14 +3780,12 @@
                          downloadPaidDiv.classList.remove('hidden');
                     }
 
-                    // Display Due row based on the FINAL OUTSTANDING DUE
                     const downloadDueDiv = downloadableInvoiceDiv.querySelector('#downloadInvoiceDue').closest('div');
-                    if (finalOutstandingDueAfterTransaction <= 0) { // Check the FINAL DUE
+                    if (finalOutstandingDueAfterTransaction <= 0) {
                         downloadDueDiv.classList.add('hidden');
                     } else {
                         downloadDueDiv.classList.remove('hidden');
                     }
-
 
                     downloadableInvoiceDiv.style.position = 'absolute';
                     downloadableInvoiceDiv.style.left = '-9999px';
@@ -2385,7 +3793,6 @@
                     downloadableInvoiceDiv.classList.remove('hidden');
 
                     try {
-                        // Check for html2canvas to ensure it has loaded with 'defer'
                         if (typeof html2canvas === 'undefined') {
                             console.error("html2canvas library not loaded. Waiting for defer.");
                             alert("Error: Image generation library not loaded. Cannot download invoice. Try reloading the page.");
@@ -2399,7 +3806,6 @@
                             onclone: (document) => {
                                 document.querySelector('#downloadableInvoice .invoice-logo').style.display = 'block';
                                 
-                                // 👇 html2canvas ক্লোনের জন্য ডিসকাউন্ট হাইড লজিক
                                 const clonedDiscountAmount = parseFloat(document.getElementById('downloadInvoiceDiscount').textContent.replace(' TK', '')) || 0;
                                 
                                 const clonedDiscountRow = document.getElementById('downloadDiscountRow');
@@ -2412,9 +3818,7 @@
                                     clonedDiscountRow.classList.remove('hidden');
                                     clonedTotalNetRow.classList.remove('hidden'); 
                                 }
-                                // 👆 ক্লোন লজিক শেষ
                                 
-                                // Paid Logic for clone
                                 const clonedPaidAmount = parseFloat(document.getElementById('downloadInvoicePaid').textContent.replace(' TK', '')) || 0;
                                 if (clonedPaidAmount <= 0) {
                                     document.querySelector('#downloadableInvoice #downloadInvoicePaid').closest('div').classList.add('hidden');
@@ -2422,7 +3826,6 @@
                                     document.querySelector('#downloadableInvoice #downloadInvoicePaid').closest('div').classList.remove('hidden');
                                 }
                                 
-                                // Final Due Logic for clone
                                 const clonedFinalDue = parseFloat(document.getElementById('downloadInvoiceDue').textContent.replace(' TK', '')) || 0;
                                 if (clonedFinalDue <= 0) {
                                     document.querySelector('#downloadableInvoice #downloadInvoiceDue').closest('div').classList.add('hidden');
@@ -2455,77 +3858,65 @@
                 }
             });
 
-
-            // --- Event Listeners for Cart Actions ---
-            document.addEventListener('click', (e) => {
-                if (e.target.classList.contains('update-cart')) {
-                    const index = e.target.dataset.index;
-                    const newQuantity = parseInt(document.querySelector(`.cart-quantity-input[data-index="${index}"]`).value);
-            
-                    if (isNaN(newQuantity) || newQuantity <= 0) {
-                        alert('Please enter a valid quantity.');
-                        renderCartView(); // Re-render to show original value
-                        return;
-                    }
-            
-                    const item = cartItems[index];
-                    const totalAvailableQuantity = stockData.filter(s => 
-                        s.itemName.toLowerCase() === item.itemName.toLowerCase() && 
-                        s.itemSize.toLowerCase() === item.itemSize.toLowerCase()
-                    ).reduce((acc, s) => acc + s.quantity, 0);
-            
-                    if (newQuantity > totalAvailableQuantity) {
-                        alert(`Not enough stock of "${item.itemName}" (${item.itemSize}). Available: ${totalAvailableQuantity}.`);
-                        renderCartView(); // Re-render to show original value
-                        return;
-                    }
-            
-                    item.quantity = newQuantity;
-                    renderCartView();
-                }
-            
-                if (e.target.classList.contains('remove-from-cart')) {
-                    const index = e.target.dataset.index;
-                    cartItems.splice(index, 1);
-                    renderCartView();
-                }
-            });
-
-            clearCartBtn.addEventListener('click', () => {
-                const confirmClear = confirm('Are you sure you want to clear your cart?');
-                if (confirmClear) {
-                    cartItems = [];
-                    renderCartView();
-                }
-            });
-
             // --- Dynamic Calculation & Conditional Discount Display ---
             applyDiscountCheckbox.addEventListener('change', calculateDueAmount); 
-
             discountAmountInput.addEventListener('input', calculateDueAmount);
             paidAmountInput.addEventListener('input', calculateDueAmount);
+            
             downloadInvoicePdfBtn.addEventListener('click', () => {
                 alert('The PDF generation feature is still under construction! Please use the JPEG download button on the Customer Report for now, which uses the same data.');
             });
 
-
             // --- Event Listeners for Navigation Buttons ---
-            btnStockView.addEventListener('click', () => { hideAllSections(); renderStockView(); }); // Added hideAllSections here
-            btnStockEntry.addEventListener('click', () => { hideAllSections(); stockEntrySection.classList.remove('hidden'); });
-            btnStockOut.addEventListener('click', () => { hideAllSections(); stockOutSection.classList.remove('hidden'); });
-            btnShowAllData.addEventListener('click', renderAllData);
-            btnJsonEdit.addEventListener('click', renderJsonEditor);
-            btnSellInvoice.addEventListener('click', renderCartView); 
-            goToInvoiceBtn.addEventListener('click', renderInvoiceFromCart); 
-            backToCartBtn.addEventListener('click', renderCartView);
-            btnCustomers.addEventListener('click', renderCustomersList);
-            btnOverallReport.addEventListener('click', renderOverallReport);
-            btnMonthlyReport.addEventListener('click', renderMonthlyReportSection); 
-            generateMonthlyReportBtn.addEventListener('click', generateMonthlyReport); 
-            backToAllDataBtn.addEventListener('click', renderAllData);
-            backToCustomersListBtn.addEventListener('click', renderCustomersList);
+            btnDashboard.addEventListener('click', showDashboard);
+            btnStockView.addEventListener('click', renderStockView);
+            btnStockEntry.addEventListener('click', showStockEntry);
+            btnSellInvoice.addEventListener('click', showCartView);
+            btnCustomers.addEventListener('click', showCustomers);
+            btnMonthlyReport.addEventListener('click', showMonthlyReport);
+            btnOverallDataView.addEventListener('click', showOverallDataView);
+            
+            // Quick action buttons
+            quickStockView.addEventListener('click', renderStockView);
+            quickStockEntry.addEventListener('click', showStockEntry);
+            quickSell.addEventListener('click', showCartView);
+            quickCustomers.addEventListener('click', showCustomers);
+            
+            // Other button event listeners
+            goToInvoiceBtn.addEventListener('click', () => {
+                hideAllSections();
+                sellInvoiceSection.classList.remove('hidden');
+                renderInvoiceFromCart();
+            }); 
+            
+            backToCartBtn.addEventListener('click', showCartView);
+            setDateRangeBtn.addEventListener('click', generateMonthlyReport); 
+            backToAllDataBtn.addEventListener('click', showOverallDataView);
+            backToCustomersListBtn.addEventListener('click', showCustomers);
+            
+            // Customer edit form buttons
+            saveCustomerEditBtn.addEventListener('click', saveCustomerEdit);
+            cancelCustomerEditBtn.addEventListener('click', cancelCustomerEdit);
 
-            // Event listener for clicking on item names in "Show All Data"
+            // ✅ FIXED: Add to Cart icon click event for Stock View
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('add-to-cart-icon') || 
+                    e.target.closest('.add-to-cart-icon')) {
+                    
+                    const icon = e.target.classList.contains('add-to-cart-icon') ? 
+                        e.target : e.target.closest('.add-to-cart-icon');
+                    
+                    const itemName = icon.dataset.itemName;
+                    const itemSize = icon.dataset.itemSize;
+                    
+                    if (itemName && itemSize) {
+                        addToCart(itemName, itemSize, 1);
+                        alert(`"${itemName}" (Size: ${itemSize}) added to cart!`);
+                    }
+                }
+            });
+
+            // Event listener for clicking on item names in "Overall Data View"
             document.addEventListener('click', (e) => {
                 if (e.target.classList.contains('item-name-link')) {
                     const itemName = e.target.dataset.itemName;
@@ -2536,6 +3927,11 @@
                     const customerPhone = e.target.dataset.customerPhone;
                     if (customerPhone) {
                         renderCustomerReport(customerPhone);
+                    }
+                } else if (e.target.classList.contains('edit-customer-btn')) {
+                    const customerPhone = e.target.dataset.customerPhone;
+                    if (customerPhone) {
+                        showCustomerEditForm(customerPhone);
                     }
                 }
             });
@@ -2551,7 +3947,6 @@
                     invoiceCustomerNameDisplay.textContent = existingCustomer.name || 'N/A';
                     invoiceCustomerPhoneDisplay.textContent = existingCustomer.phone || 'N/A';
 
-                    // ✅ New Logic: Sum of all outstanding due amounts
                     totalDue = getCustomerTotalDue(existingCustomer); 
                 } else {
                     if (!customerNameInput.dataset.userEdited) {
@@ -2564,8 +3959,8 @@
                     invoiceCustomerPhoneDisplay.textContent = phone ? phone : 'N/A';
                 }
                 customerOutstandingDueOnInvoice.textContent = formatCurrency(totalDue);
-                currentCustomerPreviousDue = totalDue; // Update global variable
-                calculateDueAmount(); // Recalculate invoice based on new customer due
+                currentCustomerPreviousDue = totalDue;
+                calculateDueAmount();
             });
 
             customerNameInput.addEventListener('input', () => {
@@ -2576,11 +3971,8 @@
                 customerAddressInput.dataset.userEdited = 'true';
             });
             
-            // Initial call to set current month/year on load
-            initializeYearDropdown(); 
-            
-            // The initial renderStockView() call is no longer needed here because onValue(stockDataRef, ...) calls it automatically.
-            // However, we ensure all elements are ready to receive the data.
+            // Show dashboard on initial load
+            showDashboard();
         });
     </script>
 </body>
